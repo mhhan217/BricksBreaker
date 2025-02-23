@@ -1,0 +1,5 @@
+
+#ifndef KONFIGURASI_H
+#define KONFIGURASI_H
+
+#endif //KONFIGURASI_H
