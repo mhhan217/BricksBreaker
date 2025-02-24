@@ -19,6 +19,6 @@ typedef struct {
 
 void initblokPengatur(blokPengatur *pengatur);
 void menambahBlok(blokPengatur *pengatur);
-void menghapusBlok1();
+void menghapusBlok();
 
 #endif
