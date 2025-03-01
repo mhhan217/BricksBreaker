@@ -1,17 +1,17 @@
-
 #ifndef CHINTA_H
 #define CHINTA_H
-#include "konfigurasi.h"
+#include <stdio.h>
+#include "raylib.h"
 
-void displayMenu();
-void playGame();
+#define BUTTON_WIDTH 200
+#define BUTTON_HEIGHT 40
+
+bool DrawButton(Rectangle rect, const char *text, Color outlineColor, Color textColor);
+void displayMenuWithGraphics();
+void displayDifficultyMenu();
 void displayInfo();
-void displayLeaderboard();
-int loadScores();
-void saveScores();
-void displayGameOverMenu();
-int calculateFinalScore();
-void handleUserInput();
-void drawText(const char* text);
+void displaySettings();
+void playGame();
+int selectedDifficulty = 0;
 
 #endif //CHINTA_H
