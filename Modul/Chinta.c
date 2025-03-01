@@ -1,180 +1,232 @@
 #include <stdio.h>
-#include "Chinta.h"
 #include "raylib.h"
 
-void displayMenu() 
+#define BUTTON_WIDTH 200
+#define BUTTON_HEIGHT 40
+
+// Definisi warna custom
+#define MY_DARK_PINK (Color){ 199, 21, 133, 255 }
+#define MY_BLUE (Color){ 0, 0, 255, 255 }
+#define MY_GREEN (Color){ 0, 255, 0, 255 }
+#define MY_YELLOW (Color){ 255, 255, 0, 255 }
+#define BLACK_BG (Color){ 0, 0, 0, 255 }
+#define WHITE_TEXT (Color){ 255, 255, 255, 255 }
+
+Vector2 ballPosition = { 400, 550 };
+Vector2 ballSpeed = { 3, -3 };
+
+bool DrawButton(Rectangle rect, const char *text, Color outlineColor, Color textColor);
+void displayMenuWithGraphics();
+void displayDifficultyMenu();
+void displayInfo();
+void displaySettings();
+void playGame();
+int selectedDifficulty = 0;
+
+// Fungsi untuk menggambar tombol dengan efek saat ditekan
+bool DrawButton(Rectangle rect, const char *text, Color outlineColor, Color textColor) 
 {
-    printf("=== Bricks Breaker Game ===\n");
-    printf("1. Play\n");
-    printf("Easy\n");
-    printf("Medium\n");
-    printf("Hard\n");
-    printf("2. Info\n");
-    printf("3. Leaderboard\n");
-    printf("4. Exit\n");
+    Vector2 mousePoint = GetMousePosition();
+    bool hovered = CheckCollisionPointRec(mousePoint, rect);
+    bool clicked = hovered && IsMouseButtonPressed(MOUSE_LEFT_BUTTON);
+    
+    DrawRectangleRec(rect, clicked ? BLACK_BG : BLACK_BG);
+    DrawRectangleLinesEx(rect, 3, outlineColor);
+    int textWidth = MeasureText(text, 20);
+    DrawText(text, rect.x + (BUTTON_WIDTH - textWidth) / 2, rect.y + 10, 20, clicked ? WHITE_TEXT : textColor);
+    
+    return clicked;
 }
 
-void playGame() 
+void displayMenuWithGraphics() 
 {
-    int difficulty;
-    printf("Level:\n");
-    printf("1. Easy\n");
-    printf("2. Medium\n");
-    printf("3. Hard\n");
-    printf("Enter your choice: ");
-    scanf("%d", &difficulty);
+    InitWindow(800, 600, "Bricks Breaker Menu");
+    SetTargetFPS(60);
 
-    while (difficulty < 1 || difficulty > 3) 
+    while (!WindowShouldClose()) 
     {
-        printf("Invalid choice. Please select a valid difficulty level.\n");
-        printf("1. Easy\n");
-        printf("2. Medium\n");
-        printf("3. Hard\n");
-        printf("Enter your choice: ");
-        scanf("%d", &difficulty);
-    }
+        BeginDrawing();
+        ClearBackground(BLACK_BG);
+        
+        // Gambar bola
+        DrawCircleV(ballPosition, 10, WHITE);
 
-    switch (difficulty) 
+        // Pergerakan bola
+        ballPosition.x += ballSpeed.x;
+        ballPosition.y += ballSpeed.y;
+
+        // Pantulan dari dinding
+        if (ballPosition.x <= 0 || ballPosition.x >= 800) ballSpeed.x *= -1;
+        if (ballPosition.y <= 0 || ballPosition.y >= 600) ballSpeed.y *= -1;
+        
+        DrawText("B", 250, 50, 30, MY_DARK_PINK);
+        DrawText("r", 270, 50, 30, MY_BLUE);
+        DrawText("i", 290, 50, 30, MY_GREEN);
+        DrawText("c", 310, 50, 30, MY_YELLOW);
+        DrawText("k", 330, 50, 30, MY_DARK_PINK);
+        DrawText("s", 350, 50, 30, MY_BLUE);
+        DrawText(" ", 370, 50, 30, MY_GREEN);
+        DrawText("B", 390, 50, 30, MY_YELLOW);
+        DrawText("r", 410, 50, 30, MY_DARK_PINK);
+        DrawText("e", 430, 50, 30, MY_BLUE);
+        DrawText("a", 450, 50, 30, MY_GREEN);
+        DrawText("k", 470, 50, 30, MY_YELLOW);
+        DrawText("e", 490, 50, 30, MY_DARK_PINK);
+        DrawText("r", 510, 50, 30, MY_BLUE);
+        DrawText(" ", 530, 50, 30, MY_GREEN);
+        DrawText("G", 550, 50, 30, MY_YELLOW);
+        DrawText("a", 570, 50, 30, MY_DARK_PINK);
+        DrawText("m", 590, 50, 30, MY_BLUE);
+        DrawText("e", 610, 50, 30, MY_GREEN);
+        
+        Rectangle playBtn = { 300, 150, BUTTON_WIDTH, BUTTON_HEIGHT };
+        Rectangle infoBtn = { 300, 210, BUTTON_WIDTH, BUTTON_HEIGHT };
+        Rectangle settingsBtn = { 300, 270, BUTTON_WIDTH, BUTTON_HEIGHT };
+        Rectangle exitBtn = { 300, 330, BUTTON_WIDTH, BUTTON_HEIGHT };
+        
+        if (DrawButton(playBtn, "Play", MY_DARK_PINK, MY_DARK_PINK))
+        {
+            displayDifficultyMenu();
+        }
+        else if (DrawButton(infoBtn, "Info", MY_BLUE, MY_BLUE))
+        {
+            displayInfo();
+        }
+        else if (DrawButton(settingsBtn, "Settings", MY_GREEN, MY_GREEN))
+        {
+            displaySettings();
+        }
+        else if (DrawButton(exitBtn, "Exit", MY_YELLOW, MY_YELLOW))
+        {
+            break;
+        }
+        
+        EndDrawing();
+    }
+    CloseWindow();
+}
+
+void displayDifficultyMenu()
+{
+    while (!WindowShouldClose())
     {
-        case 1:
-            printf("Starting game on Easy difficulty...\n");
-            // 75% lebih lambat
-            // code to start on easy level
-            break;
-        case 2:
-            printf("Starting game on Medium difficulty...\n");
-            // kecapatan normal
-            // code to start on medium level
-            break;
-        case 3:
-            printf("Starting game on Hard difficulty...\n");
-            // 25% lebih cepat
-            // code to start on hard level
-            break;
+        BeginDrawing();
+        ClearBackground(BLACK_BG);
+        
+        DrawText("d", 260, 50, 30, MY_BLUE);
+        DrawText("i", 280, 50, 30, MY_GREEN);
+        DrawText("f", 300, 50, 30, MY_YELLOW);
+        DrawText("f", 320, 50, 30, MY_DARK_PINK);
+        DrawText("i", 340, 50, 30, MY_BLUE);
+        DrawText("c", 360, 50, 30, MY_GREEN);
+        DrawText("u", 380, 50, 30, MY_YELLOW);
+        DrawText("l", 400, 50, 30, MY_DARK_PINK);
+        DrawText("t", 420, 50, 30, MY_BLUE);
+        DrawText("y", 440, 50, 30, MY_GREEN);
+        DrawText(" ", 460, 50, 30, MY_YELLOW);
+        DrawText("l", 480, 50, 30, MY_YELLOW);
+        DrawText("e", 500, 50, 30, MY_DARK_PINK);
+        DrawText("v", 520, 50, 30, MY_BLUE);
+        DrawText("e", 540, 50, 30, MY_GREEN);
+        DrawText("l", 560, 50, 30, MY_YELLOW);
+ 
+        
+        Rectangle easyBtn = { 300, 150, BUTTON_WIDTH, BUTTON_HEIGHT };
+        Rectangle mediumBtn = { 300, 210, BUTTON_WIDTH, BUTTON_HEIGHT };
+        Rectangle hardBtn = { 300, 270, BUTTON_WIDTH, BUTTON_HEIGHT };
+        Rectangle backBtn = { 300, 330, BUTTON_WIDTH, BUTTON_HEIGHT };
+        
+        if (DrawButton(easyBtn, "Easy", MY_DARK_PINK, MY_DARK_PINK))
+        {
+            selectedDifficulty = 1;
+            playGame();
+        }
+        else if (DrawButton(mediumBtn, "Medium", MY_BLUE, MY_BLUE))
+        {
+            selectedDifficulty = 2;
+            playGame();
+        }
+        else if (DrawButton(hardBtn, "Hard", MY_GREEN, MY_GREEN))
+        {
+            selectedDifficulty = 3;
+            playGame();
+        }
+        else if (DrawButton(backBtn, "Back", MY_YELLOW, MY_YELLOW))
+        {
+            return;
+        }
+        
+        EndDrawing();
     }
-
-    displayGameOverMenu();
 }
 
 void displayInfo() 
 {
-    printf("=== Game Info ===\n");
-    printf("Power-ups: \n");
-    printf("1. Extra Ball\n");
-    printf("   If you get the Extra Ball power-up, you will have 3 balls in play.\n");
-    printf("2. Larger Paddle\n");
-    printf("   If you get the Larger Paddle power-up, your paddle will increase in size.\n");
-    printf("3. Slow Ball\n");
-    printf("   If you get the Slow Ball power-up, the ball will move slower.\n");
-    printf("Levels: \n");
-    printf("1. Easy: The ball moves more slowly.\n");
-    printf("2. Medium: The ball moves at a normal speed.\n");
-    printf("3. Hard: The /ball moves faster.\n");
-}
-
-void displayLeaderboard() 
-{
-    printf("=== Leaderboard ===\n");
-    int scores[10];
-    int count = loadScores(scores, 10); //Load skor dari history sebelumnya
-
-    if (count == 0) 
+    while (!WindowShouldClose()) 
     {
-        printf("No scores available.\n");
-    } 
-    else 
-    {
-        printf("Highest Scores:\n");
-        for (int i = 0; i < count; i++) 
+        BeginDrawing();
+        ClearBackground(BLACK_BG);
+        DrawText("Power-ups:", 300, 100, 20, WHITE_TEXT);
+        DrawText("1. Ball splits into 3", 300, 150, 20, WHITE_TEXT);
+        DrawText("2. Paddle becomes longer", 300, 200, 20, WHITE_TEXT);
+        
+        Rectangle backBtn = { 300, 300, BUTTON_WIDTH, BUTTON_HEIGHT };
+        if (DrawButton(backBtn, "Back", MY_BLUE, MY_BLUE))
         {
-            char buffer[50];
-            sprintf(buffer, "%d. %d\n", i + 1, scores[i]);
-            printf(buffer);
+            break;
         }
+        EndDrawing();
     }
 }
 
-int loadScores(int *scores, int maxScores) 
+void displaySettings() 
 {
-    FILE *file = fopen("scores.txt", "r");
-    if (!file) 
+    while (!WindowShouldClose()) 
     {
-        return 0;
-    }
-
-    int count = 0;
-    while (count < maxScores && fscanf(file, "%d", &scores[count]) == 1) 
-    {
-        count++;
-    }
-
-    fclose(file);
-    return count;
-}
-
-void saveScore(int score) 
-{
-    FILE *file = fopen("scores.txt", "a");
-    if (file) 
-    {
-        fprintf(file, "%d\n", score);
-        fclose(file);
-    }
-}
-
-void displayGameOverMenu() 
-{
-    int choice, finalscore;
-    printf("=== Game Over ===\n");
-    printf("1. Play Again\n");
-    printf("2. Exit\n");
-    printf("3. Score\n");
-    printf("Enter your choice: ");
-    scanf("%d", &choice);
-	
-    switch (choice) 
-    {
-        case 1:
-            playGame();
-            break;
-        case 2:
-            printf("Exiting the game..\n");
-            break;
-        case 3:
-            //calculateFinalScore(); //Untuk menghitung skor akhir
-            char buffer[50];
-            //sprintf(buffer, "Final score: %d\n", finalScore);
-            printf(buffer);
-            break;
-        default:
-            printf("Invalid choice. Returning to main menu.\n");
-    }
-}
-void handleUserInput() 
-{
-    char choice;
-    while (1) 
-    {
-        displayMenu();
-        choice = getchar();
-        getchar(); 
-
-        switch (choice) 
+        BeginDrawing();
+        ClearBackground(BLACK_BG);
+        DrawText("Music", 300, 100, 20, MY_DARK_PINK);
+        
+        Rectangle backBtn = { 300, 300, BUTTON_WIDTH, BUTTON_HEIGHT };
+        if (DrawButton(backBtn, "Back", MY_BLUE, MY_BLUE))
         {
-            case '1':
-                playGame();
-                break;
-            case '2':
-                displayInfo();
-                break;
-            case '3':
-                displayLeaderboard();
-                break;
-            case '4':
-                printf("Exiting the game..\n");
-                return;
-            default:
-                printf("Invalid choice. Please try again.\n");
+            break;
         }
+        EndDrawing();
+    }
+}
+
+void playGame()
+{
+    Color textColor;
+    const char *message;
+
+    if (selectedDifficulty == 1) {
+        textColor = MY_DARK_PINK;
+        message = "Playing games at easy level..";
+    } else if (selectedDifficulty == 2) {
+        textColor = MY_BLUE;
+        message = "Playing games at medium level..";
+    } else if (selectedDifficulty == 3) {
+        textColor = MY_GREEN;
+        message = "Playing games at hard level..";
+    } else {
+        return;  // Jika tidak ada level yang dipilih, kembali
+    }
+
+    while (!WindowShouldClose()) 
+    {
+        BeginDrawing();
+        ClearBackground(BLACK_BG);
+        
+        DrawText(message, 250, 100, 20, textColor);
+
+        Rectangle backBtn = { 300, 300, BUTTON_WIDTH, BUTTON_HEIGHT };
+        if (DrawButton(backBtn, "Back", MY_YELLOW, MY_YELLOW))
+        {
+            return;  // Kembali ke menu pemilihan tingkat kesulitan
+        }
+
+        EndDrawing();
     }
 }
