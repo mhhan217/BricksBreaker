@@ -14,6 +14,6 @@ typedef enum {
     PAUSE,
     GAME_OVER,
     EXIT
-}GameState;
+} GameState;
 
 #endif //KONFIGURASI_H
