@@ -6,25 +6,27 @@
 #define BRICK_HEIGHT 20
 #define ROWS 5
 
-typedef struct {
-    int r, g, b, a;
-} warna;
-
-typedef struct {
-    int x, y, width, height;
-    warna warna;
-    int active;
-} blok;
-
-typedef struct {
-    blok *blok;
-    int jumlah;
-} blokPengatur;
-
-void initblokPengatur(blokPengatur *pengatur) {
-    pengatur->blok = NULL;
-    pengatur->jumlah = 0;
-    srand(time(NULL));
+void InisialisasiBricks(Brick bricks[JUMLAH_BARIS][JUMLAH_KOLOM]) {
+    for (int i = 0; i < JUMLAH_BARIS; i++) {
+        for (int j = 0; j < JUMLAH_KOLOM; j++) {
+            if (rand() % 2 == 0) { // 50% kemungkinan muncul
+                bricks[i][j].rect = (Rectangle){j * BRICK_LEBAR, i * BRICK_TINGGI, BRICK_LEBAR, BRICK_TINGGI};
+                bricks[i][j].color = (Color){rand() % 256, rand() % 256, rand() % 256, 255};
+                bricks[i][j].active = true;
+            } else {
+                bricks[i][j].active = false;
+            }
+        }
+    }
 }
-void menghapusBlok1(){
+
+void GambarBricks(Brick bricks[JUMLAH_BARIS][JUMLAH_KOLOM]) {
+    for (int i = 0; i < JUMLAH_BARIS; i++) {
+        for (int j = 0; j < JUMLAH_KOLOM; j++) {
+            if (bricks[i][j].active) {
+                DrawRectangleRec(bricks[i][j].rect, bricks[i][j].color);
+            }
+        }
+    }
 }
+

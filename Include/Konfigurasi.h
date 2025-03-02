@@ -9,6 +9,8 @@
 #define SCREEN_HEIGHT 600
 #define TARGET_FPS 60
 
+
+
 typedef enum {
     MENU,
     HIGH_SCORE,

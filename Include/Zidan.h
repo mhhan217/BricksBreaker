@@ -4,21 +4,13 @@
 #include "raylib.h"
 #include "Konfigurasi.h"
 
-
 typedef struct {
-    Rectangle rect; 
-    Color warna;    
-    bool active;    
-} Blok;
+    Rectangle rect;
+    Color color;
+    bool active;
+} Brick;
 
-
-typedef struct {
-    Blok *blok;    
-    int jumlah;     
-} blokPengatur; 
-
-void initblokPengatur(blokPengatur *pengatur);
-void menambahBlok(blokPengatur *pengatur);
-void menghapusBlok();
+void InisialisasiBricks(Brick bricks[JUMLAH_BARIS][JUMLAH_KOLOM]);
+void GambarBricks(Brick bricks[JUMLAH_BARIS][JUMLAH_KOLOM]);
 
 #endif
