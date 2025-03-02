@@ -1,11 +1,13 @@
 //
 // Created by Chinta on 2/23/2025.
 //
-#include "Chinta.c"
+#include "raylib.h"
 
-int main() 
+#define SCREEN_WIDTH 1200
+#define SCREEN_HEIGHT 900
+
+int main()
 {
-    //initializeGame();
-    handleUserInput();
+    displayMenuWithGraphics();
     return 0;
 }
