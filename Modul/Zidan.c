@@ -1,10 +1,35 @@
-
-#include "Konfigurasi.h"
+#include <stdio.h>
+#include "raylib.h"
 #include "Zidan.h"
+#include <time.h>
+#include <stdlib.h>
+
 
 #define BRICK_WIDTH 50
 #define BRICK_HEIGHT 20
 #define ROWS 5
+
+int main() {
+    InitWindow(SCREEN_WIDTH, SCREEN_WIDTH, "Bricks Random");
+    SetTargetFPS(60);
+    srand(time(NULL));
+    
+    Brick bricks[JUMLAH_BARIS][JUMLAH_KOLOM];
+    InisialisasiBricks(bricks);
+    
+    while (!WindowShouldClose()) {
+        BeginDrawing();
+        ClearBackground(RAYWHITE);
+        
+        GambarBricks(bricks);
+        
+        EndDrawing();
+    }
+    
+    CloseWindow();
+    return 0;
+}
+
 
 void InisialisasiBricks(Brick bricks[JUMLAH_BARIS][JUMLAH_KOLOM]) {
     for (int i = 0; i < JUMLAH_BARIS; i++) {

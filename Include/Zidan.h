@@ -1,7 +1,6 @@
 #ifndef ZIDAN_H
 #define ZIDAN_H
 
-#include "raylib.h"
 #include "Konfigurasi.h"
 
 typedef struct {

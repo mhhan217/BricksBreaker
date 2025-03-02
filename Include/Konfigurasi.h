@@ -9,6 +9,11 @@
 #define SCREEN_HEIGHT 600
 #define TARGET_FPS 60
 
+#define JUMLAH_BARIS 5
+#define JUMLAH_KOLOM 10
+
+#define BRICK_LEBAR 50
+#define BRICK_TINGGI 20
 
 
 typedef enum {
