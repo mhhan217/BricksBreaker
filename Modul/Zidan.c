@@ -5,7 +5,7 @@
 #include <stdlib.h>
 
 
-#define BRICK_WIDTH 50
+#define BRICK_WIDTH 30
 #define BRICK_HEIGHT 20
 #define ROWS 5
 
@@ -40,12 +40,17 @@ int main() {
     return 0;
 }
 
+Color WarnaAcak() {
+    Color warna[] = {BLUE, YELLOW, GREEN, RED};
+    return warna[rand() % 4];
+}
+
 void InisialisasiBricks(Brick bricks[JUMLAH_BARIS][JUMLAH_KOLOM]) {
     for (int i = 0; i < JUMLAH_BARIS; i++) {
         for (int j = 0; j < JUMLAH_KOLOM; j++) {
-            if (rand() % 2 == 0) { // 50% kemungkinan muncul
+            if (rand() % 2 == 0 ) { // 50% kemungkinan muncul
                 bricks[i][j].rect = (Rectangle){j * BRICK_LEBAR, i * BRICK_TINGGI, BRICK_LEBAR, BRICK_TINGGI};
-                bricks[i][j].color = (Color){rand() % 256, rand() % 256, rand() % 256, 255};
+                bricks[i][j].color = WarnaAcak();
                 bricks[i][j].active = true;
             } else {
                 bricks[i][j].active = false;
@@ -69,7 +74,7 @@ void TambahBarisBricks(Brick bricks[JUMLAH_BARIS + TAMBAHAN_BARIS][JUMLAH_KOLOM]
         for (int j = 0; j < JUMLAH_KOLOM; j++) {
             if (rand() % 2 == 0) {
                 bricks[*barisSaatIni][j].rect = (Rectangle){j * BRICK_LEBAR, *barisSaatIni * BRICK_TINGGI, BRICK_LEBAR, BRICK_TINGGI};
-                bricks[*barisSaatIni][j].color = (Color){rand() % 256, rand() % 256, rand() % 256, 255};
+                bricks[*barisSaatIni][j].color = WarnaAcak();
                 bricks[*barisSaatIni][j].active = true;
             } else {
                 bricks[*barisSaatIni][j].active = false;
