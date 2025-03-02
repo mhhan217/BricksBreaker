@@ -35,29 +35,23 @@ void gambarBalok() {
 }
 
 void bolaterkenabalok(Ball* Ball) {
-
     int i = 0;
     while (i < BRICK_ROWS) {
         int j = 0;
         while (j < BRICK_COLS) {
-            Balok *brick = &bricks[i][j];  // Mengambil referensi brick saat ini
-
+            Balok *brick = &bricks[i][j];
             if (!brick->on) {  
                 j++;  
-                continue;  // Jika brick sudah hancur, lewati
+                continue;
             }
-
-            // Cek apakah bola berada dalam area brick
             if (Ball->Posisi.x + Ball->Radius >= brick->kotak.x && 
                 Ball->Posisi.x <= brick->kotak.x + BRICK_WIDTH &&
                 Ball->Posisi.y + Ball->Radius >= brick->kotak.y && 
                 Ball->Posisi.y <= brick->kotak.y + BRICK_HEIGHT) {
-
-                brick->on = false;  // Hancurkan brick
-                Ball->Kecepatan.y = -Ball->Kecepatan.y;  // Pantulkan bola
-                return;  // Keluar dari fungsi setelah satu brick dihancurkan
+                    brick->on = false;
+                    Ball->Kecepatan.y = -Ball->Kecepatan.y;
+                    return;
             }
-
             j++;
         }
         i++;
