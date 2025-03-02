@@ -4,6 +4,15 @@
 #include "raylib.h"
 #include "Konfigurasi.h"
 
-void TampilkanMenu(int score, bool *playAgain, bool *exitGame);
+typedef struct {
+    char pesan[20];  
+    int lebarLayar;
+    int tinggiLayar;
+    Color warnaTeks;
+} LayarGameOver;
+
+void InisialisasiLayarGameOver(LayarGameOver *layar);
+void GambarLayarGameOver(LayarGameOver layar);
+void HapusLayarGameOver(LayarGameOver *layar);
 
 #endif
