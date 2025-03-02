@@ -1,7 +1,7 @@
 #ifndef KONFIGURASI_H
 #define KONFIGURASI_H
 
-#define SCREEN_WIDTH 800
-#define SCREEN_HEIGHT 600
+#define LEBAR_LAYAR 800
+#define TINGGI_LAYAR 600
 
 #endif
