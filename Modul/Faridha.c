@@ -12,17 +12,22 @@ void GambarLayarGameOver(LayarGameOver layar) {
     BeginDrawing();
     ClearBackground(BLACK);
 
-    Color warnaHuruf[] = {RED, ORANGE, YELLOW, GREEN, BLUE, PURPLE, PINK, WHITE, SKYBLUE};
+    Color warnaHuruf[] = {RED, ORANGE, YELLOW, GREEN, BLUE, PURPLE, WHITE, PINK, SKYBLUE};
+    
+    const char *judulGame = "Bricks Breaker Game";
+    int posisiXJudulGame = layar.lebarLayar / 2 - MeasureText(judulGame, 30) / 2;
+    int posisiYJudulGame = layar.tinggiLayar / 6;
+    int jarakHuruf = 5;
+    
+    for (int i = 0; i < strlen(judulGame); i++) {
+        DrawText(TextFormat("%c", judulGame[i]), posisiXJudulGame, posisiYJudulGame, 30, warnaHuruf[i % (sizeof(warnaHuruf) / sizeof(warnaHuruf[0]))]);
+        posisiXJudulGame += MeasureText(TextFormat("%c", judulGame[i]), 30) + jarakHuruf;
+    }
 
     const char *judul = "GAME OVER";
     int posisiXJudul = layar.lebarLayar / 2 - MeasureText(judul, 40) / 2;
     int posisiYJudul = layar.tinggiLayar / 4;
-    int jarakHuruf = 5;
-
-    for (int i = 0; i < strlen(judul); i++) {
-        DrawText(TextFormat("%c", judul[i]), posisiXJudul, posisiYJudul, 40, warnaHuruf[i % (sizeof(warnaHuruf) / sizeof(warnaHuruf[0]))]);
-        posisiXJudul += MeasureText(TextFormat("%c", judul[i]), 40) + jarakHuruf;
-    }
+    DrawText(judul, posisiXJudul, posisiYJudul, 40, RED);
 
     DrawRectangleLines(layar.lebarLayar / 2 - 100, layar.tinggiLayar / 2 - 60, 200, 40, PINK);
     DrawText("Score", layar.lebarLayar / 2 - MeasureText("Score", 20) / 2, layar.tinggiLayar / 2 - 50, 20, PINK);
