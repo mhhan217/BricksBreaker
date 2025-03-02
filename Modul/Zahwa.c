@@ -1,5 +1,5 @@
 #include "raylib.h"
-
+#include "Zahwa.h"
 
 void InitPaddle(Paddle* Paddle, Vector2 posisiAwal, Vector2 ukuran, float kecepatan) {
     Paddle->Posisi = posisiAwal;
