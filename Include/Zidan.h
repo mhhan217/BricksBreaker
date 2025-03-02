@@ -3,6 +3,16 @@
 
 #include "Konfigurasi.h"
 
+#define JUMLAH_BARIS 15
+#define JUMLAH_KOLOM 10
+
+#define BRICK_LEBAR 50
+#define BRICK_TINGGI 20
+
+#define BRICK_PADDING 5
+#define POSISI_TENGAH_X ((SCREEN_HEIGHT - (JUMLAH_KOLOM * (BRICK_LEBAR + BRICK_PADDING) - BRICK_PADDING)) / 2)
+#define POSISI_ATAS_Y 100 
+
 #define TAMBAHAN_BARIS 2
 #define BATAS_WAKTU 10
 

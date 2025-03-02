@@ -29,7 +29,7 @@ int main() {
         }
         
         BeginDrawing();
-        ClearBackground(RAYWHITE);
+         ClearBackground(BLACK);
         
         GambarBricks(bricks);
         
@@ -47,9 +47,10 @@ Color WarnaAcak() {
 
 void InisialisasiBricks(Brick bricks[JUMLAH_BARIS][JUMLAH_KOLOM]) {
     for (int i = 0; i < JUMLAH_BARIS; i++) {
+        int jumlah_aktif = 0;
         for (int j = 0; j < JUMLAH_KOLOM; j++) {
-            if (rand() % 2 == 0 ) { // 50% kemungkinan muncul
-                bricks[i][j].rect = (Rectangle){j * BRICK_LEBAR, i * BRICK_TINGGI, BRICK_LEBAR, BRICK_TINGGI};
+            if (rand() % 2 == 0 || (JUMLAH_KOLOM - j + jumlah_aktif < 5)) { // 50% kemungkinan muncul
+                 bricks[i][j].rect = (Rectangle){ POSISI_TENGAH_X+ j * (BRICK_LEBAR + BRICK_PADDING), POSISI_ATAS_Y + i * (BRICK_TINGGI + BRICK_PADDING), BRICK_LEBAR, BRICK_TINGGI};
                 bricks[i][j].color = WarnaAcak();
                 bricks[i][j].active = true;
             } else {
@@ -72,8 +73,9 @@ void GambarBricks(Brick bricks[JUMLAH_BARIS][JUMLAH_KOLOM]) {
 void TambahBarisBricks(Brick bricks[JUMLAH_BARIS + TAMBAHAN_BARIS][JUMLAH_KOLOM], int *barisSaatIni) {
     if (*barisSaatIni < JUMLAH_BARIS + TAMBAHAN_BARIS) {
         for (int j = 0; j < JUMLAH_KOLOM; j++) {
-            if (rand() % 2 == 0) {
-                bricks[*barisSaatIni][j].rect = (Rectangle){j * BRICK_LEBAR, *barisSaatIni * BRICK_TINGGI, BRICK_LEBAR, BRICK_TINGGI};
+            int jumlah_aktif = 0;
+            if (rand() % 2 == 0 || (JUMLAH_KOLOM - j + jumlah_aktif < 5)) {
+                bricks[*barisSaatIni][j].rect = (Rectangle){POSISI_TENGAH_X + j * (BRICK_LEBAR + BRICK_PADDING), POSISI_ATAS_Y + *barisSaatIni * (BRICK_TINGGI + BRICK_PADDING), BRICK_LEBAR, BRICK_TINGGI};
                 bricks[*barisSaatIni][j].color = WarnaAcak();
                 bricks[*barisSaatIni][j].active = true;
             } else {
