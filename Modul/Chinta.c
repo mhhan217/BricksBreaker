@@ -1,26 +1,13 @@
 #include <stdio.h>
 #include "raylib.h"
+#include "Chinta.h"
 
 #define BUTTON_WIDTH 200
 #define BUTTON_HEIGHT 40
 
-// Definisi warna custom
-#define MY_DARK_PINK (Color){ 199, 21, 133, 255 }
-#define MY_BLUE (Color){ 0, 0, 255, 255 }
-#define MY_GREEN (Color){ 0, 255, 0, 255 }
-#define MY_YELLOW (Color){ 255, 255, 0, 255 }
-#define BLACK_BG (Color){ 0, 0, 0, 255 }
-#define WHITE_TEXT (Color){ 255, 255, 255, 255 }
-
 Vector2 ballPosition = { 400, 550 };
 Vector2 ballSpeed = { 3, -3 };
 
-bool DrawButton(Rectangle rect, const char *text, Color outlineColor, Color textColor);
-void displayMenuWithGraphics();
-void displayDifficultyMenu();
-void displayInfo();
-void displaySettings();
-void playGame();
 int selectedDifficulty = 0;
 
 // Fungsi untuk menggambar tombol dengan efek saat ditekan
