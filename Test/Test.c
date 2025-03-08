@@ -11,11 +11,9 @@ int main()
 {
     InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Bricks Breaker Menu");
     SetTargetFPS(60);
-    displayMenuWithGraphics();
-    displayDifficultyMenu();
-    displayInfo();
-    displaySettings();
-    playGame();
+
+    displayMenuWithGraphics();  
+
     CloseWindow();
     return 0;
 }
