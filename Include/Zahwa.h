@@ -9,5 +9,9 @@ typedef struct {
     Color Warna;
 }Paddle;
 
+void InitPaddle(Paddle* Paddle, Vector2 posisiAwal, Vector2 ukuran, float kecepatan);
+void UpdatePaddle(Paddle* Paddle);
+void DrawPaddle(Paddle Paddle);
+
 #endif //ZAHWA_H
 

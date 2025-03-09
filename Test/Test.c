@@ -14,9 +14,7 @@ int main() {
         UpdatePaddle(&paddle);
         ClearBackground(BLACK);
         DrawPaddle(paddle);
-        DrawText("Press ESC to exit", 10, 10, 20, WHITE);
         EndDrawing();
     }
 
-    CloseWindow(); 
 }
