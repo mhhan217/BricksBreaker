@@ -2,14 +2,20 @@
 #include "Faridha.h"
 
 int main() {
-    InitWindow(LEBAR_LAYAR, TINGGI_LAYAR, "Layar Game Over");
+    InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Layar Game Over");
     SetTargetFPS(60);
     
     LayarGameOver layarGameOver;
     InisialisasiLayarGameOver(&layarGameOver);
 
     while (!WindowShouldClose()) {
-        GambarLayarGameOver(layarGameOver);
+        if (gameState == 0) {
+            GambarLayarGameOver(layarGameOver);
+        } else if (gameState == 1) {
+            GambarLayarScore();
+        } else if (gameState == 2) {
+        } else if (gameState == 3) {
+        }
     }
 
     HapusLayarGameOver(&layarGameOver);
