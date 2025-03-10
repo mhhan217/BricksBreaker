@@ -8,100 +8,37 @@
 Vector2 ballPosition = { 400, 550 };
 Vector2 ballSpeed = { 3, -3 };
 
+float paddleSpeed = 5.0f;  // Atur kecepatan paddle sesuai kebutuhan
+Vector2 paddlePosition = { 350, 550 }; // Atur posisi awal paddle
+
+int selectedMenuOption = 0;
+int menuIndex = 0;
+int currentDifficulty = 0;
 int selectedDifficulty = 0;
-
-bool DrawButton(Rectangle rect, const char *text, Color outlineColor, Color textColor) 
-{
-    Vector2 mousePoint = GetMousePosition();
-    bool hovered = CheckCollisionPointRec(mousePoint, rect);
-    bool clicked = hovered && IsMouseButtonPressed(MOUSE_LEFT_BUTTON);
-    
-    DrawRectangleRec(rect, clicked ? BLACK_BG : BLACK_BG);
-    DrawRectangleLinesEx(rect, 3, outlineColor);
-    int textWidth = MeasureText(text, 20);
-    DrawText(text, rect.x + (BUTTON_WIDTH - textWidth) / 2, rect.y + 10, 20, clicked ? WHITE_TEXT : textColor);
-    
-    return clicked;
-}
-
-void displayMenuWithGraphics() 
-{
-    InitWindow(800, 600, "Bricks Breaker Menu");
-    SetTargetFPS(60);
-
-    while (!WindowShouldClose()) 
-    {
-        BeginDrawing();
-        ClearBackground(BLACK_BG);
-        
-        DrawCircleV(ballPosition, 10, WHITE);
-
-        ballPosition.x += ballSpeed.x;
-        ballPosition.y += ballSpeed.y;
-
-        if (ballPosition.x <= 0 || ballPosition.x >= 800) ballSpeed.x *= -1;
-        if (ballPosition.y <= 0 || ballPosition.#include <stdio.h>
-#include "raylib.h"
-#include "Chinta.h"
-
-#define BUTTON_WIDTH 200
-#define BUTTON_HEIGHT 40
-
-Vector2 ballPosition = { 400, 550 };
-Vector2 ballSpeed = { 3, -3 };
-
-int selectedDifficulty = 0;
+int currentState = MENU;
+int selectedLevel = 1;
 int selectedPaddleColorIndex = 0;
 int selectedBallColorIndex = 0;
-Color paddleColor = WHITE;
-Color ballColor = WHITE;
-bool isMuted = false;
-bool isDraggingMusic = false;
-bool isDraggingSound = false;
 float musicVolume = 1.0f;
 float soundVolume = 1.0f;
-Sound ballBounce;
-Music gameMusic;
 
 Color paddleColors[6] = { MY_DARK_PINK, MY_BLUE, MY_GREEN, MY_YELLOW, WHITE, BLACK };
 Color ballColors[6] = { MY_DARK_PINK, MY_BLUE, MY_GREEN, MY_YELLOW, WHITE, BLACK };
+Color paddleColor = WHITE;
+Color ballColor = WHITE;
 
-bool DrawButton(Rectangle rect, const char *text, Color outlineColor, Color textColor) 
-{
-    Vector2 mousePoint = GetMousePosition();
-    bool hovered = CheckCollisionPointRec(mousePoint, rect);
-    bool clicked = hovered && IsMouseButtonPressed(MOUSE_LEFT_BUTTON);
-    
-    DrawRectangleRec(rect, clicked ? BLACK_BG : BLACK_BG);
-    DrawRectangleLinesEx(rect, 3, outlineColor);
-    int textWidth = MeasureText(text, 20);
-    DrawText(text, rect.x + (BUTTON_WIDTH - textWidth) / 2, rect.y + 10, 20, clicked ? WHITE_TEXT : textColor);
-    
-    return clicked;
-}
+Sound ballBounce;
+Music gameMusic;
 
-void displayMenuWithGraphics() 
-{
+void displayMenuWithGraphics() {
     InitWindow(800, 600, "Bricks Breaker Menu");
     SetTargetFPS(60);
     InitAudioDevice();
 
-    while (!WindowShouldClose()) 
-    {
+    while (!WindowShouldClose()) {
         BeginDrawing();
         ClearBackground(BLACK_BG);
-        
-        // Gambar bola
-        DrawCircleV(ballPosition, 10, WHITE);
 
-        // Pergerakan bola
-        ballPosition.x += ballSpeed.x;
-        ballPosition.y += ballSpeed.y;
-
-        // Pantulan dari dinding
-        if (ballPosition.x <= 0 || ballPosition.x >= 800) ballSpeed.x *= -1;
-        if (ballPosition.y <= 0 || ballPosition.y >= 600) ballSpeed.y *= -1;
-        
         DrawText("B", 250, 50, 30, MY_DARK_PINK);
         DrawText("r", 270, 50, 30, MY_BLUE);
         DrawText("i", 290, 50, 30, MY_GREEN);
@@ -121,86 +58,99 @@ void displayMenuWithGraphics()
         DrawText("a", 570, 50, 30, MY_DARK_PINK);
         DrawText("m", 590, 50, 30, MY_BLUE);
         DrawText("e", 610, 50, 30, MY_GREEN);
-        
-        Rectangle playBtn = { 300, 150, BUTTON_WIDTH, BUTTON_HEIGHT };
-        Rectangle infoBtn = { 300, 210, BUTTON_WIDTH, BUTTON_HEIGHT };
-        Rectangle settingsBtn = { 300, 270, BUTTON_WIDTH, BUTTON_HEIGHT };
-        Rectangle exitBtn = { 300, 330, BUTTON_WIDTH, BUTTON_HEIGHT };
-        
-        if (DrawButton(playBtn, "Play", MY_DARK_PINK, MY_DARK_PINK))
-        {
-            displayDifficultyMenu();
+
+        const char *menuOptions[] = { "Play", "Info", "Settings", "Exit" };
+        Color highlightColors[] = { MY_DARK_PINK, MY_BLUE, MY_GREEN, MY_YELLOW };
+        int menuCount = 4;
+
+        if (IsKeyPressed(KEY_DOWN) || IsKeyPressed(KEY_S))
+            selectedMenuOption = (selectedMenuOption + 1) % menuCount;
+        if (IsKeyPressed(KEY_UP) || IsKeyPressed(KEY_W))
+            selectedMenuOption = (selectedMenuOption - 1 + menuCount) % menuCount;
+
+        for (int i = 0; i < menuCount; i++) {
+            Color textColor = (i == selectedMenuOption) ? highlightColors[i] : WHITE;
+            DrawText(menuOptions[i], 350, 150 + (i * 60), 30, textColor);
         }
-        else if (DrawButton(infoBtn, "Info", MY_BLUE, MY_BLUE))
-        {
-            displayInfo();
+
+        if (IsKeyPressed(KEY_ENTER) || IsKeyPressed(KEY_SPACE)) {
+            if (selectedMenuOption == 0) displayLevelSelection();
+            else if (selectedMenuOption == 1) displayInfo();
+            else if (selectedMenuOption == 2) displaySettings();
+            else if (selectedMenuOption == 3) break;
         }
-        else if (DrawButton(settingsBtn, "Settings", MY_GREEN, MY_GREEN))
-        {
-            displaySettings();
-        }
-        else if (DrawButton(exitBtn, "Exit", MY_YELLOW, MY_YELLOW))
-        {
-            break;
-        }
-        
+
         EndDrawing();
     }
     CloseAudioDevice();
     CloseWindow();
 }
 
-void displayDifficultyMenu()
-{
-    while (!WindowShouldClose())
-    {
+// Fungsi untuk menggambar teks dengan bayangan
+void DrawTextShadow(const char *text, int posX, int posY, int fontSize, Color textColor, Color shadowColor) {
+    DrawText(text, posX + 2, posY + 2, fontSize, shadowColor); // Bayangan
+    DrawText(text, posX, posY, fontSize, textColor);           // Teks utama
+}
+
+// Fungsi untuk menampilkan menu pemilihan level
+void displayLevelSelection() {
+    while (!WindowShouldClose()) {
         BeginDrawing();
         ClearBackground(BLACK_BG);
-        
-        DrawText("d", 260, 50, 30, MY_BLUE);
-        DrawText("i", 280, 50, 30, MY_GREEN);
-        DrawText("f", 300, 50, 30, MY_YELLOW);
-        DrawText("f", 320, 50, 30, MY_DARK_PINK);
-        DrawText("i", 340, 50, 30, MY_BLUE);
-        DrawText("c", 360, 50, 30, MY_GREEN);
-        DrawText("u", 380, 50, 30, MY_YELLOW);
-        DrawText("l", 400, 50, 30, MY_DARK_PINK);
-        DrawText("t", 420, 50, 30, MY_BLUE);
-        DrawText("y", 440, 50, 30, MY_GREEN);
-        DrawText(" ", 460, 50, 30, MY_YELLOW);
-        DrawText("l", 480, 50, 30, MY_YELLOW);
-        DrawText("e", 500, 50, 30, MY_DARK_PINK);
-        DrawText("v", 520, 50, 30, MY_BLUE);
-        DrawText("e", 540, 50, 30, MY_GREEN);
-        DrawText("l", 560, 50, 30, MY_YELLOW);
- 
-        
-        Rectangle easyBtn = { 300, 150, BUTTON_WIDTH, BUTTON_HEIGHT };
-        Rectangle mediumBtn = { 300, 210, BUTTON_WIDTH, BUTTON_HEIGHT };
-        Rectangle hardBtn = { 300, 270, BUTTON_WIDTH, BUTTON_HEIGHT };
-        Rectangle backBtn = { 300, 330, BUTTON_WIDTH, BUTTON_HEIGHT };
-        
-        if (DrawButton(easyBtn, "Easy", MY_DARK_PINK, MY_DARK_PINK))
-        {
-            selectedDifficulty = 1;
-            playGame();
-        }
-        else if (DrawButton(mediumBtn, "Medium", MY_BLUE, MY_BLUE))
-        {
-            selectedDifficulty = 2;
-            playGame();
-        }
-        else if (DrawButton(hardBtn, "Hard", MY_GREEN, MY_GREEN))
-        {
-            selectedDifficulty = 3;
-            playGame();
-        }
-        else if (DrawButton(backBtn, "Back", MY_YELLOW, MY_YELLOW))
-        {
-            return;
-        }
+
+        DrawText("P", 280, 50, 30, MY_DARK_PINK);
+        DrawText("I", 300, 50, 30, MY_BLUE);
+        DrawText("L", 320, 50, 30, MY_GREEN);
+        DrawText("I", 340, 50, 30, MY_YELLOW);
+        DrawText("H", 360, 50, 30, MY_DARK_PINK);
+        DrawText(" ", 480, 50, 30, MY_BLUE);
+        DrawText("L", 400, 50, 30, MY_GREEN);
+        DrawText("E", 420, 50, 30, MY_YELLOW);
+        DrawText("V", 440, 50, 30, MY_DARK_PINK);
+        DrawText("E", 460, 50, 30, MY_BLUE);
+        DrawText("L", 480, 50, 30, MY_GREEN);
+
+        // Tampilkan pilihan kesulitan
+        const char *difficulties[] = {"EASY", "MEDIUM", "HARD"};
+        Color difficultyColor = (menuIndex == 0) ? MY_DARK_PINK : WHITE;
+        DrawText(difficulties[currentDifficulty], 350, 150, 30, difficultyColor);
+
+        // Tampilkan level yang dipilih
+        char levelText[20];
+        sprintf(levelText, "LEVEL %d", selectedLevel);
+        Color levelColor = (menuIndex == 1) ? MY_BLUE : WHITE;
+        DrawText(levelText, 340, 250, 30, levelColor);
+
+        // Tampilkan "START GAME"
+        Color startColor = (menuIndex == 2) ? MY_GREEN : WHITE;
+        DrawText("START GAME", 300, 350, 30, startColor);
+
+        // Tampilkan "BACK"
+        Color backColor = (menuIndex == 3) ? MY_YELLOW : WHITE;
+        DrawText("BACK", 350, 450, 30, backColor);
+
+        handleLevelSelectionInput();
+
         EndDrawing();
     }
+}
+
+// Fungsi untuk menangani input dalam menu pemilihan level
+void handleLevelSelectionInput() {
+    if (IsKeyPressed(KEY_DOWN)) menuIndex = (menuIndex + 1) % 4;
+    if (IsKeyPressed(KEY_UP)) menuIndex = (menuIndex - 1 + 4) % 4;
+
+    if (menuIndex == 0) { // Navigasi kesulitan
+        if (IsKeyPressed(KEY_RIGHT)) currentDifficulty = (currentDifficulty + 1) % 3;
+        if (IsKeyPressed(KEY_LEFT)) currentDifficulty = (currentDifficulty - 1 + 3) % 3;
+    }
+    if (menuIndex == 1) { // Navigasi level
+        if (IsKeyPressed(KEY_RIGHT)) selectedLevel = (selectedLevel % 30) + 1;
+        if (IsKeyPressed(KEY_LEFT)) selectedLevel = (selectedLevel - 2 + 30) % 30 + 1;
+    }
+    if (menuIndex == 2 && IsKeyPressed(KEY_ENTER)) currentState = LOADING;
+    if (menuIndex == 3 && IsKeyPressed(KEY_ENTER)) currentState = MENU;
+
 }
 
 void displayInfo() 
@@ -239,35 +189,29 @@ void displayInfo()
             DrawText("5. Extra Life - Menambah nyawa pemain", 200, 225, 20, WHITE_TEXT);
         }
 
-        Rectangle backBtn = { 50, 350, BUTTON_WIDTH, BUTTON_HEIGHT };
-        if (page == 2 && DrawButton(backBtn, "Back", MY_YELLOW, MY_YELLOW))
-        {
-            page = 1;
-        }
+        DrawText("Press B to go back", 300, 350, 20, MY_YELLOW);
 
-        Rectangle mainMenuBtn = { 300, 350, BUTTON_WIDTH, BUTTON_HEIGHT };
-        if (DrawButton(mainMenuBtn, "Back to Main Menu", MY_BLUE, MY_BLUE))
+        if (IsKeyPressed(KEY_A) || IsKeyPressed(KEY_LEFT)) 
+        {
+            if (page == 2) page = 1;
+        }
+        if (IsKeyPressed(KEY_D) || IsKeyPressed(KEY_RIGHT)) 
+        {
+            if (page == 1) page = 2;
+        }
+        if (IsKeyPressed(KEY_B) || IsKeyPressed(KEY_ESCAPE)) 
         {
             break;
         }
-
-        Rectangle nextBtn = { 550, 350, BUTTON_WIDTH, BUTTON_HEIGHT };
-        if (page == 1 && DrawButton(nextBtn, "Next", MY_GREEN, MY_GREEN))
-        {
-            page = 2;
-        }
-        
         EndDrawing();
     }
 }
 
-void displaySettings()
-{
-    while (!WindowShouldClose())
-    {
+void displaySettings() {
+    while (!WindowShouldClose()) {
         BeginDrawing();
         ClearBackground(BLACK_BG);
-        
+
         DrawText("S", 330, 50, 30, MY_BLUE);
         DrawText("e", 350, 50, 30, MY_GREEN);
         DrawText("t", 370, 50, 30, MY_YELLOW);
@@ -276,86 +220,30 @@ void displaySettings()
         DrawText("n", 420, 50, 30, MY_GREEN);
         DrawText("g", 440, 50, 30, MY_YELLOW);
         DrawText("s", 460, 50, 30, MY_DARK_PINK);
-        
-        DrawText("Paddle Color:", 200, 120, 20, WHITE_TEXT);
-        Color paddleColors[] = { MY_DARK_PINK, MY_BLUE, MY_GREEN, MY_YELLOW, WHITE, BLACK };
-        for (int i = 0; i < 6; i++) {
-            Rectangle colorBox = { 400 + (i * 50), 120, 40, 40 };
-            DrawRectangleRec(colorBox, paddleColors[i]);
-            if (CheckCollisionPointRec(GetMousePosition(), colorBox) && IsMouseButtonReleased(MOUSE_LEFT_BUTTON)) 
-            {
-                paddleColor = paddleColors[i];
-            }
-        }
-        
-        DrawText("Ball Color:", 200, 180, 20, WHITE_TEXT);
-        Color ballColors[] = { MY_DARK_PINK, MY_BLUE, MY_GREEN, MY_YELLOW, WHITE, BLACK };
-        for (int i = 0; i < 6; i++) {
-            Rectangle colorBox = { 400 + (i * 50), 180, 40, 40 };
-            DrawRectangleRec(colorBox, ballColors[i]);
-            if (CheckCollisionPointRec(GetMousePosition(), colorBox) && IsMouseButtonReleased(MOUSE_LEFT_BUTTON)) 
-            {
-                ballColor = ballColors[i];
-            }
-        }
-        
-        DrawText("Music:", 200, 240, 20, WHITE_TEXT);
-        Rectangle musicBar = { 400, 245, 200, 10 };
-        DrawRectangleRec(musicBar, WHITE_TEXT);
-        float musicSliderX = 400 + (musicVolume * 200);
-        Rectangle musicSlider = { musicSliderX - 5, 240, 10, 20 };
-        DrawRectangleRec(musicSlider, MY_DARK_PINK);
-        
-        if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON) && CheckCollisionPointRec(GetMousePosition(), musicSlider)) 
-        {
-            isDraggingMusic = true;
-        }
-        
-        if (IsMouseButtonDown(MOUSE_LEFT_BUTTON) && isDraggingMusic) 
-        {
-            musicVolume = (GetMousePosition().x - 400) / 200.0f;
-            if (musicVolume < 0.0f) musicVolume = 0.0f;
-            if (musicVolume > 1.0f) musicVolume = 1.0f;
-            SetMusicVolume(gameMusic, musicVolume);
-        }
-        
-        if (IsMouseButtonReleased(MOUSE_LEFT_BUTTON)) 
-        {
-            isDraggingMusic = false;
-        }
-        
-        DrawText("Sound Effects:", 200, 300, 20, WHITE_TEXT);
-        Rectangle soundBar = { 400, 305, 200, 10 };
-        DrawRectangleRec(soundBar, WHITE_TEXT);
-        float soundSliderX = 400 + (soundVolume * 200);
-        Rectangle soundSlider = { soundSliderX - 5, 300, 10, 20 };
-        DrawRectangleRec(soundSlider, MY_DARK_PINK);
-        
-        if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON) && CheckCollisionPointRec(GetMousePosition(), soundBar))
-        {
-            isDraggingSound = true;
-        }
-        
-        if (IsMouseButtonDown(MOUSE_LEFT_BUTTON) && isDraggingSound) 
-        {
-            soundVolume = (GetMousePosition().x - 400) / 200.0f;
-            if (soundVolume < 0.0f) soundVolume = 0.0f;
-            if (soundVolume > 1.0f) soundVolume = 1.0f;
-            SetSoundVolume(ballBounce, soundVolume);
-        }
-        
-        if (IsMouseButtonReleased(MOUSE_LEFT_BUTTON)) 
-        {
-            isDraggingSound = false;
-        }
 
-        // Tombol kembali
-        Rectangle backBtn = { 300, 420, BUTTON_WIDTH, BUTTON_HEIGHT };
-        if (DrawButton(backBtn, "Back", MY_GREEN, MY_GREEN))
-        {
-            break;
-        }
-        
+        DrawText("Paddle Color:", 200, 120, 20, WHITE);
+        DrawRectangle(400, 120, 40, 40, paddleColors[selectedPaddleColorIndex]);
+        if (IsKeyPressed(KEY_A) || IsKeyPressed(KEY_LEFT)) ChangePaddleColor(-1);
+        if (IsKeyPressed(KEY_D) || IsKeyPressed(KEY_RIGHT)) ChangePaddleColor(1);
+
+        DrawText("Ball Color:", 200, 180, 20, WHITE);
+        DrawRectangle(400, 180, 40, 40, ballColors[selectedBallColorIndex]);
+        if (IsKeyPressed(KEY_A) || IsKeyPressed(KEY_LEFT)) ChangeBallColor(-1);
+        if (IsKeyPressed(KEY_D) || IsKeyPressed(KEY_RIGHT)) ChangeBallColor(1);
+
+        DrawText("Music Volume:", 200, 240, 20, WHITE);
+        DrawText("< W / S >", 400, 240, 20, YELLOW);
+        if (IsKeyPressed(KEY_W)) IncreaseVolume();
+        if (IsKeyPressed(KEY_S)) DecreaseVolume();
+
+        DrawText("Sound Effects:", 200, 300, 20, WHITE);
+        DrawText("< A / D >", 400, 300, 20, YELLOW);
+        if (IsKeyPressed(KEY_A)) DecreaseSound();
+        if (IsKeyPressed(KEY_D)) IncreaseSound();
+
+        DrawText("Press B to go back", 300, 400, 20, MY_GREEN);
+        if (IsKeyPressed(KEY_B)) return;
+
         EndDrawing();
     }
 }
@@ -372,58 +260,45 @@ void ChangeBallColor(int direction)
     ballColor = ballColors[selectedBallColorIndex];
 }
 
-void IncreaseVolume()
+void IncreaseVolume() 
 {
-    if (musicVolume < 1.0f)
-        musicVolume += 0.1f;
+    if (musicVolume < 1.0f) musicVolume += 0.1f;
     SetMusicVolume(gameMusic, musicVolume);
 }
 
-void DecreaseVolume()
+void DecreaseVolume() 
 {
-    if (musicVolume > 0.0f)
-        musicVolume -= 0.1f;
+    if (musicVolume > 0.0f) musicVolume -= 0.1f;
     SetMusicVolume(gameMusic, musicVolume);
 }
 
-// void ToggleMute()
-// {
-//     isMuted = !isMuted;
-//     SetMusicVolume(gameMusic, isMuted ? 0.0f : musicVolume);
-// }
-
-void playGame()
+void IncreaseSound() 
 {
-    Color textColor;
-    const char *message;
+    if (soundVolume < 1.0f) soundVolume += 0.1f;
+    SetSoundVolume(ballBounce, soundVolume);
+}
 
-    if (selectedDifficulty == 1) {
-        textColor = MY_DARK_PINK;
-        message = "Playing games at easy level..";
-    } else if (selectedDifficulty == 2) {
-        textColor = MY_BLUE;
-        message = "Playing games at medium level..";
-    } else if (selectedDifficulty == 3) {
-        textColor = MY_GREEN;
-        message = "Playing games at hard level..";
-    } else {
-        return;  
-    }
+void DecreaseSound() 
+{
+    if (soundVolume > 0.0f) soundVolume -= 0.1f;
+    SetSoundVolume(ballBounce, soundVolume);
+}
 
-    while (!WindowShouldClose()) 
-    {
+void playGame() {
+    while (!WindowShouldClose()) {
         BeginDrawing();
         ClearBackground(BLACK_BG);
-        
-        DrawText(message, 250, 100, 20, textColor);
 
-        Rectangle backBtn = { 300, 300, BUTTON_WIDTH, BUTTON_HEIGHT };
-        if (DrawButton(backBtn, "Back", MY_YELLOW, MY_YELLOW))
-        {
-            return;  
-        }
+        if (IsKeyDown(KEY_LEFT) || IsKeyDown(KEY_A)) paddlePosition.x -= paddleSpeed;
+        if (IsKeyDown(KEY_RIGHT) || IsKeyDown(KEY_D)) paddlePosition.x += paddleSpeed;
+
+        if (paddlePosition.x < 0) paddlePosition.x = 0;
+        if (paddlePosition.x > 800 - 100) paddlePosition.x = 800 - 100;
+
+        DrawRectangle(paddlePosition.x, paddlePosition.y, 100, 20, paddleColor);
+        DrawText("Press B to go back", 300, 400, 20, MY_YELLOW);
+        if (IsKeyPressed(KEY_B)) return;
 
         EndDrawing();
     }
 }
-
