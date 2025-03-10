@@ -3,84 +3,43 @@
 //SELECTED_LEVEL
 
 // Fungsi untuk menangani input level
-void handleLevelSelectionInput(GameState *gameState, Difficulty *selectDifficult, int *selectNumber) {
-  int menuIndex = 0;  
-  // mengahandle pemilihan menu
+void handleLevelSelectionInput(GameState *gameState, Level *level,Ball* ball) {
+    static int menuIndex = 0;
+    //membatasi pilihan pada menu index
     if (IsKeyPressed(KEY_UP)) {
-        (menuIndex)--;
-    } 
-    else if (IsKeyPressed(KEY_DOWN)) {
-        (menuIndex)++;
+        menuIndex = (menuIndex == 0) ? 3 : menuIndex - 1;
     }
-    // untuk membatasi menuindex 0-3 saja
-    if (menuIndex < 0) {
-        menuIndex = 3;
-    } else if (menuIndex > 3) {
-        menuIndex = 0;
+    if (IsKeyPressed(KEY_DOWN)) {
+        menuIndex = (menuIndex == 3) ? 0 : menuIndex + 1;
     }
 
-    //untuk menentukan menu index yang dipilih
-    switch(menuIndex) {
-        case 0: 
-            difficultLevel(selectDifficult);
-            break;
+    if (menuIndex == 0) {
+        difficultLevel(level);//memanggil fungsi difficultlevel jika menu index=0
+    }
+    else if (menuIndex == 1) {
+        numberLevel(level);//memanggil fungsi numberlevel jika menu index=1
+    }
+    else if (menuIndex == 2) {
+        if (IsKeyPressed(KEY_ENTER)) {
+            setSpeedBall(ball,level);//memanggil fungsi setspeedball jika menu index = 2 dan pengguna menekan enter
 
-        case 1: 
-            numberLevel(selectNumber);
-            break;
-
-        case 2: 
-            if (IsKeyPressed(KEY_ENTER)) {  
-                *gameState = LOADING;  
-            }
-            break;
-
-        case 3: 
-            if (IsKeyPressed(KEY_ENTER)) {  
-                *gameState = MENU;  
-            }
-            break;
+            *gameState = LOADING;//berpindah ke state loading
+        }
+    }
+    else if (menuIndex == 3) {
+        if (IsKeyPressed(KEY_ENTER)) {
+            *gameState = MENU;//berpindah ke state menu jika pengguna menekan enter di menu index = 3
+        }
     }
 }
-
-// Fungsi untuk memilih tingkat kesulitan
-void difficultLevel(Difficulty *selectDifficulty) {
-    if (IsKeyPressed(KEY_RIGHT)) {
-        (*selectDifficulty)++;
-    } else if (IsKeyPressed(KEY_LEFT)) {
-        (*selectDifficulty)--;
-    }
-
-    // untuk membatasi kesuliatan 0-2 (easy-hard)
-    if (*selectDifficulty > 2) {
-        *selectDifficulty = 0;
-    } else if (*selectDifficulty < 0) {
-        *selectDifficulty = 2;
-    }
+//fungsi untuk menangani input user jika berada di menu index = 0 atau memilih difficultlevel(easy,medium,hard)
+void difficultLevel(Level *level) {
+    if (IsKeyPressed(KEY_RIGHT)) level->DifficultLevel = (level->DifficultLevel == HARD) ? EASY : level->DifficultLevel + 1;
+    if (IsKeyPressed(KEY_LEFT)) level->DifficultLevel = (level->DifficultLevel == EASY) ? HARD : level->DifficultLevel - 1;
+}
+//fungsi untuk menanganu input user jika berada di menu index = 1 atau memilih numberlevel(1-30)
+void numberLevel(Level *level) {
+    if (IsKeyPressed(KEY_RIGHT)) level->NumberLevel = (level->NumberLevel == 30) ? 1 : level->NumberLevel + 1;
+    if (IsKeyPressed(KEY_LEFT)) level->NumberLevel = (level->NumberLevel == 1) ? 30 : level->NumberLevel - 1;
 }
 
-// fungsi untuk menentukan nomor level yang dipilih
-void numberLevel(int *selectNumber) {
-    if (IsKeyPressed(KEY_RIGHT)) {
-        (*selectNumber)++;
-    } else if (IsKeyPressed(KEY_LEFT)) {
-        (*selectNumber)--;
-    }
-
-    // untuk membatasi level 1-30 saja
-    if (*selectNumber > 30) {
-        *selectNumber = 1;
-    } else if (*selectNumber < 1) {
-        *selectNumber = 30;
-    }
-}
-
-// Fungsi untuk mendapatkan level yang dipilih
-int getSelectNumber(int selectNumber) {
-    return selectNumber;
-}
-
-// Fungsi untuk mendapatkan tingkat kesulitan yang dipilih
-Difficulty getSelectDifficulty(Difficulty selectDifficult) {
-    return selectDifficult;
-}
