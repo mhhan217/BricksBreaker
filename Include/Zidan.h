@@ -3,30 +3,27 @@
 
 #include "Konfigurasi.h"
 
-#define JUMLAH_BARIS 15
-#define JUMLAH_KOLOM 10
+#define BRICK_LEBAR 3
+#define BRICK_TINGGI 3
 
-#define BRICK_LEBAR 50
-#define BRICK_TINGGI 20
-
-#define BRICK_PADDING 5
-#define POSISI_TENGAH_X ((SCREEN_HEIGHT - (JUMLAH_KOLOM * (BRICK_LEBAR + BRICK_PADDING) - BRICK_PADDING)) / 2)
-#define POSISI_ATAS_Y 100 
-
-#define TAMBAHAN_BARIS 2
-#define BATAS_WAKTU 10
-
+#define ROWS 30
+#define COLS 54
 
 typedef struct {
-    Rectangle rect;
-    Color color;
-    bool active;
+    Vector2 position;
+    Rectangle kotak;
+    float width;
+    float heigth;
+    Color color;        
+    bool isActive;      
+    bool isIndestructible;  
 } Brick;
 
-
-
-void InisialisasiBricks(Brick bricks[JUMLAH_BARIS][JUMLAH_KOLOM]);
-void GambarBricks(Brick bricks[JUMLAH_BARIS][JUMLAH_KOLOM]);
-void TambahBarisBricks(Brick bricks[JUMLAH_BARIS + TAMBAHAN_BARIS][JUMLAH_KOLOM], int *barisSaatIni);
+void InitializeBricks(Brick bricks[ROWS][COLS]);
+void LoadLevel(int level, Brick bricks[ROWS][COLS]);
+void UpdateBricks(Brick bricks[ROWS][COLS]);
+void DrawBricks(Brick bricks[ROWS][COLS]);
+void GeneratePattern();
 
 #endif
+

@@ -5,83 +5,125 @@
 #include <stdlib.h>
 
 
-#define BRICK_WIDTH 30
-#define BRICK_HEIGHT 20
-#define ROWS 5
+int brickPattern[ROWS][COLS];
 
-int main() {
-    InitWindow(SCREEN_HEIGHT,SCREEN_WIDTH, "Bricks Random");
-    SetTargetFPS(60);
-    srand(time(NULL));
-    
-    Brick bricks[JUMLAH_BARIS + TAMBAHAN_BARIS][JUMLAH_KOLOM];
-    int barisSaatIni = JUMLAH_BARIS;
-    float timer = 0;
-    
-    InisialisasiBricks(bricks);
-    
-    while (!WindowShouldClose()) {
-        timer += GetFrameTime();
-        
-        if (timer >= BATAS_WAKTU) {
-            TambahBarisBricks(bricks, &barisSaatIni);
-            timer = 0;
+void InitializeBricks(Brick bricks[ROWS][COLS]) {
+    int paddingX = 2;  
+    int paddingY = 2;  
+    float brickWidth = 9;  
+    float brickHeight = 9;
+
+    int screenWidth = 600;
+    int screenHeight = 800;
+
+    int totalWidth = COLS * (brickWidth + paddingX) - paddingX;
+    int totalHeight = ROWS * (brickHeight + paddingY) - paddingY;
+    int startX = (screenWidth - totalWidth) / 2;  
+    int startY = ((screenHeight - totalHeight) / 2) - 150;  
+
+    for (int i = 0; i < ROWS; i++) {
+        for (int j = 0; j < COLS; j++) {
+            bricks[i][j].kotak.x = startX + j * (brickWidth + paddingX);
+            bricks[i][j].kotak.y = startY + i * (brickHeight + paddingY);
+            bricks[i][j].kotak.width = brickWidth;
+            bricks[i][j].kotak.height = brickHeight;
+            bricks[i][j].isActive = true;
+            bricks[i][j].color = (brickPattern[i][j] == 1) ? GRAY : BLUE;
+            if (i < 2) {  
+                bricks[i][j].isIndestructible = true;
+                bricks[i][j].color = GRAY;
+            } else {
+                bricks[i][j].isIndestructible = false;
+                bricks[i][j].color = BLUE;
+            }
         }
-        
-        BeginDrawing();
-         ClearBackground(BLACK);
-        
-        GambarBricks(bricks);
-        
-        EndDrawing();
     }
-    
-    CloseWindow();
-    return 0;
 }
+
 
 Color WarnaAcak() {
-    Color warna[] = {BLUE, YELLOW, GREEN, RED};
-    return warna[rand() % 4];
+    Color warna[] = {BLUE, GRAY};
+    return warna[rand() % 2];
 }
 
-void InisialisasiBricks(Brick bricks[JUMLAH_BARIS][JUMLAH_KOLOM]) {
-    for (int i = 0; i < JUMLAH_BARIS; i++) {
-        int jumlah_aktif = 0;
-        for (int j = 0; j < JUMLAH_KOLOM; j++) {
-            if (rand() % 2 == 0 || (JUMLAH_KOLOM - j + jumlah_aktif < 5)) { // 50% kemungkinan muncul
-                 bricks[i][j].rect = (Rectangle){ POSISI_TENGAH_X+ j * (BRICK_LEBAR + BRICK_PADDING), POSISI_ATAS_Y + i * (BRICK_TINGGI + BRICK_PADDING), BRICK_LEBAR, BRICK_TINGGI};
-                bricks[i][j].color = WarnaAcak();
-                bricks[i][j].active = true;
+void LoadLevel(int level, Brick bricks[ROWS][COLS]) {
+    for (int i = 0; i < ROWS; i++) {
+        for (int j = 0; j < COLS; j++) {
+            bricks[i][j].isActive = true;
+
+            if (level % 2 == 0 && i % 2 == 0) {
+                bricks[i][j].isIndestructible = true; 
+                bricks[i][j].color = GRAY; 
             } else {
-                bricks[i][j].active = false;
+                bricks[i][j].isIndestructible = false;
             }
         }
     }
 }
 
-void GambarBricks(Brick bricks[JUMLAH_BARIS][JUMLAH_KOLOM]) {
-    for (int i = 0; i < JUMLAH_BARIS; i++) {
-        for (int j = 0; j < JUMLAH_KOLOM; j++) {
-            if (bricks[i][j].active) {
-                DrawRectangleRec(bricks[i][j].rect, bricks[i][j].color);
+
+void UpdateBricks(Brick bricks[ROWS][COLS]) {
+    for (int i = 0; i < ROWS; i++) {
+        for (int j = 0; j < COLS; j++) {
+            if (!bricks[i][j].isActive) {
+                bricks[i][j].color.a = 0;
+            }
+        }
+        return;
+    }
+}
+
+void DrawBricks(Brick bricks[ROWS][COLS]) {
+    for (int i = 0; i < ROWS; i++) {
+        for (int j = 0; j < COLS; j++) {
+            if (bricks[i][j].isActive) {
+                Color brickColor = (bricks[i][j].isIndestructible) ? GRAY : BLUE;
+                DrawRectangleRec(bricks[i][j].kotak, brickColor);
+                bricks[0][0].isIndestructible = true;  
+
             }
         }
     }
 }
 
-void TambahBarisBricks(Brick bricks[JUMLAH_BARIS + TAMBAHAN_BARIS][JUMLAH_KOLOM], int *barisSaatIni) {
-    if (*barisSaatIni < JUMLAH_BARIS + TAMBAHAN_BARIS) {
-        for (int j = 0; j < JUMLAH_KOLOM; j++) {
-            int jumlah_aktif = 0;
-            if (rand() % 2 == 0 || (JUMLAH_KOLOM - j + jumlah_aktif < 5)) {
-                bricks[*barisSaatIni][j].rect = (Rectangle){POSISI_TENGAH_X + j * (BRICK_LEBAR + BRICK_PADDING), POSISI_ATAS_Y + *barisSaatIni * (BRICK_TINGGI + BRICK_PADDING), BRICK_LEBAR, BRICK_TINGGI};
-                bricks[*barisSaatIni][j].color = WarnaAcak();
-                bricks[*barisSaatIni][j].active = true;
+
+
+void GeneratePattern() {
+    for (int i = 0; i < ROWS; i++) {
+        for (int j = 0; j < COLS; j++) {
+            if (i % 4 == 0) {
+                brickPattern[i][j] = 1; 
             } else {
-                bricks[*barisSaatIni][j].active = false;
+                brickPattern[i][j] = 0; 
             }
         }
-        (*barisSaatIni)++;
     }
+}
+
+int main() {
+    const int screenWidth = 600;
+    const int screenHeight = 800;
+    
+    InitWindow(screenWidth, screenHeight, "Breakout Game");
+    SetTargetFPS(60);
+
+    srand(time(NULL));
+
+    Brick bricks[ROWS][COLS];
+    GeneratePattern();
+    InitializeBricks(bricks);
+    LoadLevel(1, bricks);
+
+    while (!WindowShouldClose()) {
+        BeginDrawing();
+        ClearBackground(BLACK);
+        
+        DrawBricks(bricks);
+
+        EndDrawing();
+    }
+
+    CloseWindow();
+    
+    return 0;
 }
