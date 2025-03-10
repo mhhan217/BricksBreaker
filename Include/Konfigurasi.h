@@ -9,15 +9,15 @@
 #define SCREEN_HEIGHT 600
 #define TARGET_FPS 60
 
-typedef enum {
-    MENU,
-    HIGH_SCORE,
-    SETTINGS,
-    INFO,
-    PLAY,
-    PAUSE,
-    GAME_OVER,
-    EXIT
-} GameState;
-
 #endif //KONFIGURASI_H
+typedef enum {
+MENU,
+SETTINGS,
+INFO,
+LEVEL_SELECTION,
+LOADING,
+PLAY,
+PAUSE,
+GAME_OVER,
+EXIT
+} GameState;

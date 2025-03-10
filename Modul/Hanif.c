@@ -1,34 +1,35 @@
 #include "raylib.h"
 #include "../Include/Hanif.h"
 #include <math.h>
+//struct ball
 
 //mengatur atribut atribut bola
-void InitBall(Ball* ball, Vector2 KecepatanBola, Paddle* paddle) {
-    ball->Kecepatan = KecepatanBola;
+void initBall(Ball* ball, Vector2 ballSpeed, Paddle* paddle) {
+    ball->Speed = ballSpeed;
     ball->Radius = 10;
-    ball->Warna = RAYWHITE;
-    ball->Aktif = true;
+    ball->Color = RAYWHITE;
+    ball->Active = true;
     ball->Released = false; // Pastikan bola belum dilepas
-    ball->Posisi.x = paddle->Posisi.x + paddle->Ukuran.x / 2;
-    ball->Posisi.y = paddle->Posisi.y - ball->Radius;
+    ball->Position.x = paddle->Position.x + paddle->Ukuran.x / 2;
+    ball->Position.y = paddle->Position.y - ball->Radius;
 }
 
 
 //
-void UpdateBall(Ball* ball, Paddle* paddle,Vector2 KecepatanBola) {
-    if (!ball->Aktif) return; // Jika bola tidak aktif, tidak ditampilkan atau diupdate
+void updateBall(Ball* ball, Paddle* paddle,Vector2 SpeedBola) {
+    if (!ball->Active) return; // Jika bola tidak aktif, tidak ditampilkan atau diupdate
 
-    // Geser semua posisi efek (jejak)
-    for (int i = PANJANG_EFEK - 1; i > 0; i--) {
-        ball->Efek[i] = ball->Efek[i - 1];
+    // Geser semua Position Effect (jejak)
+    for (int i = LONG_EFFECT - 1; i > 0; i--) {
+        ball->Effect[i] = ball->Effect[i - 1];
     }
-    ball->Efek[0] = ball->Posisi;
+    ball->Effect[0] = ball->Position;
 
-    // Jika bola belum dilepas, posisinya mengikuti paddle
+    // Jika bola belum dilepas, Positionnya mengikuti paddle
     if (!ball->Released) {
-        ball->Posisi.x = paddle->Posisi.x + paddle->Ukuran.x / 2;
-        ball->Posisi.y = paddle->Posisi.y -ball->Radius;
-        ball->Kecepatan = KecepatanBola;
+        ball->Position.x = paddle->Position.x + paddle->Ukuran.x / 2;
+        ball->Position.y = paddle->Position.y -ball->Radius;
+        ball->Speed = SpeedBola;
 
         // Tekan spasi untuk melepaskan bola
         if (IsKeyPressed(KEY_SPACE)) {
@@ -37,85 +38,76 @@ void UpdateBall(Ball* ball, Paddle* paddle,Vector2 KecepatanBola) {
     }
 
     if (ball->Released) {
-        // Update posisi bola
-        ball->Posisi.x += ball->Kecepatan.x;
-        ball->Posisi.y += ball->Kecepatan.y;
+        // Update Position bola
+        ball->Position.x += ball->Speed.x;
+        ball->Position.y += ball->Speed.y;
 
         // Pantulan dari dinding kiri dan kanan
-        if (ball->Posisi.x - ball->Radius <= 0 || ball->Posisi.x + ball->Radius >= GetScreenWidth()) {
-            ball->Kecepatan.x *= -1;
+        if (ball->Position.x - ball->Radius <= 0 || ball->Position.x + ball->Radius >= GetScreenWidth()) {
+            ball->Speed.x *= -1;
         }
 
         // Pantulan dari atas layar
-        if (ball->Posisi.y - ball->Radius <= 0) {
-            ball->Kecepatan.y *= -1;
+        if (ball->Position.y - ball->Radius <= 0) {
+            ball->Speed.y *= -1;
         }
 
         // Pantulan dari paddle
-        if (ball->Posisi.y + ball->Radius >= paddle->Posisi.y && ball->Posisi.x >= paddle->Posisi.x &&
-            ball->Posisi.x <= paddle->Posisi.x + paddle->Ukuran.x) {
+        if (ball->Position.y + ball->Radius >= paddle->Position.y && ball->Position.x >= paddle->Position.x &&
+            ball->Position.x <= paddle->Position.x + paddle->Ukuran.x) {
 
             // Hitung offset dari tengah paddle
-            float offset = (ball->Posisi.x - (paddle->Posisi.x + paddle->Ukuran.x / 2)) / (paddle->Ukuran.x / 2);
+            float offset = (ball->Position.x - (paddle->Position.x + paddle->Ukuran.x / 2)) / (paddle->Ukuran.x / 2);
 
             // jika boal teapt ditengah maka x akan di jadikan 0
             if (fabs(offset) < 0.1f) {
-                ball->Kecepatan.x = 0;
-                ball->Kecepatan.y = -fabs(ball->Kecepatan.y);
+                ball->Speed.x = 0;
+                ball->Speed.y = -fabs(ball->Speed.y);
             } else {
                 // jika bola tidak tepat ditengah maka x akan diubah
-                ball->Kecepatan.x = offset * 5;
-                ball->Kecepatan.y = -fabs(ball->Kecepatan.y);
+                ball->Speed.x = offset * 5;
+                ball->Speed.y = -fabs(ball->Speed.y);
             }
 
-            // jika kecepatan x bola dibawah 2.0f dan diatas 0.1f
-            if (fabs(ball->Kecepatan.x) < 2.0f &&fabs(ball->Kecepatan.x) >0.1f ) {
-                ball->Kecepatan.x = (ball->Kecepatan.x > 0) ? 3.0f : -3.0f;//maka arah bola x bola akan diubah menjadi +3 atau -3
+            // jika Speed x bola dibawah 2.0f dan diatas 0.1f
+            if (fabs(ball->Speed.x) < 2.0f &&fabs(ball->Speed.x) >0.1f ) {
+                ball->Speed.x = (ball->Speed.x > 0) ? 3.0f : -3.0f;//maka arah bola x bola akan diubah menjadi +3 atau -3
             }
         }
 
-        // Jika bola jatuh ke bawah, reset posisi ke paddle
-        if (ball->Posisi.y + ball->Radius >= GetScreenHeight()) {
+        // Jika bola jatuh ke bawah, reset Position ke paddle
+        if (ball->Position.y + ball->Radius >= GetScreenHeight()) {
             ball->Released = false;
         }
     }
 }
 
 
-void DrawBall(Ball ball) {
-    if (ball.Aktif) {
-        // Gambar efek bola
-        for (int i = 0; i < PANJANG_EFEK; i++) { //membuat efek jejak lingkaran bola dari array efek
-            float jejak_efek = (float)(PANJANG_EFEK - i) / PANJANG_EFEK;//jika efek[i] lebih besar makan akan semakin transparan
-            Color efekWarna = Fade(ball.Warna, jejak_efek);//Fade digunakan untuk membuat warna bola semakin transparan dengan float jejak_efek
-            DrawCircleV(ball.Efek[i], ball.Radius - i * 0.3,efekWarna);
+void drawBall(Ball ball) {
+    if (ball.Active) {
+        // Gambar Effect bola
+        for (int i = 0; i < LONG_EFFECT; i++) { //membuat Effect jejak lingkaran bola dari array Effect
+            float jejak_Effect = (float)(LONG_EFFECT - i) / LONG_EFFECT;//jika Effect[i] lebih besar makan akan semakin transparan
+            Color EffectColor = Fade(ball.Color, jejak_Effect);//Fade digunakan untuk membuat Color bola semakin transparan dengan float jejak_Effect
+            DrawCircleV(ball.Effect[i], ball.Radius - i * 0.3,EffectColor);
         }
         // Gambar bola
-        DrawCircleV(ball.Posisi, ball.Radius, ball.Warna);//menggambar bola
+        DrawCircleV(ball.Position, ball.Radius, ball.Color);//menggambar bola
     }
 }
 
-void InitPaddle(Paddle* Paddle, Vector2 posisiAwal, Vector2 ukuran, float kecepatan) {
-    Paddle->Posisi = posisiAwal;
-    Paddle->Ukuran = ukuran;
-    Paddle->Kecepatan = kecepatan;
-    Paddle->Warna = RAYWHITE;
-}
-
-void UpdatePaddle(Paddle* Paddle) {
-    if (IsKeyDown(KEY_LEFT) && Paddle->Posisi.x > 0) {
-        Paddle->Posisi.x -= Paddle->Kecepatan;
-    }
-    if (IsKeyDown(KEY_RIGHT) && Paddle->Posisi.x + Paddle->Ukuran.x < GetScreenWidth()) {
-        Paddle->Posisi.x += Paddle->Kecepatan;
+void setSpeedBall(Ball* ball,Level* level) {
+    switch (level->DifficultLevel) {
+        case EASY:  ball -> Speed = (Vector2){0, -10};break;
+        case MEDIUM: ball -> Speed = (Vector2){0, -15};break;
+        case HARD: ball -> Speed = (Vector2){0, -20};break;
+        default: ball -> Speed = (Vector2){0, -10}; // Default ke EASY
     }
 }
 
-void DrawPaddle(Paddle Paddle) {
-    DrawRectangleV(Paddle.Posisi, Paddle.Ukuran, Paddle.Warna);
+Vector2 getSpeedBall(Ball* ball) {
+    return ball->Speed;
 }
-
-
 
 
 
