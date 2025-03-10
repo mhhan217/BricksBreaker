@@ -4,9 +4,11 @@
 #include <stdio.h>
 #include "raylib.h"
 
+// Ukuran tombol
 #define BUTTON_WIDTH 200
 #define BUTTON_HEIGHT 40
 
+// Warna kustom
 #define MY_DARK_PINK (Color){ 199, 21, 133, 255 }
 #define MY_BLUE (Color){ 0, 0, 255, 255 }
 #define MY_GREEN (Color){ 0, 255, 0, 255 }
@@ -14,33 +16,48 @@
 #define BLACK_BG (Color){ 0, 0, 0, 255 }
 #define WHITE_TEXT (Color){ 255, 255, 255, 255 }
 
+// Deklarasi variabel global (gunakan `extern`)
 extern Vector2 ballPosition;
 extern Vector2 ballSpeed;
+extern Vector2 paddlePosition;  // Ditambahkan
+extern float paddleSpeed;       // Ditambahkan
+extern int menuIndex;
+extern int currentDifficulty;
+extern int currentState;
 extern int selectedDifficulty;
 extern int selectedPaddleColorIndex;
 extern int selectedBallColorIndex;
-extern Color paddleColor;
-extern Color ballColor;
-extern bool isMuted;
-extern bool isDraggingMusic;
-extern bool isDraggingSound;
 extern float musicVolume;
 extern float soundVolume;
 extern Sound ballBounce;
 extern Music gameMusic;
 
+// Deklarasi konstanta menu
+typedef enum {
+    MENU,
+    LEVEL_SELECTION,
+    LOADING
+} GameState;
+
+// Deklarasi array warna sebagai `extern`
+extern Color paddleColor;
+extern Color ballColor;
 extern Color paddleColors[6];
 extern Color ballColors[6];
 
-bool DrawButton(Rectangle rect, const char *text, Color outlineColor, Color textColor);
+// Deklarasi fungsi
 void displayMenuWithGraphics();
-void displayDifficultyMenu();
+void DrawTextShadow(const char *text, int posX, int posY, int fontSize, Color textColor, Color shadowColor);
+void displayLevelSelection();
+void handleLevelSelectionInput();
 void displayInfo();
 void displaySettings();
 void ChangePaddleColor(int direction);
 void ChangeBallColor(int direction);
 void IncreaseVolume();
 void DecreaseVolume();
+void IncreaseSound();
+void DecreaseSound();
 void playGame();
 
 #endif // CHINTA_H
