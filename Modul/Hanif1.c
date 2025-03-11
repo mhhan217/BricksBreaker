@@ -1,10 +1,11 @@
 #include "../Include/Hanif.h"
 #include "../Include/Konfigurasi.h"
+#include <stdio.h>
 //SELECTED_LEVEL
-
+int menuIndex = 0;
 // Fungsi untuk menangani input level
-void handleLevelSelectionInput(GameState *gameState, Level *level,Ball* ball) {
-    static int menuIndex = 0;
+void handleLevelSelectionInput(GameState* gameState, Level* level,Ball* ball) {
+
     //membatasi pilihan pada menu index
     if (IsKeyPressed(KEY_UP)) {
         menuIndex = (menuIndex == 0) ? 3 : menuIndex - 1;
@@ -43,3 +44,27 @@ void numberLevel(Level *level) {
     if (IsKeyPressed(KEY_LEFT)) level->NumberLevel = (level->NumberLevel == 1) ? 30 : level->NumberLevel - 1;
 }
 
+void drawLevel(Level *level) {
+    ClearBackground(BLACK);
+
+    // Judul
+    DrawText("SELECT LEVEL", 200, 50, 30, WHITE);
+
+    // Warna untuk highlight menu yang dipilih
+    Color colors[4] = {WHITE, WHITE, WHITE, WHITE};
+    colors[menuIndex] = YELLOW;  // Highlight menu yang dipilih
+
+    // Array untuk teks menu
+    char difficultyText[10];
+    sprintf(difficultyText, "%s", (level->DifficultLevel == EASY) ? "EASY" :
+                              (level->DifficultLevel == MEDIUM) ? "MEDIUM" : "HARD");
+
+    char levelText[10];
+    sprintf(levelText, "LEVEL %d", level->NumberLevel);
+
+    // Menampilkan menu vertikal
+    DrawText(difficultyText, 100, 150, 20, colors[0]);
+    DrawText(levelText, 100, 200, 20, colors[1]);
+    DrawText("START", 100, 250, 20, colors[2]);
+    DrawText("BACK", 100, 300, 20, colors[3]);
+}

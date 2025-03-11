@@ -1,5 +1,6 @@
 #include "raylib.h"
 #include "../Include/Hanif.h"
+#include "../Include/Zahwa.h"
 #include <math.h>
 //struct ball
 
@@ -10,8 +11,8 @@ void initBall(Ball* ball, Vector2 ballSpeed, Paddle* paddle) {
     ball->Color = RAYWHITE;
     ball->Active = true;
     ball->Released = false; // Pastikan bola belum dilepas
-    ball->Position.x = paddle->Position.x + paddle->Ukuran.x / 2;
-    ball->Position.y = paddle->Position.y - ball->Radius;
+    ball->Position.x = paddle->Posisi.x + paddle->Ukuran.x / 2;
+    ball->Position.y = paddle->Posisi.y - ball->Radius;
 }
 
 
@@ -27,8 +28,8 @@ void updateBall(Ball* ball, Paddle* paddle,Vector2 SpeedBola) {
 
     // Jika bola belum dilepas, Positionnya mengikuti paddle
     if (!ball->Released) {
-        ball->Position.x = paddle->Position.x + paddle->Ukuran.x / 2;
-        ball->Position.y = paddle->Position.y -ball->Radius;
+        ball->Position.x = paddle->Posisi.x + paddle->Ukuran.x / 2;
+        ball->Position.y = paddle->Posisi.y -ball->Radius;
         ball->Speed = SpeedBola;
 
         // Tekan spasi untuk melepaskan bola
@@ -53,11 +54,11 @@ void updateBall(Ball* ball, Paddle* paddle,Vector2 SpeedBola) {
         }
 
         // Pantulan dari paddle
-        if (ball->Position.y + ball->Radius >= paddle->Position.y && ball->Position.x >= paddle->Position.x &&
-            ball->Position.x <= paddle->Position.x + paddle->Ukuran.x) {
+        if (ball->Position.y + ball->Radius >= paddle->Posisi.y && ball->Position.x >= paddle->Posisi.x &&
+            ball->Position.x <= paddle->Posisi.x + paddle->Ukuran.x) {
 
             // Hitung offset dari tengah paddle
-            float offset = (ball->Position.x - (paddle->Position.x + paddle->Ukuran.x / 2)) / (paddle->Ukuran.x / 2);
+            float offset = (ball->Position.x - (paddle->Posisi.x + paddle->Ukuran.x / 2)) / (paddle->Ukuran.x / 2);
 
             // jika boal teapt ditengah maka x akan di jadikan 0
             if (fabs(offset) < 0.1f) {
@@ -98,10 +99,10 @@ void drawBall(Ball ball) {
 
 void setSpeedBall(Ball* ball,Level* level) {
     switch (level->DifficultLevel) {
-        case EASY:  ball -> Speed = (Vector2){0, -10};break;
-        case MEDIUM: ball -> Speed = (Vector2){0, -15};break;
-        case HARD: ball -> Speed = (Vector2){0, -20};break;
-        default: ball -> Speed = (Vector2){0, -10}; // Default ke EASY
+        case EASY:  ball -> Speed = (Vector2){0, -20};break;
+        case MEDIUM: ball -> Speed = (Vector2){0, -25};break;
+        case HARD: ball -> Speed = (Vector2){0, -30};break;
+        default: ball -> Speed = (Vector2){0, -20}; // Default ke EASY
     }
 }
 

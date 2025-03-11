@@ -1,5 +1,5 @@
 #include "raylib.h"
-#include "zahwa.h"
+#include "../Include/zahwa.h"
 
 void InitPaddle(Paddle* Paddle, Vector2 posisiAwal, Vector2 ukuran, float kecepatan) {
     Paddle->Posisi = posisiAwal;
@@ -15,7 +15,7 @@ void UpdatePaddle(Paddle* Paddle) {
     if (IsKeyDown(KEY_RIGHT) && Paddle->Posisi.x + Paddle->Ukuran.x < GetScreenWidth()) {
         Paddle->Posisi.x += Paddle->Kecepatan;
     }
-	
+
 }
 
 void DrawPaddle(Paddle Paddle) {
