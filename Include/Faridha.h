@@ -8,15 +8,20 @@ extern int gameState;
 
 typedef struct {
     char pesan[20];  
-    int lebarLayar;
-    int tinggiLayar;
+    int indeksMenu;
     Color warnaTeks;
 } LayarGameOver;
 
+
+
 void InisialisasiLayarGameOver(LayarGameOver *layar);
-void GambarLayarGameOver(LayarGameOver layar);
-void GambarLayarScore();
+void DrawGameOverScreen(ScreenControl *screen);
+void HandleGameOverInput(ScreenControl *screen);
 void HapusLayarGameOver(LayarGameOver *layar);
-int CekKlikTombol(int x, int y, int lebar, int tinggi);
+void PauseGame();
+void ResumeGame();
+void BackToMenu();
+void ShowGameOver();
+
 
 #endif
