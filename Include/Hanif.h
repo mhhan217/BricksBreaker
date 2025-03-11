@@ -36,7 +36,7 @@ void numberLevel(Level *level);
 void configlevel(Level *level);
 
 //Handle game
-void updateGame(GameState *gameState);
+void updateGame(ScreenControl* screen,Difficulty* selectDifficult,int *selectNumber);
 void drawGame(GameState *gametState);
 
 

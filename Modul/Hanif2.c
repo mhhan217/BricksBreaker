@@ -2,21 +2,21 @@
 #include "../Include/Hanif.h"
 //GAME
 
-void updateGame(GameState *gameState,Difficulty* selectDifficult,int *selectNumber){
-  switch(*gameState){
+void updateGame(ScreenControl* screen,Difficulty* selectDifficult,int *selectNumber){
+  switch(screen->gameState){
     case MENU: handleMenu(); break;
     case SETTINGS: handleSettings(); break;
     case INFO: handleInfo(); break;
-    case LEVEL_SELECTION: handleLevelSelectionInput(gameState,selectDifficult,selectNumber); break;
+    case LEVEL_SELECTION: handleLevelSelectionInput(,selectDifficult,selectNumber); break;
     case PLAY: handlePlay(); break;
     case PAUSE: handlePause(); break;
-    case EXIT: exit(0); break;
+    case EXIT: exit(0);
     default: break;  // Tambahan untuk menghindari kondisi tidak terduga
   }
 }
 
-void drawGame(GameState *gameState){
-  switch(*gameState){
+void drawGame(ScreenControl* screen){
+  switch(screen->gameState){
     case MENU: drawMenu(); break;
     case SETTINGS: drawSettings(); break;
     case INFO: drawInfo(); break;
@@ -24,7 +24,7 @@ void drawGame(GameState *gameState){
     case PLAY: drawPlay(); break;
     case PAUSE: drawPause(); break;
     case GAME_OVER: drawGameOver(); break;
-    case EXIT: exit(0); break;
+    case EXIT: exit(0);
     default: break;  // Tambahan untuk menangani kondisi tidak valid
   }
 }
