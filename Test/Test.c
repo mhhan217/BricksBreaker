@@ -5,15 +5,18 @@ int main() {
     InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Bricks Breaker");
     SetTargetFPS(TARGET_FPS);
     Ball bola;
-    InitBall(&bola, (Vector2){SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2});
+    Paddle paddle;
+    InitPaddle(&paddle, (Vector2){ SCREEN_WIDTH / 2 - 50, SCREEN_HEIGHT - 30 }, (Vector2){ 100, 20 }, 15.0f);
+    InitBall(&bola, (Vector2){SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2}, &paddle);
     inisialisasiBalok();
     while (!WindowShouldClose()) {
-        UpdateBall(&bola);
-        bolaterkenabalok(&bola); 
+        UpdateBall(&bola,&paddle,(Vector2){0,-20});
+        UpdatePaddle(&paddle);
         BeginDrawing();
         gambarBalok();
         ClearBackground(BLACK);
         DrawBall(bola);
+        DrawPaddle(paddle);
         EndDrawing();
     }
     CloseWindow();

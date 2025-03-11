@@ -12,6 +12,7 @@ typedef struct{
     Vector2 Efek[PANJANG_EFEK];
     Color Warna;
     bool Aktif;
+    bool Released;
 
 }Ball;
 
@@ -27,8 +28,8 @@ void UpdatePaddle(Paddle* paddle);
 void DrawPaddle(Paddle paddle);
 
 
-void InitBall(Ball* ball,Vector2 PosisiAwal);
-void UpdateBall(Ball* ball);
+void InitBall(Ball* ball,Vector2 KecepatanBola,Paddle* paddle   );
+void UpdateBall(Ball* ball,Paddle* paddle,Vector2 kecepatanBola);
 void DrawBall(Ball ball);
 
 
