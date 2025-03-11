@@ -9,7 +9,7 @@
 #define SCREEN_HEIGHT 600
 #define TARGET_FPS 60
 
-#endif //KONFIGURASI_H
+
 typedef enum {
 MENU,
 SETTINGS,
@@ -21,3 +21,10 @@ PAUSE,
 GAME_OVER,
 EXIT
 } GameState;
+
+typedef struct {
+    GameState gameState; //untuk menentukan gamestate
+    int index;   // untuk menentukan index yang dipilih pada tiap tiap gamestate
+} ScreenControl;
+
+#endif //KONFIGURASI_H
