@@ -39,6 +39,10 @@ void drawLevel(Level *level);
 void updateGame(GameState *gameState);
 void drawGame(GameState *gametState);
 
+//handle pause
+void DrawPauseScreen(ScreenControl *screen);
+void HandlePauseInput(ScreenControl *screen);
+
 
 
 

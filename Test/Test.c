@@ -17,9 +17,10 @@ int main() {
     Level level = {1, EASY}; // Default Level 1, Easy
     int menuIndex = 0;  // Menyimpan posisi menu yang dipilih
 
+    ScreenControl screen;
     // Inisialisasi Paddle dan Ball
     InitPaddle(&paddle, (Vector2){SCREEN_WIDTH / 2 - 50, SCREEN_HEIGHT - 70},
-               (Vector2){100, 20}, 30);
+               (Vector2){100, 20}, 20);
     setSpeedBall(&level, &ball); // Set kecepatan bola berdasarkan level
     initBall(&ball, ball.Speed, &paddle); // Gunakan kecepatan bola yang telah di-set
 
@@ -35,8 +36,17 @@ int main() {
             gameState = PLAY;  // Masuk ke mode bermain
         }
         else if (gameState == PLAY) {
-            updateBall(&ball, &paddle, ball.Speed);
-            UpdatePaddle(&paddle);
+            if (IsKeyDown(KEY_P)) {
+                gameState = PAUSE;
+            }else {
+                updateBall(&ball, &paddle, ball.Speed);
+                UpdatePaddle(&paddle);
+            }
+        }else if (gameState == PAUSE) {
+            HandlePauseInput(&screen);
+            if (screen.gameState != PAUSE) {
+                gameState = screen.gameState; // Kembali ke state lain jika ada perubahan
+            }
         }
 
         // Render tampilan game
@@ -49,7 +59,10 @@ int main() {
         else if (gameState == PLAY) {
             drawBall(ball);
             DrawPaddle(paddle);
+        }else if (gameState == PAUSE) {
+            DrawPauseScreen(&screen);
         }
+
 
         EndDrawing();
     }

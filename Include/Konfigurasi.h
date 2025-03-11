@@ -20,4 +20,10 @@ PAUSE,
 GAME_OVER,
 EXIT
 } GameState;
+
+typedef struct {
+    GameState gameState; // Status utama game
+    int index;   // Indeks pilihan yang sedang dipilih
+} ScreenControl;
+
 #endif //KONFIGURASI_H

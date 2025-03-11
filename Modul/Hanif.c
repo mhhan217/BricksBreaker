@@ -7,7 +7,7 @@
 //mengatur atribut atribut bola
 void initBall(Ball* ball, Vector2 ballSpeed, Paddle* paddle) {
     ball->Speed = ballSpeed;
-    ball->Radius = 10;
+    ball->Radius = 8;
     ball->Color = RAYWHITE;
     ball->Active = true;
     ball->Released = false; // Pastikan bola belum dilepas
@@ -60,13 +60,13 @@ void updateBall(Ball* ball, Paddle* paddle,Vector2 SpeedBola) {
             // Hitung offset dari tengah paddle
             float offset = (ball->Position.x - (paddle->Posisi.x + paddle->Ukuran.x / 2)) / (paddle->Ukuran.x / 2);
 
-            // jika boal teapt ditengah maka x akan di jadikan 0
-            if (fabs(offset) < 0.1f) {
+            //jika boal teapt ditengah maka x akan di jadikan 0
+            if (fabs(offset) == 0) {
                 ball->Speed.x = 0;
                 ball->Speed.y = -fabs(ball->Speed.y);
             } else {
                 // jika bola tidak tepat ditengah maka x akan diubah
-                ball->Speed.x = offset * 5;
+                ball->Speed.x = offset * 10;
                 ball->Speed.y = -fabs(ball->Speed.y);
             }
 
@@ -99,9 +99,9 @@ void drawBall(Ball ball) {
 
 void setSpeedBall(Ball* ball,Level* level) {
     switch (level->DifficultLevel) {
-        case EASY:  ball -> Speed = (Vector2){0, -20};break;
-        case MEDIUM: ball -> Speed = (Vector2){0, -25};break;
-        case HARD: ball -> Speed = (Vector2){0, -30};break;
+        case EASY:  ball -> Speed = (Vector2){0, -15};break;
+        case MEDIUM: ball -> Speed = (Vector2){0, -20};break;
+        case HARD: ball -> Speed = (Vector2){0, -25};break;
         default: ball -> Speed = (Vector2){0, -20}; // Default ke EASY
     }
 }
