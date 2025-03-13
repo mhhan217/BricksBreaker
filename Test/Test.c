@@ -32,7 +32,7 @@ int main() {
             drawLevel(&level);
         }
         else if (gameState == LOADING) {
-            setSpeedBall(&ball,&level); // Pastikan kecepatan bola diperbarui
+            setSpeedBall(&level,&ball); // Pastikan kecepatan bola diperbarui
             gameState = PLAY;  // Masuk ke mode bermain
         }
         else if (gameState == PLAY) {

@@ -27,7 +27,7 @@ typedef struct {
 void initBall(Ball* ball,Vector2 ballSpeed,Paddle* paddle);
 void updateBall(Ball* ball,Paddle* paddle,Vector2 ballSpeed);
 void drawBall(Ball ball);
-void setSpeedBall(Ball* ball,Level* level);
+void setSpeedBall(Level* level,Ball* ball);
 Vector2 getSpeedBall(Ball* ball);
 //Handlelevel
 void handleLevelSelectionInput(GameState* gameState,Level* level,Ball* ball);
