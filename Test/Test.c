@@ -2,6 +2,10 @@
 #include "Hanif.c"
 
 int main() {
+    printf("Pilih tingkat kesulitan: 0 (Easy), 1 (Medium), 2 (Hard): ");
+    int pilihan;
+    scanf("%d", &pilihan);
+    SetDifficulty(pilihan);
     InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Bricks Breaker");
     SetTargetFPS(TARGET_FPS);
     inisialisasibacksound();

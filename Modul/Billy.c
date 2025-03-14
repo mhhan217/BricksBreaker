@@ -4,6 +4,7 @@
 #include "Hanif.h"
 #include <math.h>
 
+int currentDifficulty = 0;
 int currentLevel = 0;
 Sound suaratabrakan;
 
@@ -30,7 +31,7 @@ void inisialisasiBalok() {
             bricks[i][j].kotak.y = i * (BRICK_HEIGHT + BRICK_PADDING) + 38;
             bricks[i][j].kotak.width = BRICK_WIDTH;
             bricks[i][j].kotak.height = BRICK_HEIGHT;
-            bricks[i][j].on = levelPatterns[currentLevel][i][j] == 1;
+            bricks[i][j].on = levelPatterns[currentDifficulty][currentLevel][i][j] == 1;
             j++;
         }
         i++; 
@@ -85,11 +86,24 @@ bool AreAllBricksDestroyed() {
     return true;
 }
 
+void SetDifficulty(int difficulty) {
+    if (difficulty >= 0 && difficulty < DIFFICULTY_LEVELS) {
+        currentDifficulty = difficulty;
+        currentLevel = 0;
+        inisialisasiBalok();
+    }
+}
+
 void NextLevel() {
-    if (currentLevel < LEVELS - 1) {
+    if (currentLevel < LEVELS_PER_DIFFICULTY - 1) {
         currentLevel++;
     } else {
         currentLevel = 0;
+        if (currentDifficulty < DIFFICULTY_LEVELS - 1) {
+            currentDifficulty++;
+        } else {
+            currentDifficulty = 0;
+        }
     }
     inisialisasiBalok();
 }
