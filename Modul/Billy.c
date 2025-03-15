@@ -1,9 +1,9 @@
 #include <stdio.h>
 #include "Billy.h"
 #include "Hanif.h"
-#include "Hanif.h"
 #include <math.h>
 
+bool isPaused = false;
 int currentDifficulty = 0;
 int currentLevel = 0;
 Sound suaratabrakan;
@@ -106,4 +106,74 @@ void NextLevel() {
         }
     }
     inisialisasiBalok();
+}
+
+int inisialisasiGame(){
+    if (IsKeyPressed(KEY_P)) {
+        isPaused = !isPaused;
+    }
+    inisialisasibacksound();
+    Ball bola;
+    Paddle paddle;
+    InitPaddle(&paddle, (Vector2){ SCREEN_WIDTH / 2 - 50, SCREEN_HEIGHT - 30 }, (Vector2){ 100, 20 }, 15.0f);
+    InitBall(&bola, (Vector2){SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2}, &paddle);
+    inisialisasiBalok();
+
+    while (!WindowShouldClose()) {
+        if (!isPaused)
+        {
+            bolaterkenabalok(&bola);
+            UpdateBall(&bola, &paddle, (Vector2){0, -20});
+            UpdatePaddle(&paddle);
+            if (AreAllBricksDestroyed()) {
+                NextLevel();
+            }
+        }
+        
+        BeginDrawing();
+        ClearBackground(BLACK);
+        gambarBalok();
+        DrawBall(bola);
+        DrawPaddle(paddle);
+        if (isPaused) {
+            DrawText("PAUSED", SCREEN_WIDTH / 2 - 50, SCREEN_HEIGHT / 2, 40, RED);
+            DrawText("Tekan 'P' untuk melanjutkan", SCREEN_WIDTH / 2 - 100, SCREEN_HEIGHT / 2 + 50, 20, WHITE);
+        }
+        EndDrawing();
+    }
+    tutupbacksound();
+    return 0;
+}
+
+void ShowMenu() {
+    int selectedDifficulty = 0;
+    int selectedLevel = 0;
+    while (!WindowShouldClose()) {
+        if (IsKeyPressed(KEY_DOWN)) selectedDifficulty = (selectedDifficulty + 1) % DIFFICULTY_LEVELS;
+        if (IsKeyPressed(KEY_UP)) selectedDifficulty = (selectedDifficulty - 1 + DIFFICULTY_LEVELS) % DIFFICULTY_LEVELS;
+        if (IsKeyPressed(KEY_RIGHT)) selectedLevel = (selectedLevel + 1) % LEVELS_PER_DIFFICULTY;
+        if (IsKeyPressed(KEY_LEFT)) selectedLevel = (selectedLevel - 1 + LEVELS_PER_DIFFICULTY) % LEVELS_PER_DIFFICULTY;
+
+        BeginDrawing();
+        ClearBackground(BLACK);
+
+        DrawText("Pilih Kesulitan:", 300, 150, 30, WHITE);
+        DrawText(selectedDifficulty == 0 ? "> Easy" : "  Easy", 350, 200, 25, selectedDifficulty == 0 ? YELLOW : WHITE);
+        DrawText(selectedDifficulty == 1 ? "> Medium" : "  Medium", 350, 230, 25, selectedDifficulty == 1 ? YELLOW : WHITE);
+        DrawText(selectedDifficulty == 2 ? "> Hard" : "  Hard", 350, 260, 25, selectedDifficulty == 2 ? YELLOW : WHITE);
+
+        DrawText("Pilih Level:", 300, 320, 30, WHITE);
+        DrawText(TextFormat("> Level %d", selectedLevel + 1), 350, 370, 25, YELLOW);
+
+        DrawText("Gunakan ARROW KEYS untuk memilih", 200, 450, 20, LIGHTGRAY);
+        DrawText("Tekan ENTER untuk memulai", 250, 500, 20, GREEN);
+
+        EndDrawing();
+
+        if (IsKeyPressed(KEY_ENTER)) {
+            SetDifficulty(selectedDifficulty);
+            currentLevel = selectedLevel;
+            inisialisasiGame();
+        }
+    }
 }
