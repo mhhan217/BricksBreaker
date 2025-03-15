@@ -1,3 +1,16 @@
 CMakeLists.txt
 cmake-build-debug
 .idea
+Chinta.h
+Faridha.h
+Hanif.h
+Konfigurasi.h
+Zahwa.h
+Zidan.h
+Chinta.c
+Faridha.c
+Hanif.c
+Zahwa.c
+Zidan.c
+game.exe
+tabrakan.wav
