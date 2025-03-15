@@ -16,7 +16,7 @@ void initBall(Ball* ball, Vector2 ballSpeed, Paddle* paddle) {
 
 
 //
-void updateBall(Ball* ball, Paddle* paddle,Vector2 SpeedBola) {
+void updateBall(Ball* ball, Paddle* paddle, Vector2 SpeedBola) {
     if (!ball->Active) return; // Jika bola tidak aktif, tidak ditampilkan atau diupdate
 
     // Geser semua Position Effect (jejak)
@@ -25,10 +25,10 @@ void updateBall(Ball* ball, Paddle* paddle,Vector2 SpeedBola) {
     }
     ball->Effect[0] = ball->Position;
 
-    // Jika bola belum dilepas, Positionnya mengikuti paddle
+    // Jika bola belum dilepas, posisi bola mengikuti paddle
     if (!ball->Released) {
-        ball->Position.x = paddle->Position.x + paddle->Ukuran.x / 2;
-        ball->Position.y = paddle->Position.y -ball->Radius;
+        ball->Position.x = paddle->Posisi.x + paddle->Ukuran.x / 2;
+        ball->Position.y = paddle->Posisi.y - ball->Radius;
         ball->Speed = SpeedBola;
 
         // Tekan spasi untuk melepaskan bola
@@ -38,7 +38,7 @@ void updateBall(Ball* ball, Paddle* paddle,Vector2 SpeedBola) {
     }
 
     if (ball->Released) {
-        // Update Position bola
+        // Update posisi bola
         ball->Position.x += ball->Speed.x;
         ball->Position.y += ball->Speed.y;
 
@@ -53,34 +53,36 @@ void updateBall(Ball* ball, Paddle* paddle,Vector2 SpeedBola) {
         }
 
         // Pantulan dari paddle
-        if (ball->Position.y + ball->Radius >= paddle->Position.y && ball->Position.x >= paddle->Position.x &&
-            ball->Position.x <= paddle->Position.x + paddle->Ukuran.x) {
+        if (ball->Position.y + ball->Radius >= paddle->Posisi.y &&
+            ball->Position.x >= paddle->Posisi.x &&
+            ball->Position.x <= paddle->Posisi.x + paddle->Ukuran.x) {
 
-            // Hitung offset dari tengah paddle
-            float offset = (ball->Position.x - (paddle->Position.x + paddle->Ukuran.x / 2)) / (paddle->Ukuran.x / 2);
+            // menghitung posisi bola saat mengenai paddle dari (-1.0 ke 1.0)
+            float posisiPantulan = (ball->Position.x - (paddle->Posisi.x + paddle->Ukuran.x / 2)) / (paddle->Ukuran.x / 2);
 
-            // jika boal teapt ditengah maka x akan di jadikan 0
-            if (fabs(offset) < 0.1f) {
-                ball->Speed.x = 0;
-                ball->Speed.y = -fabs(ball->Speed.y);
-            } else {
-                // jika bola tidak tepat ditengah maka x akan diubah
-                ball->Speed.x = offset * 5;
-                ball->Speed.y = -fabs(ball->Speed.y);
-            }
+            // menghitung sudut pantulan dari -45° hingga 45°
+            float sudutPantulan = posisiPantulan * 45 * (PI / 180.0f);  // Konversi ke radian
 
-            // jika Speed x bola dibawah 2.0f dan diatas 0.1f
-            if (fabs(ball->Speed.x) < 2.0f &&fabs(ball->Speed.x) >0.1f ) {
-                ball->Speed.x = (ball->Speed.x > 0) ? 3.0f : -3.0f;//maka arah bola x bola akan diubah menjadi +3 atau -3
+            // menghitung kecepatan dan arah bola menggunakan sin dan cos agar lebih realistis
+            float speedTotal = sqrtf(ball->Speed.x * ball->Speed.x + ball->Speed.y * ball->Speed.y);//meghitung kecepatan bola(vektor) sebelum mengenai paddle dengan (a^2 + b^2)
+            ball->Speed.x = sinf(sudutPantulan) * speedTotal; //menentukan berapa kemiringan pantulan bola setelah mengenai paddle
+            ball->Speed.y = -cosf(sudutPantulan) * speedTotal;  // agar bola selalu ke atas setelah kena paddle
+
+            // jika kecepatan bola terlalu kecil
+            if (fabs(ball->Speed.x) < 2.0f) {
+                ball->Speed.x = (ball->Speed.x > 0) ? 2.0f : -2.0f; //maka akan diubah ke 2 atau -2            }
+            if (fabs(ball->Speed.y) < 3.0f) {
+                ball->Speed.y = (ball->Speed.y > 0) ? 3.0f : -3.0f;//maka akan diubah ke 3 atau -3
             }
         }
 
-        // Jika bola jatuh ke bawah, reset Position ke paddle
+        // Jika bola jatuh ke bawah, reset posisi ke paddle
         if (ball->Position.y + ball->Radius >= GetScreenHeight()) {
             ball->Released = false;
         }
     }
 }
+
 
 
 void drawBall(Ball ball) {
