@@ -17,23 +17,26 @@ void UpdatePaddle(Paddle* Paddle) {
     if (IsKeyDown(KEY_RIGHT) && Paddle->Posisi.x + Paddle->Ukuran.x < GetScreenWidth()) {
         Paddle->Posisi.x += Paddle->Kecepatan;
     }
-	
 }
 
 void DrawPaddle(Paddle Paddle) {
     DrawRectangleV(Paddle.Posisi, Paddle.Ukuran, Paddle.Warna);
 }
 
-void InitLives(Lives *lives) {
+void InitLives(Lives* lives) {
     lives->jumlah_nyawa = MAKS_NYAWA;
     lives->heartIcon = LoadTexture("HeartPixel.png");
-    lives->position = (Vector){10, 10};
+    if (!IsTextureReady(lives->heartIcon)) {
+        TraceLog(LOG_ERROR, "Gagal menampilkan HeartPixel.png");
+    }
+    lives->posisi = (Vector){10, 10};
 }
 
-void DrawLives(const Lives *lives) {
-    int jarak = 5;
-    int i = 0;
+void DrawLives(const Lives* lives) {
+    if (!IsTextureReady(lives->heartIcon)) return;
 
+    int jarak = 5;
+    int i;
     for (i = 0; i < lives->jumlah_nyawa; i++) {
         DrawTexture(lives->heartIcon,
                     lives->posisi.x + (i * (lives->heartIcon.width + jarak)),
@@ -41,19 +44,22 @@ void DrawLives(const Lives *lives) {
     }
 }
 
-void CekBolaJatuh(Lives *lives, Ball *ball){
-    if (ball->posisi.y >= GetScreenHeight()) {
+void CekBolaJatuh(Lives* lives, Ball* ball) {
+    if (ball->Posisi.y >= GetScreenHeight()) {
         lives->jumlah_nyawa--;
 
-        ball->posisi = (Vector2){400,300};
+        ball->Posisi = (Vector2){400, 300};
 
         if (lives->jumlah_nyawa <= 0) {
             InitLives(lives);
         }
-
     }
 }
 
 void unloadLives(Lives *lives) {
-    UnloadTexture(lives->heartIcon);
+    if (IsTextureReady(lives->heartIcon)) {
+        UnloadTexture(lives->heartIcon);
+        lives->heartIcon.id = 0; 
+    }
 }
+

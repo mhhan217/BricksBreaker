@@ -8,7 +8,7 @@ typedef struct {
     Vector2 Ukuran;
     float Kecepatan;
     Color Warna;
-}Paddle;
+} Paddle;
 
 typedef struct {
     int jumlah_nyawa;
@@ -20,10 +20,10 @@ void InitPaddle(Paddle* Paddle, Vector2 posisiAwal, Vector2 ukuran, float kecepa
 void UpdatePaddle(Paddle* Paddle);
 void DrawPaddle(Paddle Paddle);
 
-void InitLives(Lives *lives);
-void DrawLives(Lives *lives);
-void CekBolaJatuh(Lives *lives, Ball *ball);
-void unloadLives(Lives *lives);
+void InitLives(Lives* lives);
+void DrawLives(Lives* lives);
+void CekBolaJatuh(Lives* lives, Ball* ball);
+void unloadLives(Lives* lives);
 
 #endif //ZAHWA_H
 
