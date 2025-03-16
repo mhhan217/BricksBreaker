@@ -1,7 +1,6 @@
-#include "zahwa.h"
-#include "konfigurasi.h"
+#include "../Include/Zahwa.h"
+#include "Konfigurasi.h"
 #include "raylib.h"
-#include "zahwa.c"
 
 int main() {
     
@@ -18,3 +17,4 @@ int main() {
     }
 
 }
+
