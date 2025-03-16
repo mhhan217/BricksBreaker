@@ -2,7 +2,7 @@
 #include "Hanif.h"
 
 #define SCREEN_WIDTH 1200
-#define SCREEN_HEIGHT 900
+#define SCREEN_HEIGHT 800
 
 int main() {
     SetTargetFPS(60);
