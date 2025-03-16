@@ -4,9 +4,8 @@
 #include <time.h>
 #include <stdlib.h>
 
-
 int brickPattern[ROWS][COLS];
-
+// bricks[i][j].on = levelpatterns[currrentLevel][i][j]==1;//
 void InitializeBricks(Brick bricks[ROWS][COLS]) {
     int paddingX = 2;  
     int paddingY = 2;  
@@ -27,18 +26,11 @@ void InitializeBricks(Brick bricks[ROWS][COLS]) {
             bricks[i][j].kotak.y = startY + i * (brickHeight + paddingY);
             bricks[i][j].kotak.width = brickWidth;
             bricks[i][j].kotak.height = brickHeight;
-            bricks[i][j].isActive = true;
-            bricks[i][j].color = (brickPattern[i][j] == 1) ? GRAY : BLUE;
-            if (i < 2) {  
-                bricks[i][j].isIndestructible = true;
-                bricks[i][j].color = GRAY;
-            } else {
-                bricks[i][j].isIndestructible = false;
-                bricks[i][j].color = BLUE;
+            bricks[i][j].isActive = (levelPatterns[i][j] ==1);
             }
         }
     }
-}
+
 
 
 Color WarnaAcak() {
@@ -49,17 +41,16 @@ Color WarnaAcak() {
 void LoadLevel(int level, Brick bricks[ROWS][COLS]) {
     for (int i = 0; i < ROWS; i++) {
         for (int j = 0; j < COLS; j++) {
-            bricks[i][j].isActive = true;
-
-            if (level % 2 == 0 && i % 2 == 0) {
-                bricks[i][j].isIndestructible = true; 
-                bricks[i][j].color = GRAY; 
+            if (levelPatterns[i][j] == 1) {
+                bricks[i][j].isActive = true;
+                bricks[i][j].color = BLUE;
             } else {
-                bricks[i][j].isIndestructible = false;
+                bricks[i][j].isActive = false;
             }
         }
     }
 }
+
 
 
 void UpdateBricks(Brick bricks[ROWS][COLS]) {
@@ -69,7 +60,6 @@ void UpdateBricks(Brick bricks[ROWS][COLS]) {
                 bricks[i][j].color.a = 0;
             }
         }
-        return;
     }
 }
 
