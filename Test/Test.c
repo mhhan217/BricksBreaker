@@ -3,20 +3,19 @@
 //
 #include "raylib.h"
 #include "Chinta.h"
-#include "Konfigurasi.h"
 
-// #define SCREEN_WIDTH 1200
-// #define SCREEN_HEIGHT 900
+#define SCREEN_WIDTH 1200
+#define SCREEN_HEIGHT 900
 
 int main()
 {
     InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Bricks Breaker Menu");
     SetTargetFPS(60);
-
-    ScreenControl screen;
-    displayMenuWithGraphics(&screen);
-
-
+    displayMenuWithGraphics();
+    displayDifficultyMenu();
+    displayInfo();
+    displaySettings();
+    playGame();
     CloseWindow();
     return 0;
 }
