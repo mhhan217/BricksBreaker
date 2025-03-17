@@ -5,9 +5,8 @@
 
 bool isPaused = false;
 int currentDifficulty = 0;
-int currentLevel = 0;
 Sound suaratabrakan;
-
+Level level;
 void inisialisasibacksound() {
     InitAudioDevice();
     suaratabrakan = LoadSound("tabrakan.wav");
@@ -31,7 +30,18 @@ void inisialisasiBalok() {
             bricks[i][j].kotak.y = i * (BRICK_HEIGHT + BRICK_PADDING) + 38;
             bricks[i][j].kotak.width = BRICK_WIDTH;
             bricks[i][j].kotak.height = BRICK_HEIGHT;
-            bricks[i][j].on = levelPatterns[currentDifficulty][currentLevel][i][j] == 1;
+            int tipebalok = levels[currentLevel].brickPattern[i][j];
+            if (tipebalok == 1)
+            {
+                bricks[i][j].on = true;
+                bricks[i][j].warna = BLUE;
+            } else if (tipebalok == 2)
+            {
+                bricks[i][j].on = true;
+                bricks[i][j].warna = RED;
+            } else {
+                bricks[i][j].on = false;
+            }
             j++;
         }
         i++; 
@@ -44,7 +54,14 @@ void gambarBalok() {
         int j=0;
         while (j < BRICK_COLS){
             if (bricks[i][j].on) {
-                DrawRectangleRec(bricks[i][j].kotak, BLUE);
+                int tipebalok = levels[currentLevel].brickPattern[i][j];
+                if (tipebalok == 1)
+                {
+                    DrawRectangleRec(bricks[i][j].kotak, BLUE);
+                } else if (tipebalok == 2)
+                {
+                    DrawRectangleRec(bricks[i][j].kotak, DARKGRAY);
+                }
             }
             j++;
         }
@@ -62,14 +79,23 @@ void bolaterkenabalok(Ball* Ball) {
                 j++;  
                 continue;
             }
-            if (Ball->Posisi.x + Ball->Radius >= brick->kotak.x && 
-                Ball->Posisi.x <= brick->kotak.x + BRICK_WIDTH &&
-                Ball->Posisi.y + Ball->Radius >= brick->kotak.y && 
-                Ball->Posisi.y <= brick->kotak.y + BRICK_HEIGHT) {
-                    brick->on = false;
-                    panggilbacksound();
-                    Ball->Kecepatan.y = -Ball->Kecepatan.y;
-                    return;
+            if (Ball->Position.x + Ball->Radius >= brick->kotak.x && 
+                Ball->Position.x <= brick->kotak.x + BRICK_WIDTH &&
+                Ball->Position.y + Ball->Radius >= brick->kotak.y && 
+                Ball->Position.y <= brick->kotak.y + BRICK_HEIGHT) {
+                    if (levels[currentLevel].brickPattern[i][j] == 1)
+                    {
+                        brick->on = false;
+                        panggilbacksound();
+                        Ball->Speed.y = -Ball->Speed.y;
+                        return;
+                    } else if (levels[currentLevel].brickPattern[i][j] == 2)
+                    {
+                        panggilbacksound();
+                        Ball->Speed.y = -Ball->Speed.y;
+                        return;
+                    }
+                    
             }
             j++;
         }
@@ -88,25 +114,17 @@ bool AreAllBricksDestroyed() {
 
 void SetDifficulty(int difficulty) {
     if (difficulty >= 0 && difficulty < DIFFICULTY_LEVELS) {
-        currentDifficulty = difficulty;
-        currentLevel = 0;
-        inisialisasiBalok();
+        currentDifficulty = difficulty; 
+        inisialisasiBalok(); 
     }
 }
 
+
 void NextLevel() {
-    if (currentLevel < LEVELS_PER_DIFFICULTY - 1) {
-        currentLevel++;
-    } else {
-        currentLevel = 0;
-        if (currentDifficulty < DIFFICULTY_LEVELS - 1) {
-            currentDifficulty++;
-        } else {
-            currentDifficulty = 0;
-        }
-    }
+    currentLevel = (currentLevel + 1) % TOTAL_LEVELS;  // Looping dari 1-10
     inisialisasiBalok();
 }
+
 
 int inisialisasiGame(){
     if (IsKeyPressed(KEY_P)) {
@@ -116,14 +134,14 @@ int inisialisasiGame(){
     Ball bola;
     Paddle paddle;
     InitPaddle(&paddle, (Vector2){ SCREEN_WIDTH / 2 - 50, SCREEN_HEIGHT - 30 }, (Vector2){ 100, 20 }, 15.0f);
-    InitBall(&bola, (Vector2){SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2}, &paddle);
+    initBall(&bola, (Vector2){SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2}, &paddle);
     inisialisasiBalok();
 
     while (!WindowShouldClose()) {
         if (!isPaused)
         {
             bolaterkenabalok(&bola);
-            UpdateBall(&bola, &paddle, (Vector2){0, -20});
+            updateBall(&bola, &paddle, (Vector2){0, -20});
             UpdatePaddle(&paddle);
             if (AreAllBricksDestroyed()) {
                 NextLevel();
@@ -133,7 +151,7 @@ int inisialisasiGame(){
         BeginDrawing();
         ClearBackground(BLACK);
         gambarBalok();
-        DrawBall(bola);
+        drawBall(bola);
         DrawPaddle(paddle);
         if (isPaused) {
             DrawText("PAUSED", SCREEN_WIDTH / 2 - 50, SCREEN_HEIGHT / 2, 40, RED);
@@ -148,32 +166,41 @@ int inisialisasiGame(){
 void ShowMenu() {
     int selectedDifficulty = 0;
     int selectedLevel = 0;
+
     while (!WindowShouldClose()) {
+        // Navigasi Kesulitan (Easy, Medium, Hard)
         if (IsKeyPressed(KEY_DOWN)) selectedDifficulty = (selectedDifficulty + 1) % DIFFICULTY_LEVELS;
         if (IsKeyPressed(KEY_UP)) selectedDifficulty = (selectedDifficulty - 1 + DIFFICULTY_LEVELS) % DIFFICULTY_LEVELS;
-        if (IsKeyPressed(KEY_RIGHT)) selectedLevel = (selectedLevel + 1) % LEVELS_PER_DIFFICULTY;
-        if (IsKeyPressed(KEY_LEFT)) selectedLevel = (selectedLevel - 1 + LEVELS_PER_DIFFICULTY) % LEVELS_PER_DIFFICULTY;
+
+        // Navigasi Level (1 - 10)
+        if (IsKeyPressed(KEY_RIGHT)) selectedLevel = (selectedLevel + 1) % TOTAL_LEVELS;
+        if (IsKeyPressed(KEY_LEFT)) selectedLevel = (selectedLevel - 1 + TOTAL_LEVELS) % TOTAL_LEVELS;
 
         BeginDrawing();
         ClearBackground(BLACK);
 
+        // Tampilkan opsi kesulitan
         DrawText("Pilih Kesulitan:", 300, 150, 30, WHITE);
         DrawText(selectedDifficulty == 0 ? "> Easy" : "  Easy", 350, 200, 25, selectedDifficulty == 0 ? YELLOW : WHITE);
         DrawText(selectedDifficulty == 1 ? "> Medium" : "  Medium", 350, 230, 25, selectedDifficulty == 1 ? YELLOW : WHITE);
         DrawText(selectedDifficulty == 2 ? "> Hard" : "  Hard", 350, 260, 25, selectedDifficulty == 2 ? YELLOW : WHITE);
 
+        // Tampilkan opsi level
         DrawText("Pilih Level:", 300, 320, 30, WHITE);
         DrawText(TextFormat("> Level %d", selectedLevel + 1), 350, 370, 25, YELLOW);
 
+        // Petunjuk kontrol
         DrawText("Gunakan ARROW KEYS untuk memilih", 200, 450, 20, LIGHTGRAY);
         DrawText("Tekan ENTER untuk memulai", 250, 500, 20, GREEN);
 
         EndDrawing();
 
+        // Konfirmasi pemilihan level & kesulitan
         if (IsKeyPressed(KEY_ENTER)) {
-            SetDifficulty(selectedDifficulty);
-            currentLevel = selectedLevel;
-            inisialisasiGame();
+            SetDifficulty(selectedDifficulty); // Atur kecepatan bola
+            currentLevel = selectedLevel; // Tetapkan level yang dipilih
+            inisialisasiBalok(); // Pastikan bricks diinisialisasi sesuai level
+            inisialisasiGame(); // Masuk ke game
         }
     }
 }

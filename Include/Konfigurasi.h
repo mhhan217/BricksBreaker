@@ -6,14 +6,20 @@
 #define TARGET_FPS 60
 
 typedef enum {
-    MENU,
-    HIGH_SCORE,
-    SETTINGS,
-    INFO,
-    PLAY,
-    PAUSE,
-    GAME_OVER,
-    EXIT
+MENU,
+SETTINGS,
+INFO,
+LEVEL_SELECTION,
+LOADING,
+PLAY,
+PAUSE,
+GAME_OVER,
+EXIT
 } GameState;
+
+typedef struct {
+    GameState gameState; // Status utama game
+    int index;   // Indeks pilihan yang sedang dipilih
+} ScreenControl;
 
 #endif //KONFIGURASI_H
