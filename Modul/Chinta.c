@@ -1,51 +1,45 @@
 #include <stdio.h>
 #include "raylib.h"
 #include "Chinta.h"
+#include "Konfigurasi.h"
 
-#define BUTTON_WIDTH 200
-#define BUTTON_HEIGHT 40
+// #define BUTTON_WIDTH 200
+// #define BUTTON_HEIGHT 40
 
 Vector2 ballPosition = { 400, 550 };
 Vector2 ballSpeed = { 3, -3 };
 
+float paddleSpeed = 5.0f;  // Atur kecepatan paddle sesuai kebutuhan
+Vector2 paddlePosition = { 350, 550 }; // Atur posisi awal paddle
+
+int selectedMenuOption = 0;
+int menuIndex = 0;
+int currentDifficulty = 0;
 int selectedDifficulty = 0;
+int currentState = MENU;
+int selectedLevel = 1;
+int selectedPaddleColorIndex = 0;
+int selectedBallColorIndex = 0;
+float musicVolume = 1.0f;
+float soundVolume = 1.0f;
 
-// Fungsi untuk menggambar tombol dengan efek saat ditekan
-bool DrawButton(Rectangle rect, const char *text, Color outlineColor, Color textColor) 
-{
-    Vector2 mousePoint = GetMousePosition();
-    bool hovered = CheckCollisionPointRec(mousePoint, rect);
-    bool clicked = hovered && IsMouseButtonPressed(MOUSE_LEFT_BUTTON);
-    
-    DrawRectangleRec(rect, clicked ? BLACK_BG : BLACK_BG);
-    DrawRectangleLinesEx(rect, 3, outlineColor);
-    int textWidth = MeasureText(text, 20);
-    DrawText(text, rect.x + (BUTTON_WIDTH - textWidth) / 2, rect.y + 10, 20, clicked ? WHITE_TEXT : textColor);
-    
-    return clicked;
-}
+Color paddleColors[6] = { MY_DARK_PINK, MY_BLUE, MY_GREEN, MY_YELLOW, WHITE, BLACK };
+Color ballColors[6] = { MY_DARK_PINK, MY_BLUE, MY_GREEN, MY_YELLOW, WHITE, BLACK };
+Color paddleColor = WHITE;
+Color ballColor = WHITE;
 
-void displayMenuWithGraphics() 
-{
+Sound ballBounce;
+Music gameMusic;
+
+void displayMenuWithGraphics(ScreenControl *screen) {
     InitWindow(800, 600, "Bricks Breaker Menu");
     SetTargetFPS(60);
+    InitAudioDevice();
 
-    while (!WindowShouldClose()) 
-    {
+    while (!WindowShouldClose()) {
         BeginDrawing();
         ClearBackground(BLACK_BG);
-        
-        // Gambar bola
-        DrawCircleV(ballPosition, 10, WHITE);
 
-        // Pergerakan bola
-        ballPosition.x += ballSpeed.x;
-        ballPosition.y += ballSpeed.y;
-
-        // Pantulan dari dinding
-        if (ballPosition.x <= 0 || ballPosition.x >= 800) ballSpeed.x *= -1;
-        if (ballPosition.y <= 0 || ballPosition.y >= 600) ballSpeed.y *= -1;
-        
         DrawText("B", 250, 50, 30, MY_DARK_PINK);
         DrawText("r", 270, 50, 30, MY_BLUE);
         DrawText("i", 290, 50, 30, MY_GREEN);
@@ -65,155 +59,304 @@ void displayMenuWithGraphics()
         DrawText("a", 570, 50, 30, MY_DARK_PINK);
         DrawText("m", 590, 50, 30, MY_BLUE);
         DrawText("e", 610, 50, 30, MY_GREEN);
-        
-        Rectangle playBtn = { 300, 150, BUTTON_WIDTH, BUTTON_HEIGHT };
-        Rectangle infoBtn = { 300, 210, BUTTON_WIDTH, BUTTON_HEIGHT };
-        Rectangle settingsBtn = { 300, 270, BUTTON_WIDTH, BUTTON_HEIGHT };
-        Rectangle exitBtn = { 300, 330, BUTTON_WIDTH, BUTTON_HEIGHT };
-        
-        if (DrawButton(playBtn, "Play", MY_DARK_PINK, MY_DARK_PINK))
-        {
-            displayDifficultyMenu();
+
+        const char *menuOptions[] = { "Play", "Info", "Settings", "Exit" };
+        Color highlightColors[] = { MY_DARK_PINK, MY_BLUE, MY_GREEN, MY_YELLOW };
+        int menuCount = 4;
+
+        if (IsKeyPressed(KEY_DOWN) || IsKeyPressed(KEY_S))
+            screen->index = (screen->index + 1) % menuCount;
+        if (IsKeyPressed(KEY_UP) || IsKeyPressed(KEY_W))
+            screen->index = (screen->index - 1 + menuCount) % menuCount;
+
+        for (int i = 0; i < menuCount; i++) {
+            Color textColor = (i == screen->index) ? highlightColors[i] : WHITE;
+            DrawText(menuOptions[i], 350, 150 + (i * 60), 30, textColor);
         }
-        else if (DrawButton(infoBtn, "Info", MY_BLUE, MY_BLUE))
-        {
-            displayInfo();
+
+        if (IsKeyPressed(KEY_ENTER) || IsKeyPressed(KEY_SPACE)) {
+            if (screen->index == 0) displayLevelSelection(screen);
+            else if (screen->index == 1) displayInfo(screen);
+            else if (screen->index == 2) displaySettings(screen);
+            else if (screen->index == 3) break;
         }
-        else if (DrawButton(settingsBtn, "Settings", MY_GREEN, MY_GREEN))
-        {
-            displaySettings();
-        }
-        else if (DrawButton(exitBtn, "Exit", MY_YELLOW, MY_YELLOW))
-        {
-            break;
-        }
-        
+
         EndDrawing();
     }
+    CloseAudioDevice();
     CloseWindow();
 }
 
-void displayDifficultyMenu()
-{
-    while (!WindowShouldClose())
-    {
+void displayLevelSelection(ScreenControl *screen) {
+    while (!WindowShouldClose()) {
         BeginDrawing();
         ClearBackground(BLACK_BG);
-        
-        DrawText("d", 260, 50, 30, MY_BLUE);
-        DrawText("i", 280, 50, 30, MY_GREEN);
-        DrawText("f", 300, 50, 30, MY_YELLOW);
-        DrawText("f", 320, 50, 30, MY_DARK_PINK);
-        DrawText("i", 340, 50, 30, MY_BLUE);
-        DrawText("c", 360, 50, 30, MY_GREEN);
-        DrawText("u", 380, 50, 30, MY_YELLOW);
-        DrawText("l", 400, 50, 30, MY_DARK_PINK);
-        DrawText("t", 420, 50, 30, MY_BLUE);
-        DrawText("y", 440, 50, 30, MY_GREEN);
-        DrawText(" ", 460, 50, 30, MY_YELLOW);
-        DrawText("l", 480, 50, 30, MY_YELLOW);
-        DrawText("e", 500, 50, 30, MY_DARK_PINK);
-        DrawText("v", 520, 50, 30, MY_BLUE);
-        DrawText("e", 540, 50, 30, MY_GREEN);
-        DrawText("l", 560, 50, 30, MY_YELLOW);
- 
-        
-        Rectangle easyBtn = { 300, 150, BUTTON_WIDTH, BUTTON_HEIGHT };
-        Rectangle mediumBtn = { 300, 210, BUTTON_WIDTH, BUTTON_HEIGHT };
-        Rectangle hardBtn = { 300, 270, BUTTON_WIDTH, BUTTON_HEIGHT };
-        Rectangle backBtn = { 300, 330, BUTTON_WIDTH, BUTTON_HEIGHT };
-        
-        if (DrawButton(easyBtn, "Easy", MY_DARK_PINK, MY_DARK_PINK))
-        {
-            selectedDifficulty = 1;
-            playGame();
-        }
-        else if (DrawButton(mediumBtn, "Medium", MY_BLUE, MY_BLUE))
-        {
-            selectedDifficulty = 2;
-            playGame();
-        }
-        else if (DrawButton(hardBtn, "Hard", MY_GREEN, MY_GREEN))
-        {
-            selectedDifficulty = 3;
-            playGame();
-        }
-        else if (DrawButton(backBtn, "Back", MY_YELLOW, MY_YELLOW))
-        {
-            return;
-        }
-        
-        EndDrawing();
-    }
-}
 
-void displayInfo() 
-{
-    while (!WindowShouldClose()) 
-    {
-        BeginDrawing();
-        ClearBackground(BLACK_BG);
-        DrawText("Power-ups:", 300, 100, 20, WHITE_TEXT);
-        DrawText("1. Ball splits into 3", 300, 150, 20, WHITE_TEXT);
-        DrawText("2. Paddle becomes longer", 300, 200, 20, WHITE_TEXT);
-        
-        Rectangle backBtn = { 300, 300, BUTTON_WIDTH, BUTTON_HEIGHT };
-        if (DrawButton(backBtn, "Back", MY_BLUE, MY_BLUE))
-        {
+        // Judul dengan warna berbeda
+        DrawText("P", 280, 50, 30, MY_DARK_PINK);
+        DrawText("I", 300, 50, 30, MY_BLUE);
+        DrawText("L", 320, 50, 30, MY_GREEN);
+        DrawText("I", 340, 50, 30, MY_YELLOW);
+        DrawText("H", 360, 50, 30, MY_DARK_PINK);
+        DrawText(" ", 480, 50, 30, MY_BLUE);
+        DrawText("L", 400, 50, 30, MY_GREEN);
+        DrawText("E", 420, 50, 30, MY_YELLOW);
+        DrawText("V", 440, 50, 30, MY_DARK_PINK);
+        DrawText("E", 460, 50, 30, MY_BLUE);
+        DrawText("L", 480, 50, 30, MY_GREEN);
+
+        // Opsi kesulitan
+        const char *difficulties[] = {"EASY", "MEDIUM", "HARD"};
+        Color difficultyColor = (screen->index == 0) ? MY_DARK_PINK : WHITE;
+        DrawText(difficulties[currentDifficulty], 350, 150, 30, difficultyColor);
+
+        // Opsi pemilihan level
+        char levelText[20];
+        sprintf(levelText, "LEVEL %d", selectedLevel);
+        Color levelColor = (screen->index == 1) ? MY_BLUE : WHITE;
+        DrawText(levelText, 340, 250, 30, levelColor);
+
+        // Opsi start game
+        Color startColor = (screen->index == 2) ? MY_GREEN : WHITE;
+        DrawText("START GAME", 300, 350, 30, startColor);
+
+        // Opsi kembali
+        Color backColor = (screen->index == 3) ? MY_YELLOW : WHITE;
+        DrawText("BACK", 350, 450, 30, backColor);
+
+        // === Navigasi Atas-Bawah ===
+        if (IsKeyPressed(KEY_UP) || IsKeyPressed(KEY_W)) {
+            screen->index = (screen->index - 1 + 4) % 4;  // Naik ke atas (0 - 1 - 2 - 3 -> kembali ke 0)
+        }
+        if (IsKeyPressed(KEY_DOWN) || IsKeyPressed(KEY_S)) {
+            screen->index = (screen->index + 1) % 4;  // Turun ke bawah
+        }
+
+        // === Navigasi Kiri-Kanan ===
+        if (screen->index == 0) { // Jika memilih kesulitan
+            if (IsKeyPressed(KEY_LEFT) || IsKeyPressed(KEY_A)) {
+                currentDifficulty = (currentDifficulty - 1 + 3) % 3;
+            }
+            if (IsKeyPressed(KEY_RIGHT) || IsKeyPressed(KEY_D)) {
+                currentDifficulty = (currentDifficulty + 1) % 3;
+            }
+        } else if (screen->index == 1) { // Jika memilih level
+            if (IsKeyPressed(KEY_LEFT) || IsKeyPressed(KEY_A)) {
+                selectedLevel = (selectedLevel == 1) ? 30 : selectedLevel - 1;
+            }
+            if (IsKeyPressed(KEY_RIGHT) || IsKeyPressed(KEY_D)) {
+                selectedLevel = (selectedLevel == 30) ? 1 : selectedLevel + 1;
+            }
+        } else if (screen->index == 2 && IsKeyPressed(KEY_ENTER)) { // Jika memilih start game
+            screen->gameState = PLAY;
+            break;
+        } else if (screen->index == 3 && IsKeyPressed(KEY_ENTER)) { // Jika memilih kembali
+            screen->gameState = MENU;
             break;
         }
+
         EndDrawing();
     }
 }
 
-void displaySettings() 
+
+void DrawInfoScreen(int page) {
+    ClearBackground(BLACK_BG);
+    
+    DrawText("P", 320, 100, 30, MY_BLUE);
+    DrawText("o", 340, 100, 30, MY_GREEN);
+    DrawText("w", 360, 100, 30, MY_YELLOW);
+    DrawText("e", 380, 100, 30, MY_DARK_PINK);
+    DrawText("r", 400, 100, 30, MY_BLUE);
+    DrawText("-", 420, 100, 30, MY_GREEN);
+    DrawText("u", 440, 100, 30, MY_YELLOW);
+    DrawText("p", 460, 100, 30, MY_DARK_PINK);
+    
+    if (page == 1) {
+        DrawText("1. Enlarge Paddle - Memperbesar paddle", 200, 175, 20, WHITE_TEXT);
+        DrawText("2. Shrink Paddle - Mengecilkan paddle", 200, 225, 20, WHITE_TEXT);
+        DrawText("3. Speed Up Ball - Mempercepat bola", 200, 275, 20, WHITE_TEXT);
+    } else if (page == 2) {
+        DrawText("4. Slow Down Ball - Memperlambat bola", 200, 175, 20, WHITE_TEXT);
+        DrawText("5. Extra Life - Menambah nyawa pemain", 200, 225, 20, WHITE_TEXT);
+    }
+
+    DrawText("Press B to go back", 300, 350, 20, MY_YELLOW);
+}
+
+void HandleInfoInput(int *page) {
+    if (IsKeyPressed(KEY_A) || IsKeyPressed(KEY_LEFT)) {
+        if (*page == 2) *page = 1;
+    }
+    if (IsKeyPressed(KEY_D) || IsKeyPressed(KEY_RIGHT)) {
+        if (*page == 1) *page = 2;
+    }
+}
+
+void displayInfo(ScreenControl *screen) {
+    int page = 1;
+    while (!WindowShouldClose()) {
+        BeginDrawing();
+        DrawInfoScreen(page);
+        HandleInfoInput(&page);
+        if (IsKeyPressed(KEY_B) || IsKeyPressed(KEY_ESCAPE)) break;
+        EndDrawing();
+    }
+}
+
+void DrawSettingsScreen(ScreenControl *screen) {
+    ClearBackground(BLACK_BG);
+
+    DrawText("S", 330, 50, 30, MY_BLUE);
+    DrawText("e", 350, 50, 30, MY_GREEN);
+    DrawText("t", 370, 50, 30, MY_YELLOW);
+    DrawText("t", 390, 50, 30, MY_DARK_PINK);
+    DrawText("i", 410, 50, 30, MY_BLUE);
+    DrawText("n", 420, 50, 30, MY_GREEN);
+    DrawText("g", 440, 50, 30, MY_YELLOW);
+    DrawText("s", 460, 50, 30, MY_DARK_PINK);
+
+    DrawText("Paddle Color:", 200, 120, 20, WHITE);
+    DrawRectangle(400, 120, 40, 40, paddleColors[selectedPaddleColorIndex]);
+
+    DrawText("Ball Color:", 200, 180, 20, WHITE);
+    DrawRectangle(400, 180, 40, 40, ballColors[selectedBallColorIndex]);
+
+    DrawText("Music Volume:", 200, 240, 20, WHITE);
+    DrawText("< W / S >", 400, 240, 20, YELLOW);
+
+    DrawText("Sound Effects:", 200, 300, 20, WHITE);
+    DrawText("< A / D >", 400, 300, 20, YELLOW);
+
+    DrawText("Press B to go back", 300, 400, 20, MY_GREEN);
+}
+
+void HandleSettingsInput(ScreenControl *screen) {
+    // if (IsKeyPressed(KEY_A) || IsKeyPressed(KEY_LEFT)) ChangePaddleColor(-1);
+    // if (IsKeyPressed(KEY_D) || IsKeyPressed(KEY_RIGHT)) ChangePaddleColor(1);
+
+    // if (IsKeyPressed(KEY_A) || IsKeyPressed(KEY_LEFT)) ChangeBallColor(-1);
+    // if (IsKeyPressed(KEY_D) || IsKeyPressed(KEY_RIGHT)) ChangeBallColor(1);
+
+    if (IsKeyPressed(KEY_W)) IncreaseVolume();
+    if (IsKeyPressed(KEY_S)) DecreaseVolume();
+
+    if (IsKeyPressed(KEY_A)) DecreaseSound();
+    if (IsKeyPressed(KEY_D)) IncreaseSound();
+}
+
+void displaySettings(ScreenControl *screen) {
+    while (!WindowShouldClose()) {
+        BeginDrawing();
+        DrawSettingsScreen(screen);
+        HandleSettingsInput(screen);
+        if (IsKeyPressed(KEY_B)) return;
+        EndDrawing();
+    }
+}
+
+void ChangePaddleColor(int direction) 
 {
-    while (!WindowShouldClose()) 
-    {
+selectedPaddleColorIndex = (selectedPaddleColorIndex + direction + 6) % 6;
+paddleColor = paddleColors[selectedPaddleColorIndex];
+}
+
+void ChangeBallColor(int direction) 
+{
+selectedBallColorIndex = (selectedBallColorIndex + direction + 6) % 6;
+ballColor = ballColors[selectedBallColorIndex];
+}
+
+void IncreaseVolume() 
+{
+    if (musicVolume < 1.0f) musicVolume += 0.1f;
+    SetMusicVolume(gameMusic, musicVolume);
+}
+
+void DecreaseVolume() 
+{
+    if (musicVolume > 0.0f) musicVolume -= 0.1f;
+    SetMusicVolume(gameMusic, musicVolume);
+}
+
+void IncreaseSound() 
+{
+    if (soundVolume < 1.0f) soundVolume += 0.1f;
+    SetSoundVolume(ballBounce, soundVolume);
+}
+
+void DecreaseSound() 
+{
+    if (soundVolume > 0.0f) soundVolume -= 0.1f;
+    SetSoundVolume(ballBounce, soundVolume);
+}
+
+void playGame(ScreenControl *screen) {
+    while (!WindowShouldClose()) {
         BeginDrawing();
         ClearBackground(BLACK_BG);
-        DrawText("Music", 300, 100, 20, MY_DARK_PINK);
-        
-        Rectangle backBtn = { 300, 300, BUTTON_WIDTH, BUTTON_HEIGHT };
-        if (DrawButton(backBtn, "Back", MY_BLUE, MY_BLUE))
-        {
-            break;
-        }
-        EndDrawing();
-    }
-}
 
-void playGame()
-{
-    Color textColor;
-    const char *message;
+        if (IsKeyDown(KEY_LEFT) || IsKeyDown(KEY_A)) paddlePosition.x -= paddleSpeed;
+        if (IsKeyDown(KEY_RIGHT) || IsKeyDown(KEY_D)) paddlePosition.x += paddleSpeed;
 
-    if (selectedDifficulty == 1) {
-        textColor = MY_DARK_PINK;
-        message = "Playing games at easy level..";
-    } else if (selectedDifficulty == 2) {
-        textColor = MY_BLUE;
-        message = "Playing games at medium level..";
-    } else if (selectedDifficulty == 3) {
-        textColor = MY_GREEN;
-        message = "Playing games at hard level..";
-    } else {
-        return;  // Jika tidak ada level yang dipilih, kembali
-    }
+        if (paddlePosition.x < 0) paddlePosition.x = 0;
+        if (paddlePosition.x > 800 - 100) paddlePosition.x = 800 - 100;
 
-    while (!WindowShouldClose()) 
-    {
-        BeginDrawing();
-        ClearBackground(BLACK_BG);
-        
-        DrawText(message, 250, 100, 20, textColor);
-
-        Rectangle backBtn = { 300, 300, BUTTON_WIDTH, BUTTON_HEIGHT };
-        if (DrawButton(backBtn, "Back", MY_YELLOW, MY_YELLOW))
-        {
-            return;  // Kembali ke menu pemilihan tingkat kesulitan
-        }
+        DrawRectangle(paddlePosition.x, paddlePosition.y, 100, 20, paddleColor);
+        DrawText("Press B to go back", 300, 400, 20, MY_YELLOW);
+        if (IsKeyPressed(KEY_B)) return;
 
         EndDrawing();
     }
 }
+
+void DrawPauseScreen(ScreenControl *screen) {
+    BeginDrawing();
+    ClearBackground(BLACK);
+
+    DrawText("PAUSED", SCREEN_WIDTH / 2 - MeasureText("PAUSED", 40) / 2, 50, 40, WHITE);
+
+    Color colors[6] = {MY_BLUE, MY_GREEN, MY_YELLOW, MY_DARK_PINK, MY_BLUE, MY_GREEN};
+    colors[screen->index] = YELLOW;
+
+    const char *menuItems[] = {"Resume", "Settings", "Restart", "Menu"};
+
+    for (int i = 0; i < 5; i++) {
+        DrawText(menuItems[i], SCREEN_WIDTH / 2 - MeasureText(menuItems[i], 20) / 2,
+                 150 + (i * 50), 20, colors[i]);
+    }
+
+    EndDrawing();
+}
+
+// void HandlePauseInput(ScreenControl *screen) {
+//     if (IsKeyPressed(KEY_UP)) {
+//         screen->index = (screen->index == 0) ? 5 : screen->index - 1;
+//     }
+//     if (IsKeyPressed(KEY_DOWN)) {
+//         screen->index = (screen->index == 5) ? 0 : screen->index + 1;
+//     }
+
+//     if (IsKeyPressed(KEY_ENTER)) {
+//         switch (screen->index) {
+//             case 0:
+//                 screen->gameState = SETTINGS;
+//                 break;
+//             case 1:
+//                 screen->gameState = PLAY;
+//                 break;
+//             case 2:
+//                 screen->gameState = LEVEL_SELECTION;
+//                 break;
+//             case 3:
+//                 screen->gameState = MENU;
+//                 break;
+//             case 4:
+//                 CloseWindow();
+//                 break;
+//             case 5:
+//                 screen->gameState = PLAY;
+//                 break;
+//         }
+//     }
+// }
