@@ -2,13 +2,13 @@ CMakeLists.txt
 cmake-build-debug
 .idea
 Tes
-# Chinta.h
-# Hanif.h
-# Zahwa.h
-# Chinta.c
-# Hanif.c
-# Hanif1.c
-# Hanif2.c
-# Hanif3.c
-# Zahwa.c
-# game.exe
+Chinta.h
+Hanif.h
+Zahwa.h
+Chinta.c
+Hanif.c
+Hanif1.c
+Hanif2.c
+Hanif3.c
+Zahwa.c
+game.exe
