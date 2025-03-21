@@ -1,4 +1,8 @@
 #include "../Include/konfigurasi.h"
+#include "../Include/Hanif.h"
+#include "../Include/Billy.h"
+#include "../Include/Zahwa.h"
+#include "../Include/Faridha.h"
 #include "raylib.h"
 
 void HandleMenu(ScreenControl *screen) {
@@ -76,6 +80,43 @@ void HandlePauseInput(ScreenControl *screen) {
         }
     }
 }
+
+
+static Paddle paddle;
+static Ball ball;
+static bool isInit = false;
+void updateGame(ScreenControl* screen, Difficulty* selectDifficult, int* selectNumber) {
+    if (!isInit) {
+        InitPaddle(&paddle, (Vector2){SCREEN_WIDTH / 2, SCREEN_HEIGHT - 30}, (Vector2){100, 15}, 15);
+        initBall(&ball, getSpeedBall(&ball), &paddle);
+        inisialisasiBalok();
+        inisialisasibacksound();
+        isInit = true;
+    }
+
+    // Update objek game
+    updateBall(&ball, getSpeedBall(&ball), &paddle);
+    UpdatePaddle(&paddle);
+    bolaterkenabalok(&ball);
+
+    // Handle perubahan level jika semua balok hancur
+    if (AreAllBricksDestroyed()) {
+        NextLevel();
+    }
+}
+
+void drawGame(ScreenControl* screen, Difficulty* selectDifficult, int* selectNumber) {
+    BeginDrawing();
+    ClearBackground(BLACK);
+
+    // Gambar objek game
+    drawBall(ball);
+    DrawPaddle(paddle);
+    gambarBalok(); // Menampilkan balok
+
+    EndDrawing();
+}
+
 
 
 

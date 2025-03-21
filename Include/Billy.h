@@ -10,6 +10,7 @@
 #define BRICK_PADDING 5
 #define TOTAL_LEVELS 30
 
+
 typedef struct {
     Rectangle kotak;
     bool on;

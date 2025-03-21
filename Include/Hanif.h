@@ -2,6 +2,7 @@
 #define HANIF_H
 #include "raylib.h"
 #include "Konfigurasi.h"
+#include "Zahwa.h"
 
 #define LONG_EFFECT 15
 
@@ -25,7 +26,7 @@ typedef struct {
 }Level;
 
 void initBall(Ball* ball,Vector2 ballSpeed,Paddle* paddle);
-void updateBall(Ball* ball,Paddle* paddle,Vector2 ballSpeed);
+void updateBall(Ball* ball,Vector2 ballSpeed,Paddle* paddle);
 void drawBall(Ball ball);
 void setSpeedBall(Ball* ball,Level* level);
 Vector2 getSpeedBall(Ball* ball);
@@ -37,7 +38,7 @@ void configlevel(Level *level);
 
 //Handle game
 void updateGame(ScreenControl* screen,Difficulty* selectDifficult,int *selectNumber);
-void drawGame(GameState *gametState);
+void drawGame(ScreenControl* screen,Difficulty* selectDifficult,int *selectNumber);
 
 
 

@@ -1,25 +1,29 @@
 #include "raylib.h"
+#include "../Include/Konfigurasi.h"
 #include "../Include/Hanif.h"
+#include "../Include/Billy.h"
+#include "../Include/Zahwa.h"
 
 int main() {
-    // Inisialisasi window
-    InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Bricks Breaker");
+    // Inisialisasi jendela game
+    InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Bricks Breaker Game");
     SetTargetFPS(TARGET_FPS);
-    Level level;
-    // Inisialisasi bola
-    Ball ball;
-    initBall(&ball,getSpeedBall(&ball),&paddle);
 
+    // Struktur utama untuk mengontrol game
+    ScreenControl screen = {PLAY, 0};
+    Difficulty selectedDifficulty = EASY;
+    int selectedNumber = 1;  // Misalnya, level pertama
+
+    // Loop utama game
     while (!WindowShouldClose()) {
-        updateBall(&ball,&paddle,(Vector2){0,-20});
-        UpdatePaddle(&paddle);
-        BeginDrawing();
-        ClearBackground(BLACK);
-        drawBall(ball);
-        DrawPaddle(paddle);
-        EndDrawing();
-    }
-    CloseWindow();
+        // Update game logic
+        updateGame(&screen, &selectedDifficulty, &selectedNumber);
 
+        // Gambar game
+        drawGame(&screen, &selectedDifficulty, &selectedNumber);
+    }
+
+    // Tutup jendela game
+    CloseWindow();
     return 0;
 }

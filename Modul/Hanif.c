@@ -10,13 +10,13 @@ void initBall(Ball* ball, Vector2 ballSpeed, Paddle* paddle) {
     ball->Color = RAYWHITE;
     ball->Active = true;
     ball->Released = false; // Pastikan bola belum dilepas
-    ball->Position.x = paddle->Position.x + paddle->Ukuran.x / 2;
-    ball->Position.y = paddle->Position.y - ball->Radius;
+    ball->Position.x = paddle->Posisi.x + paddle->Ukuran.x / 2;
+    ball->Position.y = paddle->Posisi.y - ball->Radius;
 }
 
 
 //
-void updateBall(Ball* ball, Paddle* paddle, Vector2 SpeedBola) {
+void updateBall(Ball* ball,Vector2 SpeedBola,Paddle* paddle) {
     if (!ball->Active) return; // Jika bola tidak aktif, tidak ditampilkan atau diupdate
 
     // Geser semua Position Effect (jejak)

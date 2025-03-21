@@ -1,5 +1,8 @@
 #include "../Include/Konfigurasi.h"
 #include "../Include/Hanif.h"
+#include "../Include/Faridha.h"
+#include "../Include/Zahwa.h"
+#include "../Include/Billy.h"
 //GAME
 
 void updateGame(ScreenControl* screen,Difficulty* selectDifficult,int *selectNumber){
@@ -7,7 +10,7 @@ void updateGame(ScreenControl* screen,Difficulty* selectDifficult,int *selectNum
     case MENU: handleMenu(); break;
     case SETTINGS: handleSettings(); break;
     case INFO: handleInfo(); break;
-    case LEVEL_SELECTION: handleLevelSelectionInput(,selectDifficult,selectNumber); break;
+    case LEVEL_SELECTION: handleLevelSelectionInput(selectDifficult,selectNumber); break;
     case PLAY: handlePlay(); break;
     case PAUSE: handlePause(); break;
     case EXIT: exit(0);
