@@ -1,5 +1,4 @@
 #include "raylib.h"
-
 #include "../Modul/Zahwa.c"
 #include "../Include/Konfigurasi.h"
 
