@@ -1,39 +1,35 @@
 #include "raylib.h"
-#include "../Include/Zahwa.h"
+#include "../Modul/Zahwa.c"
 #include "../Include/Konfigurasi.h"
 
 int main() {
-    InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Bricks Breaker");
-    SetTargetFPS(TARGET_FPS);
+    InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "BricksBreaker");
 
     Paddle paddle;
-    InitPaddle(&paddle, (Vector2){ SCREEN_WIDTH / 2 - 50, SCREEN_HEIGHT - 30 }, (Vector2){ 100, 20 }, 5.0f);
+    InitPaddle(&paddle, (Vector2){ SCREEN_WIDTH / 2 - 50, SCREEN_HEIGHT - 50 }, (Vector2){ 80, 10 }, 0.5f);
 
-    Ball ball;
-    InitBall(&ball, (Vector2){3, -5}, &paddle);
 
     Lives lives;
-    InitLives(&lives);
+    InitLives(&lives, (Vector2){0, 0}, 3);
 
     while (!WindowShouldClose()) {
         UpdatePaddle(&paddle);
-        UpdateBall(&ball, &paddle, (Vector2){3, -5});
-
-        CekBolaJatuh(&lives, &ball);
+        
+        UpdateLives(&lives, &ball);
 
         BeginDrawing();
         ClearBackground(BLACK);
 
-        DrawLives(&lives);
-
-        DrawBall(ball);
         DrawPaddle(paddle);
+        
+        DrawLives(&lives);
 
         EndDrawing();
     }
 
-    unloadLives(&lives);
+    UnloadLives(&lives);
     CloseWindow();
-    
+
     return 0;
 }
+
