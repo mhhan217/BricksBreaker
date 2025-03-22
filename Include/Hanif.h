@@ -1,20 +1,10 @@
 #ifndef HANIF_H
 #define HANIF_H
+
 #include "raylib.h"
 #include "Konfigurasi.h"
-#include "Zahwa.h"
-
-#define LONG_EFFECT 15
-
-typedef struct{
-    Vector2 Position;
-    Vector2 Speed;
-    float Radius;
-    Vector2 Effect[LONG_EFFECT];
-    Color Color;
-    bool Active;
-    bool Released;
-}Ball;
+#define BRICK_COLS 30
+#define BRICK_ROWS 55
 
 typedef enum {
     EASY, MEDIUM, HARD
@@ -23,54 +13,25 @@ typedef enum {
 typedef struct {
     int NumberLevel;
     Difficulty DifficultLevel;
+    int brickPattern[BRICK_ROWS][BRICK_COLS];
 }Level;
 
-void initBall(Ball* ball,Vector2 ballSpeed,Paddle* paddle);
-void updateBall(Ball* ball,Vector2 ballSpeed,Paddle* paddle);
-void drawBall(Ball ball);
-void setSpeedBall(Ball* ball,Level* level);
+void initBall(Ball* ball, Vector2 ballSpeed, Paddle* paddle);
+void updateBall(Ball* ball, Vector2 ballSpeed, Paddle* paddle);
+void drawBall(Ball* ball);
+void setSpeedBall(Ball* ball, Level* level);
 Vector2 getSpeedBall(Ball* ball);
-//Handlelevel
-void handleLevelSelectionInput(ScreenControl* screen, Level *level,Ball* ball);
+
+// Handle Level
+void handleLevelSelectionInput(ScreenControl* screen, Level *level, Ball* ball);
 void difficultLevel(Level *level);
 void numberLevel(Level *level);
-void configlevel(Level *level);
+void configLevel(Level *level);
 
-//Handle game
-void updateGame(ScreenControl* screen,Difficulty* selectDifficult,int *selectNumber);
-void drawGame(ScreenControl* screen,Difficulty* selectDifficult,int *selectNumber);
+// Handle Game
+void updateGame(ScreenControl* screen, Difficulty* selectDifficult, int *selectNumber);
+void drawGame(ScreenControl* screen, Difficulty* selectDifficult, int *selectNumber);
 
+#include "Zahwa.h" // Dipanggil setelah Ball didefinisikan
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/*
-typedef struct {
-    Vector2 Posisi;
-    Vector2 Ukuran;
-    float Kecepatan;
-    Color Warna;
-} Paddle;
-
-void InitPaddle(Paddle* paddle, Vector2 posisiAwal, Vector2 ukuran, float kecepatan);
-void UpdatePaddle(Paddle* paddle);
-void DrawPaddle(Paddle paddle);
-
-*/
-
-#endif //HANIF_H
+#endif // HANIF_H

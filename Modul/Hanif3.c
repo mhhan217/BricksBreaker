@@ -110,7 +110,7 @@ void drawGame(ScreenControl* screen, Difficulty* selectDifficult, int* selectNum
     ClearBackground(BLACK);
 
     // Gambar objek game
-    drawBall(ball);
+    drawBall(&ball);
     DrawPaddle(paddle);
     gambarBalok(); // Menampilkan balok
 

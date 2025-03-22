@@ -8,6 +8,7 @@ int main() {
     // Inisialisasi jendela game
     InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Bricks Breaker Game");
     SetTargetFPS(TARGET_FPS);
+    
 
     // Struktur utama untuk mengontrol game
     ScreenControl screen = {PLAY, 0};
