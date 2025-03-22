@@ -9,6 +9,7 @@
 int main() {
     InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Bricks Breaker");
     SetTargetFPS(TARGET_FPS);
+    
 
     // Inisialisasi game state
     GameState gameState = LEVEL_SELECTION;
