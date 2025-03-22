@@ -24,7 +24,7 @@ void DrawPaddle(Paddle Paddle) {
     DrawRectangleV(Paddle.Posisi, Paddle.Ukuran, Paddle.Warna);
 }
 
-void InitLives(Lives* lives, Vector2 Posisi, int jumlah_nyawa) {
+void InitLives(Lives* lives, Vector2 Posisi) {
     lives->jumlah_nyawa = MAKS_NYAWA;
     lives->posisi = (Vector2){0, 0};  // Posisi ikon nyawa di pojok kiri atas
     lives->heartIcon = LoadTexture("HeartPixel.png");
@@ -46,7 +46,7 @@ void DrawLives(Lives* lives) {
 
 void UpdateLives(Lives* lives, Ball* ball) {
     // Cek bola jatuh ke bawah layar 
-    if (lives->jumlah_nyawa > 0 && ball->Position.y >= GetScreenHeight() + ball->Radius) {
+    if (lives->jumlah_nyawa > 0 && ball->Position.y + ball->Radius >= GetScreenHeight()) {
         lives->jumlah_nyawa--;  
         // Nyawa masih ada
         if (lives->jumlah_nyawa <= 0) {

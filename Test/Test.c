@@ -11,7 +11,7 @@ int main() {
     displayMenuWithGraphics();
     InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Bricks Breaker");
     SetTargetFPS(TARGET_FPS);
-    
+
     // Inisialisasi game state
     GameState gameState = LEVEL_SELECTION;
 
@@ -19,78 +19,69 @@ int main() {
     Paddle paddle;
     Ball ball;
     Level level = {1, EASY}; // Default Level 1, Easy
-    int menuIndex = 0;  // Menyimpan posisi menu yang dipilih
-    ScreenControl screen;
+    ScreenControl screen = {0, PLAY}; // Index menu pause, default ke PLAY
     Lives lives;
-    InitLives(&lives, (Vector2){0, 0}, 3);
-
-
-    // Inisialisasi Paddle dan Ball
-    InitPaddle(&paddle, (Vector2){SCREEN_WIDTH / 2 - 50, SCREEN_HEIGHT - 70},
-               (Vector2){100, 20}, 20);
-    setSpeedBall(&level, &ball); 
-    initBall(&ball, ball.Speed, &paddle);
-    inisialisasibacksound();
-    inisialisasiBalok();
 
     while (!WindowShouldClose()) {
-        switch (gameState) {
-            case LEVEL_SELECTION:
-                handleLevelSelectionInput(&gameState, &level, &ball);
-                break;
-            case LOADING:
-                setSpeedBall(&level, &ball);
-                currentLevel = numberLevel(&level);
-                inisialisasiBalok();
-                gameState = PLAY;
-                break;
-            case PLAY:
-                if (IsKeyPressed(KEY_P)) {
-                    gameState = PAUSE;
-                } else {
-                    UpdateLives(&lives, &ball);
-                    updateBall(&ball, &paddle, ball.Speed);
-                    UpdatePaddle(&paddle);
-                    bolaterkenabalok(&ball);
-    
-                    if (AreAllBricksDestroyed()) {
-                        gameState = LEVEL_SELECTION; // Kembali ke pemilihan level jika semua bricks hancur
-                    }
-                }
-                break;
-            case PAUSE:
-                HandlePauseInput(&screen);
-                // if (screen.gameState != PAUSE) {
-                //     gameState = screen.gameState; // Kembali ke state lain jika ada perubahan
-                // }
-                break;
-            case MENU:
-                gameState = LEVEL_SELECTION; // Kembali ke pemilihan level
-                break;
-            case EXIT:
-                CloseWindow();
-                return 0;
+        if (gameState == MENU) {
+
         }
-    
-        // Rendering game
+        else if (gameState == INFO) {
+
+        }
+        else if (gameState == SETTINGS) {
+
+        }
+        if (gameState == LEVEL_SELECTION) {
+            handleLevelSelectionInput(&gameState, &level, &ball);
+        }
+        else if (gameState == LOADING) {
+            setSpeedBall(&level, &ball);
+            currentLevel = numberLevel(&level);
+            inisialisasiBalok();
+            InitPaddle(&paddle, (Vector2){SCREEN_WIDTH / 2 - 50, SCREEN_HEIGHT - 70}, (Vector2){100, 20}, 20);
+            initBall(&ball, ball.Speed, &paddle);
+            inisialisasibacksound();
+            InitLives(&lives, (Vector2){0, 0});
+            gameState = PLAY;
+        }
+        else if (gameState == PLAY) {
+            if (IsKeyPressed(KEY_P)) {
+                gameState = PAUSE;
+            }
+            UpdateLives(&lives, &ball);
+            updateBall(&ball, &paddle, ball.Speed);
+            UpdatePaddle(&paddle);
+            bolaterkenabalok(&ball);
+            if (AreAllBricksDestroyed()) {
+                gameState = LEVEL_SELECTION;
+            }
+        }
+        else if (gameState == PAUSE) {
+            HandlePauseInput(&screen); // Navigasi menu pause
+            if (IsKeyPressed(KEY_ENTER)) {
+                gameState = screen.gameState;
+            }
+        }
+        else if (gameState == GAME_OVER) {
+
+        }
+
         BeginDrawing();
         ClearBackground(BLACK);
-    
-        switch (gameState) {
-            case LEVEL_SELECTION:
-                drawLevel(&level);
-                break;
-            case PLAY:
-                DrawLives(&lives);
-                gambarBalok();  // Tambahkan bricks ke layar
-                drawBall(ball);
-                DrawPaddle(paddle);
-                break;
-            case PAUSE:
-                DrawPauseScreen(&screen);
-                break;
+
+        if (gameState == LEVEL_SELECTION) {
+            drawLevel(&level);
         }
-    
+        else if (gameState == PLAY) {
+            DrawLives(&lives);
+            gambarBalok();
+            drawBall(ball);
+            DrawPaddle(paddle);
+        }
+        else if (gameState == PAUSE) {
+            DrawPauseScreen(&screen);
+        }
         EndDrawing();
     }
     tutupbacksound();

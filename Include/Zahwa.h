@@ -20,7 +20,7 @@ void InitPaddle(Paddle* Paddle, Vector2 posisiAwal, Vector2 ukuran, float kecepa
 void UpdatePaddle(Paddle* Paddle);
 void DrawPaddle(Paddle Paddle);
 
-void InitLives(Lives* lives, Vector2 Posisi, int jumlah_nyawa);
+void InitLives(Lives* lives, Vector2 Posisi);
 void DrawLives(Lives* lives);
 void UpdateLives(Lives* lives, Ball* ball);
 void UnloadLives(Lives* lives);
