@@ -33,11 +33,11 @@ extern Sound ballBounce;
 extern Music gameMusic;
 
 // Deklarasi konstanta menu
-typedef enum {
-    MENU,
-    LEVEL_SELECTION,
-    LOADING
-} GameState;
+// typedef enum {
+//     MENU,
+//     LEVEL_SELECTION,
+//     LOADING
+// } GameState;
 
 // Deklarasi array warna sebagai `extern`
 extern Color paddleColor;

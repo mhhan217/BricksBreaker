@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include "raylib.h"
 #include "Chinta.h"
+#include "Hanif.h"
 
 #define BUTTON_WIDTH 200
 #define BUTTON_HEIGHT 40
@@ -11,9 +12,12 @@ Vector2 ballSpeed = { 3, -3 };
 float paddleSpeed = 5.0f;  // Atur kecepatan paddle sesuai kebutuhan
 Vector2 paddlePosition = { 350, 550 }; // Atur posisi awal paddle
 
+GameState gameState;
+Level level;
+// Ball ball;
 int selectedMenuOption = 0;
-int menuIndex = 0;
-int currentDifficulty = 0;
+// int menuIndex = 0;
+// int currentDifficulty = 0;
 int selectedDifficulty = 0;
 int currentState = MENU;
 int selectedLevel = 1;
@@ -33,7 +37,8 @@ Music gameMusic;
 void displayMenuWithGraphics() {
     InitWindow(800, 600, "Bricks Breaker Menu");
     SetTargetFPS(60);
-    InitAudioDevice();
+    // InitAudioDevice();
+    inisialisasibacksound1();
 
     while (!WindowShouldClose()) {
         BeginDrawing();
@@ -63,10 +68,14 @@ void displayMenuWithGraphics() {
         Color highlightColors[] = { MY_DARK_PINK, MY_BLUE, MY_GREEN, MY_YELLOW };
         int menuCount = 4;
 
-        if (IsKeyPressed(KEY_DOWN) || IsKeyPressed(KEY_S))
+        if (IsKeyPressed(KEY_DOWN) || IsKeyPressed(KEY_S)){
+            panggilbacksound1();
             selectedMenuOption = (selectedMenuOption + 1) % menuCount;
-        if (IsKeyPressed(KEY_UP) || IsKeyPressed(KEY_W))
+        }
+        if (IsKeyPressed(KEY_UP) || IsKeyPressed(KEY_W)){
+            panggilbacksound1();
             selectedMenuOption = (selectedMenuOption - 1 + menuCount) % menuCount;
+        }
 
         for (int i = 0; i < menuCount; i++) {
             Color textColor = (i == selectedMenuOption) ? highlightColors[i] : WHITE;
@@ -74,7 +83,7 @@ void displayMenuWithGraphics() {
         }
 
         if (IsKeyPressed(KEY_ENTER) || IsKeyPressed(KEY_SPACE)) {
-            if (selectedMenuOption == 0) displayLevelSelection();
+            if (selectedMenuOption == 0) break;
             else if (selectedMenuOption == 1) displayInfo();
             else if (selectedMenuOption == 2) displaySettings();
             else if (selectedMenuOption == 3) break;
@@ -82,7 +91,8 @@ void displayMenuWithGraphics() {
 
         EndDrawing();
     }
-    CloseAudioDevice();
+    tutupbacksound1();
+    // CloseAudioDevice();
     CloseWindow();
 }
 
@@ -92,66 +102,66 @@ void DrawTextShadow(const char *text, int posX, int posY, int fontSize, Color te
     DrawText(text, posX, posY, fontSize, textColor);           // Teks utama
 }
 
-// Fungsi untuk menampilkan menu pemilihan level
-void displayLevelSelection() {
-    while (!WindowShouldClose()) {
-        BeginDrawing();
-        ClearBackground(BLACK_BG);
+// // Fungsi untuk menampilkan menu pemilihan level
+// void displayLevelSelection() {
+//     while (!WindowShouldClose()) {
+//         BeginDrawing();
+//         ClearBackground(BLACK_BG);
 
-        DrawText("P", 280, 50, 30, MY_DARK_PINK);
-        DrawText("I", 300, 50, 30, MY_BLUE);
-        DrawText("L", 320, 50, 30, MY_GREEN);
-        DrawText("I", 340, 50, 30, MY_YELLOW);
-        DrawText("H", 360, 50, 30, MY_DARK_PINK);
-        DrawText(" ", 480, 50, 30, MY_BLUE);
-        DrawText("L", 400, 50, 30, MY_GREEN);
-        DrawText("E", 420, 50, 30, MY_YELLOW);
-        DrawText("V", 440, 50, 30, MY_DARK_PINK);
-        DrawText("E", 460, 50, 30, MY_BLUE);
-        DrawText("L", 480, 50, 30, MY_GREEN);
+//         DrawText("P", 280, 50, 30, MY_DARK_PINK);
+//         DrawText("I", 300, 50, 30, MY_BLUE);
+//         DrawText("L", 320, 50, 30, MY_GREEN);
+//         DrawText("I", 340, 50, 30, MY_YELLOW);
+//         DrawText("H", 360, 50, 30, MY_DARK_PINK);
+//         DrawText(" ", 480, 50, 30, MY_BLUE);
+//         DrawText("L", 400, 50, 30, MY_GREEN);
+//         DrawText("E", 420, 50, 30, MY_YELLOW);
+//         DrawText("V", 440, 50, 30, MY_DARK_PINK);
+//         DrawText("E", 460, 50, 30, MY_BLUE);
+//         DrawText("L", 480, 50, 30, MY_GREEN);
 
-        // Tampilkan pilihan kesulitan
-        const char *difficulties[] = {"EASY", "MEDIUM", "HARD"};
-        Color difficultyColor = (menuIndex == 0) ? MY_DARK_PINK : WHITE;
-        DrawText(difficulties[currentDifficulty], 350, 150, 30, difficultyColor);
+//         // Tampilkan pilihan kesulitan
+//         const char *difficulties[] = {"EASY", "MEDIUM", "HARD"};
+//         Color difficultyColor = (menuIndex == 0) ? MY_DARK_PINK : WHITE;
+//         DrawText(difficulties[currentDifficulty], 350, 150, 30, difficultyColor);
 
-        // Tampilkan level yang dipilih
-        char levelText[20];
-        sprintf(levelText, "LEVEL %d", selectedLevel);
-        Color levelColor = (menuIndex == 1) ? MY_BLUE : WHITE;
-        DrawText(levelText, 340, 250, 30, levelColor);
+//         // Tampilkan level yang dipilih
+//         char levelText[20];
+//         sprintf(levelText, "LEVEL %d", selectedLevel);
+//         Color levelColor = (menuIndex == 1) ? MY_BLUE : WHITE;
+//         DrawText(levelText, 340, 250, 30, levelColor);
 
-        // Tampilkan "START GAME"
-        Color startColor = (menuIndex == 2) ? MY_GREEN : WHITE;
-        DrawText("START GAME", 300, 350, 30, startColor);
+//         // Tampilkan "START GAME"
+//         Color startColor = (menuIndex == 2) ? MY_GREEN : WHITE;
+//         DrawText("START GAME", 300, 350, 30, startColor);
 
-        // Tampilkan "BACK"
-        Color backColor = (menuIndex == 3) ? MY_YELLOW : WHITE;
-        DrawText("BACK", 350, 450, 30, backColor);
+//         // Tampilkan "BACK"
+//         Color backColor = (menuIndex == 3) ? MY_YELLOW : WHITE;
+//         DrawText("BACK", 350, 450, 30, backColor);
 
-        handleLevelSelectionInput();
+//         handleLevelSelectionInput();
 
-        EndDrawing();
-    }
-}
+//         EndDrawing();
+//     }
+// }
 
 // Fungsi untuk menangani input dalam menu pemilihan level
-void handleLevelSelectionInput() {
-    if (IsKeyPressed(KEY_DOWN)) menuIndex = (menuIndex + 1) % 4;
-    if (IsKeyPressed(KEY_UP)) menuIndex = (menuIndex - 1 + 4) % 4;
+// void handleLevelSelectionInput() {
+//     if (IsKeyPressed(KEY_DOWN)) menuIndex = (menuIndex + 1) % 4;
+//     if (IsKeyPressed(KEY_UP)) menuIndex = (menuIndex - 1 + 4) % 4;
 
-    if (menuIndex == 0) { // Navigasi kesulitan
-        if (IsKeyPressed(KEY_RIGHT)) currentDifficulty = (currentDifficulty + 1) % 3;
-        if (IsKeyPressed(KEY_LEFT)) currentDifficulty = (currentDifficulty - 1 + 3) % 3;
-    }
-    if (menuIndex == 1) { // Navigasi level
-        if (IsKeyPressed(KEY_RIGHT)) selectedLevel = (selectedLevel % 30) + 1;
-        if (IsKeyPressed(KEY_LEFT)) selectedLevel = (selectedLevel - 2 + 30) % 30 + 1;
-    }
-    if (menuIndex == 2 && IsKeyPressed(KEY_ENTER)) currentState = LOADING;
-    if (menuIndex == 3 && IsKeyPressed(KEY_ENTER)) currentState = MENU;
+//     if (menuIndex == 0) { // Navigasi kesulitan
+//         if (IsKeyPressed(KEY_RIGHT)) currentDifficulty = (currentDifficulty + 1) % 3;
+//         if (IsKeyPressed(KEY_LEFT)) currentDifficulty = (currentDifficulty - 1 + 3) % 3;
+//     }
+//     if (menuIndex == 1) { // Navigasi level
+//         if (IsKeyPressed(KEY_RIGHT)) selectedLevel = (selectedLevel % 30) + 1;
+//         if (IsKeyPressed(KEY_LEFT)) selectedLevel = (selectedLevel - 2 + 30) % 30 + 1;
+//     }
+//     if (menuIndex == 2 && IsKeyPressed(KEY_ENTER)) currentState = LOADING;
+//     if (menuIndex == 3 && IsKeyPressed(KEY_ENTER)) currentState = MENU;
 
-}
+// }
 
 void displayInfo() 
 {

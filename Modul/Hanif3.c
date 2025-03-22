@@ -24,6 +24,7 @@ void DrawPauseScreen(ScreenControl *screen) {
     EndDrawing();
 }
 void HandlePauseInput(ScreenControl *screen) {
+    DrawPauseScreen(screen);
     // Navigasi menu pause
     if (IsKeyPressed(KEY_UP)) {
         screen->index = (screen->index == 0) ? 5 : screen->index - 1;

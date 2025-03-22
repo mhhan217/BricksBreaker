@@ -1,6 +1,6 @@
 #ifndef BILLY_H
 #define BILLY_H
-#include "konfigurasi.h"
+#include "Konfigurasi.h"
 #include "raylib.h"
 #include "Hanif.h"
 
@@ -10,7 +10,7 @@
 #define BRICK_PADDING 5
 #define TOTAL_LEVELS 30
 
-int currentLevel;
+// int currentLevel;
 
 void inisialisasiBalok();
 void gambarBalok();
@@ -20,4 +20,8 @@ void NextLevel();
 void inisialisasibacksound();
 void panggilbacksound();
 void tutupbacksound();
+void inisialisasibacksound1();
+void panggilbacksound1();
+void tutupbacksound1();
+
 #endif // BILLY_H

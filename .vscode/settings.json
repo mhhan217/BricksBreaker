@@ -1,0 +1,10 @@
+{
+    "files.associations": {
+        "chinta.h": "c",
+        "hanif.h": "c",
+        "zahwa.h": "c",
+        "stdio.h": "c",
+        "konfigurasi.h": "c",
+        "raylib.h": "c"
+    }
+}

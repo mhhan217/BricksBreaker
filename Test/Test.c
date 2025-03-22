@@ -1,4 +1,5 @@
 #include "Billy.c"
+#include "Chinta.c"
 #include "Hanif.c"
 #include "Zahwa.c"
 #include "Hanif1.c"
@@ -7,10 +8,10 @@
 #include "Konfigurasi.h"
 
 int main() {
+    displayMenuWithGraphics();
     InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Bricks Breaker");
     SetTargetFPS(TARGET_FPS);
     
-
     // Inisialisasi game state
     GameState gameState = LEVEL_SELECTION;
 
@@ -20,6 +21,9 @@ int main() {
     Level level = {1, EASY}; // Default Level 1, Easy
     int menuIndex = 0;  // Menyimpan posisi menu yang dipilih
     ScreenControl screen;
+    Lives lives;
+    InitLives(&lives, (Vector2){0, 0}, 3);
+
 
     // Inisialisasi Paddle dan Ball
     InitPaddle(&paddle, (Vector2){SCREEN_WIDTH / 2 - 50, SCREEN_HEIGHT - 70},
@@ -44,9 +48,10 @@ int main() {
                 if (IsKeyPressed(KEY_P)) {
                     gameState = PAUSE;
                 } else {
+                    UpdateLives(&lives, &ball);
                     updateBall(&ball, &paddle, ball.Speed);
                     UpdatePaddle(&paddle);
-                    bolaterkenabalok(&ball); // Cek apakah bola mengenai bricks
+                    bolaterkenabalok(&ball);
     
                     if (AreAllBricksDestroyed()) {
                         gameState = LEVEL_SELECTION; // Kembali ke pemilihan level jika semua bricks hancur
@@ -55,9 +60,9 @@ int main() {
                 break;
             case PAUSE:
                 HandlePauseInput(&screen);
-                if (screen.gameState != PAUSE) {
-                    gameState = screen.gameState; // Kembali ke state lain jika ada perubahan
-                }
+                // if (screen.gameState != PAUSE) {
+                //     gameState = screen.gameState; // Kembali ke state lain jika ada perubahan
+                // }
                 break;
             case MENU:
                 gameState = LEVEL_SELECTION; // Kembali ke pemilihan level
@@ -76,6 +81,7 @@ int main() {
                 drawLevel(&level);
                 break;
             case PLAY:
+                DrawLives(&lives);
                 gambarBalok();  // Tambahkan bricks ke layar
                 drawBall(ball);
                 DrawPaddle(paddle);

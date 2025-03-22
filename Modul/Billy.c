@@ -6,8 +6,10 @@
 
 bool isPaused = false;
 int currentDifficulty = 0;
-Sound suaratabrakan;
+Sound suaratabrakan, suaramenu;
 Level level;
+
+
 void inisialisasibacksound() {
     InitAudioDevice();
     suaratabrakan = LoadSound("tabrakan.wav");
@@ -22,6 +24,20 @@ void tutupbacksound() {
     CloseAudioDevice();
 }
 
+void inisialisasibacksound1(){
+    InitAudioDevice();
+    suaramenu = LoadSound("suaramenu.wav");
+}
+
+void panggilbacksound1(){
+    PlaySound(suaramenu);
+}
+
+void tutupbacksound1(){
+    UnloadSound(suaramenu);
+    CloseAudioDevice();
+}
+
 void inisialisasiBalok() {
     int i=0;
     while (i < BRICK_ROWS) {
@@ -33,9 +49,6 @@ void inisialisasiBalok() {
             bricks[i][j].kotak.height = BRICK_HEIGHT;
             int tipebalok = levels[currentLevel].brickPattern[i][j];
             if (tipebalok == 1)
-            {
-                bricks[i][j].on = true;
-            } else if (tipebalok == 2)
             {
                 bricks[i][j].on = true;
             } else {
@@ -57,9 +70,6 @@ void gambarBalok() {
                 if (tipebalok == 1)
                 {
                     DrawRectangleRec(bricks[i][j].kotak, BLUE);
-                } else if (tipebalok == 2)
-                {
-                    DrawRectangleRec(bricks[i][j].kotak, DARKGRAY);
                 }
             }
             j++;
@@ -122,42 +132,4 @@ void SetDifficulty(int difficulty) {
 void NextLevel() {
     currentLevel = (currentLevel + 1) % TOTAL_LEVELS;  
     inisialisasiBalok();
-}
-
-
-int inisialisasiGame(){
-    if (IsKeyPressed(KEY_P)) {
-        isPaused = !isPaused;
-    }
-    inisialisasibacksound();
-    Ball bola;
-    Paddle paddle;
-    InitPaddle(&paddle, (Vector2){ SCREEN_WIDTH / 2 - 50, SCREEN_HEIGHT - 30 }, (Vector2){ 100, 20 }, 15.0f);
-    initBall(&bola, (Vector2){SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2}, &paddle);
-    inisialisasiBalok();
-
-    while (!WindowShouldClose()) {
-        if (!isPaused)
-        {
-            bolaterkenabalok(&bola);
-            updateBall(&bola, &paddle, (Vector2){0, -20});
-            UpdatePaddle(&paddle);
-            if (AreAllBricksDestroyed()) {
-                NextLevel();
-            }
-        }
-        
-        BeginDrawing();
-        ClearBackground(BLACK);
-        gambarBalok();
-        drawBall(bola);
-        DrawPaddle(paddle);
-        if (isPaused) {
-            DrawText("PAUSED", SCREEN_WIDTH / 2 - 50, SCREEN_HEIGHT / 2, 40, RED);
-            DrawText("Tekan 'P' untuk melanjutkan", SCREEN_WIDTH / 2 - 100, SCREEN_HEIGHT / 2 + 50, 20, WHITE);
-        }
-        EndDrawing();
-    }
-    tutupbacksound();
-    return 0;
 }

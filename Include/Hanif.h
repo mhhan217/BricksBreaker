@@ -4,10 +4,10 @@
 #include "Konfigurasi.h"
 #include "Zahwa.h"
 #define LONG_EFFECT 15
-#define BRICK_ROWS 18
-#define BRICK_COLS 50
+#define BRICK_ROWS 30
+#define BRICK_COLS 55
 
-typedef struct{
+typedef struct Ball{
     Vector2 Position;
     Vector2 Speed;
     float Radius;
