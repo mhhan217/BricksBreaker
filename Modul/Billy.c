@@ -5,8 +5,6 @@
 #include "../Include/Konfigurasi.h"
 #include <math.h>
 
-bool isPaused = false;
-int currentDifficulty = 0;
 Sound suaratabrakan;
 Level level;
 void inisialisasibacksound() {
@@ -32,20 +30,16 @@ void inisialisasiBalok() {
             bricks[i][j].kotak.y = i * (BRICK_HEIGHT + BRICK_PADDING) + 38;
             bricks[i][j].kotak.width = BRICK_WIDTH;
             bricks[i][j].kotak.height = BRICK_HEIGHT;
-            int tipebalok = levels[currentLevel].brickPattern[i][j];
-            if (tipebalok == 1)
-            {
-                bricks[i][j].on = true;
-            } else if (tipebalok == 2)
-            {
+            int tipebalok = level.brickPattern[i][j];
+            if (tipebalok == 1 || tipebalok == 2) {
                 bricks[i][j].on = true;
             } else {
                 bricks[i][j].on = false;
             }
             j++;
         }
-        i++; 
-    }    
+        i++;
+    }
 }
 
 void gambarBalok() {
@@ -54,18 +48,16 @@ void gambarBalok() {
         int j=0;
         while (j < BRICK_COLS){
             if (bricks[i][j].on) {
-                int tipebalok = levels[currentLevel].brickPattern[i][j];
-                if (tipebalok == 1)
-                {
+                int tipebalok = level.brickPattern[i][j];
+                if (tipebalok == 1) {
                     DrawRectangleRec(bricks[i][j].kotak, BLUE);
-                } else if (tipebalok == 2)
-                {
+                } else if (tipebalok == 2) {
                     DrawRectangleRec(bricks[i][j].kotak, DARKGRAY);
                 }
             }
             j++;
         }
-        i++; 
+        i++;
     }
 }
 
@@ -75,27 +67,22 @@ void bolaterkenabalok(Ball* Ball) {
         int j = 0;
         while (j < BRICK_COLS) {
             Brick *brick = &bricks[i][j];
-            if (!brick->on) {  
-                j++;  
+            if (!brick->on) {
+                j++;
                 continue;
             }
-            if (Ball->Position.x + Ball->Radius >= brick->kotak.x && 
+            if (Ball->Position.x + Ball->Radius >= brick->kotak.x &&
                 Ball->Position.x <= brick->kotak.x + BRICK_WIDTH &&
-                Ball->Position.y + Ball->Radius >= brick->kotak.y && 
+                Ball->Position.y + Ball->Radius >= brick->kotak.y &&
                 Ball->Position.y <= brick->kotak.y + BRICK_HEIGHT) {
-                    if (levels[currentLevel].brickPattern[i][j] == 1)
-                    {
-                        brick->on = false;
-                        panggilbacksound();
-                        Ball->Speed.y = -Ball->Speed.y;
-                        return;
-                    } else if (levels[currentLevel].brickPattern[i][j] == 2)
-                    {
+                    if (level.brickPattern[i][j] == 1 || level.brickPattern[i][j] == 2) {
+                        if (level.brickPattern[i][j] == 1) {
+                            brick->on = false;
+                        }
                         panggilbacksound();
                         Ball->Speed.y = -Ball->Speed.y;
                         return;
                     }
-                    
             }
             j++;
         }
@@ -112,16 +99,12 @@ bool AreAllBricksDestroyed() {
     return true;
 }
 
-void SetDifficulty(int difficulty) {
-    if (difficulty >= 0 && difficulty < DIFFICULTY_LEVELS) {
-        currentDifficulty = difficulty; 
-        inisialisasiBalok(); 
-    }
-}
-
-
-void NextLevel() {
-    currentLevel = (currentLevel + 1) % TOTAL_LEVELS;  
+void SetDifficulty(Difficulty difficulty) {
+    level.DifficultLevel = difficulty;
     inisialisasiBalok();
 }
 
+void NextLevel() {
+    level.NumberLevel = (level.NumberLevel + 1) % TOTAL_LEVELS;
+    inisialisasiBalok();
+}

@@ -17,6 +17,9 @@
 #define BRICK_HEIGHT 10
 #define BRICK_PADDING 5
 #define TOTAL_LEVELS 30
+#define BUTTON_WIDTH 200
+#define BUTTON_HEIGHT 40
+
 
 typedef enum {
 MENU,
@@ -98,5 +101,6 @@ typedef struct PowerUp {
     int type;
     bool active;
 } PowerUp;
+
 
 #endif //KONFIGURASI_H

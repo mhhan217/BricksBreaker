@@ -1,32 +1,23 @@
 #include <stdio.h>
 #include "raylib.h"
-#include "Chinta.h"
-#include "Konfigurasi.h"
+#include "../Include/Konfigurasi.h"
+#include "../Include/Chinta.h"
+#include "../Include/Hanif.h"
+#define MY_DARK_PINK (Color){ 199, 21, 133, 255 }
+#define MY_BLUE (Color){ 0, 0, 255, 255 }
+#define MY_GREEN (Color){ 0, 255, 0, 255 }
+#define MY_YELLOW (Color){ 255, 255, 0, 255 }
+#define BLACK_BG (Color){ 0, 0, 0, 255 }
+#define WHITE_TEXT (Color){ 255, 255, 255, 255 }
 
-Vector2 ballPosition = { 400, 550 };
-Vector2 ballSpeed = { 3, -3 };
-
-float paddleSpeed = 5.0f;  // Atur kecepatan paddle sesuai kebutuhan
-Vector2 paddlePosition = { 350, 550 }; // Atur posisi awal paddle
-
-int selectedMenuOption = 0;
-int menuIndex = 0;
-int currentDifficulty = 0;
-int selectedDifficulty = 0;
-int currentState = MENU;
-int selectedLevel = 1;
-// int selectedPaddleColorIndex = 0;
-// int selectedBallColorIndex = 0;
 float musicVolume = 1.0f;
 float soundVolume = 1.0f;
 
-// Color paddleColors[6] = { MY_DARK_PINK, MY_BLUE, MY_GREEN, MY_YELLOW, WHITE, BLACK };
-// Color ballColors[6] = { MY_DARK_PINK, MY_BLUE, MY_GREEN, MY_YELLOW, WHITE, BLACK };
-// Color paddleColor = WHITE;
-// Color ballColor = WHITE;
-
 Sound ballBounce;
 Music gameMusic;
+
+Level level;
+Ball ball;
 
 void displayMenu(ScreenControl *screen) {
     InitWindow(800, 600, "Bricks Breaker Menu");
@@ -105,11 +96,11 @@ void displayLevel(ScreenControl *screen) {
         // Opsi kesulitan
         const char *difficulties[] = {"EASY", "MEDIUM", "HARD"};
         Color difficultyColor = (screen->index == 0) ? MY_DARK_PINK : WHITE;
-        DrawText(difficulties[currentDifficulty], 350, 150, 30, difficultyColor);
+        DrawText(difficulties[level.DifficultLevel], 350, 150, 30, difficultyColor);
 
         // Opsi pemilihan level
         char levelText[20];
-        sprintf(levelText, "LEVEL %d", selectedLevel);
+        sprintf(levelText, "LEVEL %d", level.NumberLevel);
         Color levelColor = (screen->index == 1) ? MY_BLUE : WHITE;
         DrawText(levelText, 340, 250, 30, levelColor);
 
@@ -120,37 +111,7 @@ void displayLevel(ScreenControl *screen) {
         // Opsi kembali
         Color backColor = (screen->index == 3) ? MY_YELLOW : WHITE;
         DrawText("BACK", 350, 450, 30, backColor);
-
-        // === Navigasi Atas-Bawah ===
-        if (IsKeyPressed(KEY_UP) || IsKeyPressed(KEY_W)) {
-            screen->index = (screen->index - 1 + 4) % 4;  // Naik ke atas (0 - 1 - 2 - 3 -> kembali ke 0)
-        }
-        if (IsKeyPressed(KEY_DOWN) || IsKeyPressed(KEY_S)) {
-            screen->index = (screen->index + 1) % 4;  // Turun ke bawah
-        }
-
-        // === Navigasi Kiri-Kanan ===
-        if (screen->index == 0) { // Jika memilih kesulitan
-            if (IsKeyPressed(KEY_LEFT) || IsKeyPressed(KEY_A)) {
-                currentDifficulty = (currentDifficulty - 1 + 3) % 3;
-            }
-            if (IsKeyPressed(KEY_RIGHT) || IsKeyPressed(KEY_D)) {
-                currentDifficulty = (currentDifficulty + 1) % 3;
-            }
-        } else if (screen->index == 1) { // Jika memilih level
-            if (IsKeyPressed(KEY_LEFT) || IsKeyPressed(KEY_A)) {
-                selectedLevel = (selectedLevel == 1) ? 30 : selectedLevel - 1;
-            }
-            if (IsKeyPressed(KEY_RIGHT) || IsKeyPressed(KEY_D)) {
-                selectedLevel = (selectedLevel == 30) ? 1 : selectedLevel + 1;
-            }
-        } else if (screen->index == 2 && IsKeyPressed(KEY_ENTER)) { // Jika memilih start game
-            screen->gameState = PLAY;
-            break;
-        } else if (screen->index == 3 && IsKeyPressed(KEY_ENTER)) { // Jika memilih kembali
-            screen->gameState = MENU;
-            break;
-        }
+        handleLevelSelectionInput(screen,&level,&ball);
 
         EndDrawing();
     }
