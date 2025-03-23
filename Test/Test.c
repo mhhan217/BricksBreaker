@@ -14,7 +14,7 @@ int main()
     SetTargetFPS(60);
 
     ScreenControl screen;
-    displayMenuWithGraphics(&screen);
+    displayMenu(&screen);
 
     CloseWindow();
     return 0;

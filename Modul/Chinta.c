@@ -3,9 +3,6 @@
 #include "Chinta.h"
 #include "Konfigurasi.h"
 
-// #define BUTTON_WIDTH 200
-// #define BUTTON_HEIGHT 40
-
 Vector2 ballPosition = { 400, 550 };
 Vector2 ballSpeed = { 3, -3 };
 
@@ -18,20 +15,20 @@ int currentDifficulty = 0;
 int selectedDifficulty = 0;
 int currentState = MENU;
 int selectedLevel = 1;
-int selectedPaddleColorIndex = 0;
-int selectedBallColorIndex = 0;
+// int selectedPaddleColorIndex = 0;
+// int selectedBallColorIndex = 0;
 float musicVolume = 1.0f;
 float soundVolume = 1.0f;
 
-Color paddleColors[6] = { MY_DARK_PINK, MY_BLUE, MY_GREEN, MY_YELLOW, WHITE, BLACK };
-Color ballColors[6] = { MY_DARK_PINK, MY_BLUE, MY_GREEN, MY_YELLOW, WHITE, BLACK };
-Color paddleColor = WHITE;
-Color ballColor = WHITE;
+// Color paddleColors[6] = { MY_DARK_PINK, MY_BLUE, MY_GREEN, MY_YELLOW, WHITE, BLACK };
+// Color ballColors[6] = { MY_DARK_PINK, MY_BLUE, MY_GREEN, MY_YELLOW, WHITE, BLACK };
+// Color paddleColor = WHITE;
+// Color ballColor = WHITE;
 
 Sound ballBounce;
 Music gameMusic;
 
-void displayMenuWithGraphics(ScreenControl *screen) {
+void displayMenu(ScreenControl *screen) {
     InitWindow(800, 600, "Bricks Breaker Menu");
     SetTargetFPS(60);
     InitAudioDevice();
@@ -87,7 +84,7 @@ void displayMenuWithGraphics(ScreenControl *screen) {
     CloseWindow();
 }
 
-void displayLevelSelection(ScreenControl *screen) {
+void displayLevel(ScreenControl *screen) {
     while (!WindowShouldClose()) {
         BeginDrawing();
         ClearBackground(BLACK_BG);
@@ -160,7 +157,7 @@ void displayLevelSelection(ScreenControl *screen) {
 }
 
 
-void DrawInfoScreen(int page) {
+void DrawInfo(int page) {
     ClearBackground(BLACK_BG);
     
     DrawText("P", 320, 100, 30, MY_BLUE);
@@ -184,7 +181,7 @@ void DrawInfoScreen(int page) {
     DrawText("Press B to go back", 300, 350, 20, MY_YELLOW);
 }
 
-void HandleInfoInput(int *page) {
+void HandleInfo(int *page) {
     if (IsKeyPressed(KEY_A) || IsKeyPressed(KEY_LEFT)) {
         if (*page == 2) *page = 1;
     }
@@ -204,7 +201,7 @@ void displayInfo(ScreenControl *screen) {
     }
 }
 
-void DrawSettingsScreen(ScreenControl *screen) {
+void DrawSettings(ScreenControl *screen) {
     ClearBackground(BLACK_BG);
 
     DrawText("S", 330, 50, 30, MY_BLUE);
@@ -216,33 +213,39 @@ void DrawSettingsScreen(ScreenControl *screen) {
     DrawText("g", 440, 50, 30, MY_YELLOW);
     DrawText("s", 460, 50, 30, MY_DARK_PINK);
 
-    DrawText("Paddle Color:", 200, 120, 20, WHITE);
-    DrawRectangle(400, 120, 40, 40, paddleColors[selectedPaddleColorIndex]);
+    // DrawText("Paddle Color:", 200, 120, 20, WHITE);
+    // DrawRectangle(400, 120, 40, 40, paddleColors[selectedPaddleColorIndex]);
 
-    DrawText("Ball Color:", 200, 180, 20, WHITE);
-    DrawRectangle(400, 180, 40, 40, ballColors[selectedBallColorIndex]);
+    // DrawText("Ball Color:", 200, 180, 20, WHITE);
+    // DrawRectangle(400, 180, 40, 40, ballColors[selectedBallColorIndex]);
 
     DrawText("Music Volume:", 200, 240, 20, WHITE);
-    DrawText("< W / S >", 400, 240, 20, YELLOW);
-
+    DrawRectangle(400, 245, 200, 10, GRAY); 
+    DrawRectangle(400, 245, (int)(musicVolume * 200), 10, MY_GREEN); 
+    DrawText(TextFormat("%d", (int)(musicVolume * 100)), 610, 240, 20, YELLOW);
+    
     DrawText("Sound Effects:", 200, 300, 20, WHITE);
-    DrawText("< A / D >", 400, 300, 20, YELLOW);
+    DrawRectangle(400, 305, 200, 10, GRAY);
+    DrawRectangle(400, 305, (int)(soundVolume * 200), 10, MY_YELLOW);
+    DrawText(TextFormat("%d", (int)(soundVolume * 100)), 610, 300, 20, YELLOW);
 
     DrawText("Press B to go back", 300, 400, 20, MY_GREEN);
 }
 
-void HandleSettingsInput(ScreenControl *screen) {
-    // if (IsKeyPressed(KEY_A) || IsKeyPressed(KEY_LEFT)) ChangePaddleColor(-1);
-    // if (IsKeyPressed(KEY_D) || IsKeyPressed(KEY_RIGHT)) ChangePaddleColor(1);
+void HandleSettings(ScreenControl *screen) {
+    if (IsKeyPressed(KEY_W) || IsKeyPressed(KEY_UP)) {
+        IncreaseVolume();
+    }
+    if (IsKeyPressed(KEY_S) || IsKeyPressed(KEY_DOWN)) {
+        DecreaseVolume();
+    }
 
-    // if (IsKeyPressed(KEY_A) || IsKeyPressed(KEY_LEFT)) ChangeBallColor(-1);
-    // if (IsKeyPressed(KEY_D) || IsKeyPressed(KEY_RIGHT)) ChangeBallColor(1);
-
-    if (IsKeyPressed(KEY_W)) IncreaseVolume();
-    if (IsKeyPressed(KEY_S)) DecreaseVolume();
-
-    if (IsKeyPressed(KEY_A)) DecreaseSound();
-    if (IsKeyPressed(KEY_D)) IncreaseSound();
+    if (IsKeyPressed(KEY_D) || IsKeyPressed(KEY_RIGHT)) {
+        IncreaseSound();
+    }
+    if (IsKeyPressed(KEY_A) || IsKeyPressed(KEY_LEFT)) {
+        DecreaseSound();
+    }
 }
 
 void displaySettings(ScreenControl *screen) {
@@ -253,18 +256,6 @@ void displaySettings(ScreenControl *screen) {
         if (IsKeyPressed(KEY_B)) return;
         EndDrawing();
     }
-}
-
-void ChangePaddleColor(int direction) 
-{
-selectedPaddleColorIndex = (selectedPaddleColorIndex + direction + 6) % 6;
-paddleColor = paddleColors[selectedPaddleColorIndex];
-}
-
-void ChangeBallColor(int direction) 
-{
-selectedBallColorIndex = (selectedBallColorIndex + direction + 6) % 6;
-ballColor = ballColors[selectedBallColorIndex];
 }
 
 void IncreaseVolume() 
@@ -310,7 +301,7 @@ void playGame(ScreenControl *screen) {
     }
 }
 
-void DrawPauseScreen(ScreenControl *screen) {
+void DrawPause(ScreenControl *screen) {
     BeginDrawing();
     ClearBackground(BLACK);
 
@@ -321,7 +312,8 @@ void DrawPauseScreen(ScreenControl *screen) {
 
     const char *menuItems[] = {"Resume", "Settings", "Restart", "Menu"};
 
-    for (int i = 0; i < 5; i++) {
+    for (int i = 0; i < 5; i++) 
+    {
         DrawText(menuItems[i], SCREEN_WIDTH / 2 - MeasureText(menuItems[i], 20) / 2,
                  150 + (i * 50), 20, colors[i]);
     }
