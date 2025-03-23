@@ -6,7 +6,7 @@
 
 
 int brickPattern[ROWS][COLS];
-void InitializeBricks(Brick bricks[ROWS][COLS]) {
+void InitializeBricks(int NumberLevel, Brick bricks[ROWS][COLS]) {
     int paddingX = 2;  
     int paddingY = 2;  
     float brickWidth = 9;  
@@ -26,7 +26,7 @@ void InitializeBricks(Brick bricks[ROWS][COLS]) {
             bricks[i][j].kotak.y = startY + i * (brickHeight + paddingY);
             bricks[i][j].kotak.width = brickWidth;
             bricks[i][j].kotak.height = brickHeight;
-            int tipebalok = levels[currentLevel].brickPattern[i][j];
+            int tipebalok = levels[NumberLevel].brickPattern[i][j];
             if (tipebalok == 1)
             {
                 bricks[i][j].on = true;
@@ -118,7 +118,7 @@ int main() {
                 break;
             case LOADING:
                 setSpeedBall(&level, &ball);
-                currentLevel = numberLevel(&level);
+                NumberLevel = numberLevel(&level);
                 InitializeBricks(bricks);
                 gameState = PLAY;
                 break;
