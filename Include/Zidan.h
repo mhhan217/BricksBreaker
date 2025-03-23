@@ -1,31 +1,7 @@
 #ifndef ZIDAN_H
 #define ZIDAN_H
-
 #include "Konfigurasi.h"
-#include "Hanif.h"
-#define DIFFICULTY_LEVELS 3
 
-#define BRICK_LEBAR 3
-#define BRICK_TINGGI 3
-#define BRICK_PADDING 5
-#define TOTAL_LEVELS 30
-
-
-
-typedef struct {
-    Vector2 position;
-    Rectangle kotak;
-    float width;
-    float heigth;
-    Color color;        
-    bool isActive;      
-    bool isIndestructible;
-    bool on;
-} Brick;
-
-Brick bricks[BRICK_ROWS][BRICK_COLS];
-
-int currentLevel;
 
 void InitializeBricks(Brick bricks[BRICK_ROWS][BRICK_ROWS]);
 void LoadLevel(int level, Brick bricks[BRICK_ROWS][BRICK_COLS]);
