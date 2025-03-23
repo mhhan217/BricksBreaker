@@ -88,46 +88,7 @@ void DrawBricks(Brick bricks[ROWS][COLS]) {
 
 
 
-void GeneratePattern() {
-    for (int i = 0; i < ROWS; i++) {
-        for (int j = 0; j < COLS; j++) {
-            if (i % 4 == 0) {
-                brickPattern[i][j] = 1; 
-            } else {
-                brickPattern[i][j] = 0; 
-            }
-        }
-    }
-}
 
-
-// int main() {
-//     const int screenWidth = 600;
-//     const int screenHeight = 800;
-    
-//     InitWindow(screenWidth, screenHeight, "Breakout Game");
-//     SetTargetFPS(60);
-
-//     srand(time(NULL));
-
-//     Brick bricks[ROWS][COLS];
-//     GeneratePattern();
-//     InitializeBricks(bricks);
-//     LoadLevel(1, bricks);
-
-//     while (!WindowShouldClose()) {
-//         BeginDrawing();
-//         ClearBackground(BLACK);
-        
-//         DrawBricks(bricks);
-
-//         EndDrawing();
-//     }
-
-//     CloseWindow();
-    
-//     return 0;
-// }
 
 int main() {
     InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Bricks Breaker");
