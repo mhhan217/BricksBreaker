@@ -13,12 +13,5 @@ Vector2 getSpeedBall(Ball* ball);
 void handleLevelSelectionInput(ScreenControl* screen, Level *level, Ball* ball);
 void difficultLevel(Level *level);
 void numberLevel(Level *level);
-void configLevel(Level *level);
-
-// Handle Game
-void updateGame(ScreenControl* screen, Difficulty* selectDifficult, int *selectNumber);
-void drawGame(ScreenControl* screen, Difficulty* selectDifficult, int *selectNumber);
-
-#include "Zahwa.h" // Dipanggil setelah Ball didefinisikan
 
 #endif // HANIF_H

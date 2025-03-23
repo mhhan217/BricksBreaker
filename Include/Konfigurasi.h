@@ -99,12 +99,4 @@ typedef struct PowerUp {
     bool active;
 } PowerUp;
 
-
-
-
-
-
-
-
-
 #endif //KONFIGURASI_H
