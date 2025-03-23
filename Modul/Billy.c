@@ -6,7 +6,6 @@
 #include <math.h>
 
 Sound suaratabrakan;
-Level level;
 void inisialisasibacksound() {
     InitAudioDevice();
     suaratabrakan = LoadSound("tabrakan.wav");

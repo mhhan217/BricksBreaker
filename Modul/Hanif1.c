@@ -1,5 +1,9 @@
 #include "../Include/Hanif.h"
 #include "../Include/Konfigurasi.h"
+#include "../Include/Zahwa.h"
+#include "../Include/Billy.h"
+#include "../Include/Zidan.h"
+#include "../Include/Faridha.h"
 //SELECTED_LEVEL
 
 // Fungsi untuk menangani input level
@@ -41,4 +45,5 @@ void numberLevel(Level *level) {
     if (IsKeyPressed(KEY_RIGHT)) level->NumberLevel = (level->NumberLevel == 30) ? 1 : level->NumberLevel + 1;
     if (IsKeyPressed(KEY_LEFT)) level->NumberLevel = (level->NumberLevel == 1) ? 30 : level->NumberLevel - 1;
 }
+
 

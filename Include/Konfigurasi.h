@@ -5,13 +5,9 @@
 #define SCREEN_HEIGHT 600
 #define TARGET_FPS 60
 #define LONG_EFFECT 15
-#define DIFFICULTY_LEVELS 3
-#define BRICK_LEBAR 3
-#define BRICK_TINGGI 3
 #define BRICK_PADDING 5
-#define TOTAL_LEVELS 30
-#define BRICK_COLS 30
-#define BRICK_ROWS 55
+#define BRICK_COLS 55
+#define BRICK_ROWS 30
 #define DIFFICULTY_LEVELS 3
 #define BRICK_WIDTH 10
 #define BRICK_HEIGHT 10
@@ -19,7 +15,12 @@
 #define TOTAL_LEVELS 30
 #define BUTTON_WIDTH 200
 #define BUTTON_HEIGHT 40
-
+#define MY_DARK_PINK (Color){ 199, 21, 133, 255 }
+#define MY_BLUE (Color){ 0, 0, 255, 255 }
+#define MY_GREEN (Color){ 0, 255, 0, 255 }
+#define MY_YELLOW (Color){ 255, 255, 0, 255 }
+#define BLACK_BG (Color){ 0, 0, 0, 255 }
+#define WHITE_TEXT (Color){ 255, 255, 255, 255 }
 
 typedef enum {
 MENU,
@@ -39,12 +40,6 @@ typedef struct {
 } ScreenControl;
 
 typedef struct {
-    int jumlah_nyawa;
-    Texture2D heartIcon;
-    Vector2 posisi;
-} Lives;
-
-typedef struct {
     Vector2 Posisi;
     Vector2 Ukuran;
     float Kecepatan;
@@ -62,8 +57,6 @@ typedef struct {
     bool isIndestructible;
     bool on;
 } Brick;
-
-Brick bricks[BRICK_ROWS][BRICK_COLS];
 
 typedef enum {
     EASY, MEDIUM, HARD
@@ -102,5 +95,15 @@ typedef struct PowerUp {
     bool active;
 } PowerUp;
 
+typedef struct {
+    int jumlah_nyawa;
+    Texture2D heartIcon;
+    Vector2 posisi;
+}Lives;
+
+extern Level level;
+extern Ball ball;
+extern Lives lives;
+extern Brick bricks[BRICK_ROWS][BRICK_COLS];
 
 #endif //KONFIGURASI_H

@@ -8,7 +8,7 @@ void LoadLevel(int level, Brick bricks[BRICK_ROWS][BRICK_COLS]);
 void UpdateBricks(Brick bricks[BRICK_ROWS][BRICK_COLS]);
 void DrawBricks(Brick bricks[BRICK_ROWS][BRICK_COLS]);
 
-static Level levels[TOTAL_LEVELS] ={
+static Level levels[TOTAL_LEVELS]={
     {
         .NumberLevel = 1,
         .brickPattern =

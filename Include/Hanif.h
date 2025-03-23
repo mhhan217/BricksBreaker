@@ -14,4 +14,6 @@ void handleLevelSelectionInput(ScreenControl* screen, Level *level, Ball* ball);
 void difficultLevel(Level *level);
 void numberLevel(Level *level);
 
+void startGame(ScreenControl *screen);
+
 #endif // HANIF_H

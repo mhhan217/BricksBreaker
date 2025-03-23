@@ -1,30 +1,101 @@
-#include "raylib.h"
+#include <stdio.h>
+#include <stdbool.h>
 #include "../Include/Konfigurasi.h"
+#include "../Include/Chinta.h"
+#include "../Include/Faridha.h"
 #include "../Include/Hanif.h"
-#include "../Include/Billy.h"
 #include "../Include/Zahwa.h"
+#include "../Include/Billy.h"
+#include "../Include/Zidan.h"
 
-int main() {
-    // Inisialisasi jendela game
-    InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Bricks Breaker Game");
-    SetTargetFPS(TARGET_FPS);
-    
+void startGame(ScreenControl *screen) {
+    Paddle paddle;
+    Ball ball;
+    Lives lives;
+    Brick bricks[BRICK_ROWS][BRICK_COLS];
 
-    // Struktur utama untuk mengontrol game
-    ScreenControl screen = {PLAY, 0};
-    Difficulty selectedDifficulty = EASY;
-    int selectedNumber = 1;  // Misalnya, level pertama
+    InitPaddle(&paddle, (Vector2){SCREEN_WIDTH / 2 - 50, SCREEN_HEIGHT - 30}, (Vector2){100, 10}, 5.0f);
+    initBall(&ball, (Vector2){4, -4}, &paddle);
+    InitLives(&lives, (Vector2){10, 10}); // Perbaikan jumlah parameter
+    LoadLevel(screen->index, bricks);
 
-    // Loop utama game
-    while (!WindowShouldClose()) {
-        // Update game logic
-        updateGame(&screen, &selectedDifficulty, &selectedNumber);
+    while (screen->gameState == PLAY && !WindowShouldClose()) {
+        if (IsKeyPressed(KEY_P)) {
+            screen->gameState = PAUSE;
+            return;
+        }
 
-        // Gambar game
-        drawGame(&screen, &selectedDifficulty, &selectedNumber);
+        updateBall(&ball, ball.Speed, &paddle);
+        UpdatePaddle(&paddle);
+        UpdateBricks(bricks);
+        UpdateLives(&lives, &ball);
+
+        if (AreAllBricksDestroyed()) {
+            screen->gameState = GAME_OVER;
+            return;
+        }
+
+        if (lives.jumlah_nyawa <= 0) {
+            screen->gameState = GAME_OVER;
+            return;
+        }
+
+        BeginDrawing();
+        ClearBackground(BLACK);
+        DrawPaddle(paddle);
+        drawBall(&ball);
+        DrawBricks(bricks);
+        DrawLives(&lives);
+        EndDrawing();
+    }
+}
+
+int main(){
+    ScreenControl screen = {MENU, 0};
+    bool running = true;
+
+    InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Bricks Breaker"); // Tambahkan InitWindow
+    SetTargetFPS(60);
+
+    while (running) {
+        if (WindowShouldClose()) {
+            screen.gameState = EXIT;
+        }
+
+        switch (screen.gameState) {
+            case MENU:
+                displayMenu(&screen);
+                break;
+            case SETTINGS:
+                displaySettings(&screen);
+                screen.gameState = MENU;
+                break;
+            case INFO:
+                displayInfo(&screen);
+                screen.gameState = MENU;
+                break;
+            case LEVEL_SELECTION:
+                displayLevel(&screen);
+                break;
+            case LOADING:
+                LoadLevel(screen.index, bricks);
+                screen.gameState = PLAY;
+                break;
+            case PLAY:
+                startGame(&screen);
+                break;
+            case PAUSE:
+                displayPause(&screen);
+                break;
+            case GAME_OVER:
+                displayGameOver(&screen);
+                break;
+            case EXIT:
+                running = false;
+                break;
+        }
     }
 
-    // Tutup jendela game
     CloseWindow();
     return 0;
 }

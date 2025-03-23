@@ -1,125 +1,51 @@
 #include <string.h>  
-#include "Faridha.h"
+#include "../Include/Konfigurasi.h"
 #include <stdlib.h>
 #include <stdbool.h>
 
-int gameState = 0;
-bool isPaused = false;
-int selectedButton = 0;
+void displayGameOver(ScreenControl *screen) {
+    while (!WindowShouldClose()) {
+        BeginDrawing();
+        ClearBackground(BLACK_BG);
 
-void InisialisasiLayarGameOver(LayarGameOver *layar) {
-    strcpy(layar->pesan, "GAME OVER");  
-    layar->warnaTeks = RED;
-}
+        // Teks "GAME OVER" dengan warna MY_DARK_PINK untuk semua huruf
+        DrawText("G", 290, 50, 40, MY_DARK_PINK);
+        DrawText("A", 320, 50, 40, MY_DARK_PINK);
+        DrawText("M", 350, 50, 40, MY_DARK_PINK);
+        DrawText("E", 380, 50, 40, MY_DARK_PINK);
+        DrawText(" ", 410, 50, 40, MY_DARK_PINK);
+        DrawText("O", 440, 50, 40, MY_DARK_PINK);
+        DrawText("V", 470, 50, 40, MY_DARK_PINK);
+        DrawText("E", 500, 50, 40, MY_DARK_PINK);
+        DrawText("R", 530, 50, 40, MY_DARK_PINK);
 
-void RestartGame(ScreenControl *screen) {
-    screen->gameState = PLAYING;
-}
+        // Menu Opsi
+        const char *menuOptions[] = { "Restart", "Select Level", "Menu", "Exit" };
+        Color highlightColors[] = { MY_DARK_PINK, MY_BLUE, MY_GREEN, MY_YELLOW };
+        int menuCount = 4;
 
-void KembaliKeMenu(ScreenControl *screen) {
-    screen->gameState = MENU;
-}
+        if (IsKeyPressed(KEY_DOWN) || IsKeyPressed(KEY_S))
+            screen->index = (screen->index + 1) % menuCount;
+        if (IsKeyPressed(KEY_UP) || IsKeyPressed(KEY_W))
+            screen->index = (screen->index - 1 + menuCount) % menuCount;
 
-void PauseGame(ScreenControl *screen) {
-    if (IsKeyPressed(KEY_P)) {
-        screen->gameState = PAUSED;
-    }
-}
-
-void ResumeGame(ScreenControl *screen) {
-    if (IsKeyPressed(KEY_R)) {
-        screen->gameState = PLAYING;
-    }
-}
-
-void KeluarPermainan() {
-    CloseWindow();
-    exit(0);
-}
-
-void ShowGameOver() {//
-    gameState = 0;
-}
-
-void DrawGameOverScreen(ScreenControl *screen) {
-    BeginDrawing();
-    ClearBackground(BLACK);
-
-	Color warnaHuruf[] = {PINK, BLUE, GREEN, YELLOW};
-    
-    const char *judulGame = "Bricks Breaker Game";
-    int posisiXJudulGame = SCREEN_WIDTH / 2 - MeasureText(judulGame, 30) / 2;
-    int posisiYJudulGame = SCREEN_HEIGHT / 6;
-    int jarakHuruf = 5;
-    
-    for (int i = 0; i < strlen(judulGame); i++) {
-        DrawText(TextFormat("%c", judulGame[i]), posisiXJudulGame, posisiYJudulGame, 30, warnaHuruf[i % (sizeof(warnaHuruf) / sizeof(warnaHuruf[0]))]);
-        posisiXJudulGame += MeasureText(TextFormat("%c", judulGame[i]), 30) + jarakHuruf;
-    }
-
-
-
-    // Warna tombol
-    Color buttonColors[] = {BLUE, GREEN, YELLOW, RED}; 
-    const char *menuItems[] = {"Restart", "Select Level", "Menu", "Exit"};
-
-    // Judul Game Over
-    const char *judul = "GAME OVER";
-    int posisiXJudul = SCREEN_WIDTH / 2 - MeasureText(judul, 40) / 2;
-    int posisiYJudul = SCREEN_HEIGHT / 4;
-    DrawText(judul, posisiXJudul, posisiYJudul, 40, RED);
-
-    // Posisi tombol
-    int tombolLebarNormal = 200;
-	int tombolLebarTerpilih = 220;
-	int tombolXNormal = SCREEN_WIDTH / 2 - tombolLebarNormal / 2;
-	int tombolXTerpilih = SCREEN_WIDTH / 2 - tombolLebarTerpilih / 2;
-	int tombolY = SCREEN_HEIGHT / 2 - 60;
-
-    for (int i = 0; i < 4; i++) {
-        bool isSelected = (i == screen->index);
-        int tombolLebar = isSelected ? 220 : 200;
-        int tombolTinggi = isSelected ? 50 : 40;
-		int tombolX = isSelected ? tombolXTerpilih : tombolXNormal;
-        Color warna = buttonColors[i];
-
-        DrawRectangleLines(tombolX, tombolY + (i * 50), tombolLebar, tombolTinggi, warna);
-        DrawText(menuItems[i], SCREEN_WIDTH / 2 - MeasureText(menuItems[i], 20) / 2, 
-                 tombolY + (i * 50) + (tombolTinggi / 2 - 10), 20, warna);
-    }
-
-    EndDrawing();
-}
-
-void HandleGameOverInput(ScreenControl *screen) {
-    // Navigasi menu
-    if (IsKeyPressed(KEY_UP)) {
-        screen->index = (screen->index == 0) ? 3 : screen->index - 1;
-    }
-    if (IsKeyPressed(KEY_DOWN)) {
-        screen->index = (screen->index == 3) ? 0 : screen->index + 1;
-    }
-
-    // Pilihan menu berdasarkan index
-    if (IsKeyPressed(KEY_ENTER)) {
-        switch (screen->index) {
-            case 0:
-                screen->gameState = PLAY;  // Restart game
-            break;
-            case 1:
-                screen->gameState = LEVEL_SELECTION;  // Kembali ke pemilihan level
-            break;
-            case 2:
-                screen->gameState = MENU;  // Kembali ke menu utama
-            break;
-            case 3:
-                screen->gameState = EXIT;  // Keluar dari game
-            break;
+        for (int i = 0; i < menuCount; i++) {
+            Color textColor = (i == screen->index) ? highlightColors[i] : WHITE;
+            DrawText(menuOptions[i], 350, 150 + (i * 60), 30, textColor);
         }
+
+        if (IsKeyPressed(KEY_ENTER) || IsKeyPressed(KEY_SPACE)) {
+            switch (screen->index) {
+                case 0: screen->gameState = PLAY; break;
+                case 1: screen->gameState = LEVEL_SELECTION; break;
+                case 2: screen->gameState = MENU; break;
+                case 3: screen->gameState = EXIT; break;
+            }
+        }
+
+        EndDrawing();
     }
 }
 
 
-void HapusLayarGameOver(LayarGameOver *layar) {
-}
 

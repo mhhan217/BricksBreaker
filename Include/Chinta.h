@@ -17,6 +17,6 @@ void IncreaseVolume();
 void DecreaseVolume();
 void IncreaseSound();
 void DecreaseSound();
-void displayPause(ScreenControl *screen)
+void displayPause(ScreenControl *screen);
 
 #endif // CHINTA_H
