@@ -4,6 +4,8 @@
 
 #define MAKS_NYAWA 3
 
+// Paddle
+
 void InitPaddle(Paddle* Paddle, Vector2 posisiAwal, Vector2 ukuran, float kecepatan) {
     Paddle->Posisi = posisiAwal;
     Paddle->Ukuran = ukuran;
@@ -23,6 +25,9 @@ void UpdatePaddle(Paddle* Paddle) {
 void DrawPaddle(Paddle Paddle) {
     DrawRectangleV(Paddle.Posisi, Paddle.Ukuran, Paddle.Warna);
 }
+
+
+//Lives
 
 void InitLives(Lives* lives, Vector2 Posisi, int jumlah_nyawa) {
     lives->jumlah_nyawa = MAKS_NYAWA;
@@ -47,7 +52,7 @@ void DrawLives(Lives* lives) {
 void UpdateLives(Lives* lives, Ball* ball) {
     void UpdateLives(Lives* lives, Ball* ball) {
         // Cek bola jatuh ke bawah layar 
-        if (lives->jumlah_nyawa > 0 && ball->Posisi.y >= GetScreenHeight()) {
+        if (lives->jumlah_nyawa > 0 && ball->Posisi.y + ball->Radius >= GetScreenHeight()) {
             lives->jumlah_nyawa--;  
 
             // Nyawa masih ada
