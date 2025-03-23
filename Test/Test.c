@@ -1,5 +1,6 @@
 #include "Billy.c"
 #include "Chinta.c"
+#include "Faridha.c"
 #include "Hanif.c"
 #include "Zahwa.c"
 #include "Hanif1.c"
@@ -53,6 +54,9 @@ int main() {
             updateBall(&ball, &paddle, ball.Speed);
             UpdatePaddle(&paddle);
             bolaterkenabalok(&ball);
+            if (lives.jumlah_nyawa == 0) {
+                gameState = GAME_OVER;
+            }
             if (AreAllBricksDestroyed()) {
                 gameState = LEVEL_SELECTION;
             }
@@ -64,7 +68,7 @@ int main() {
             }
         }
         else if (gameState == GAME_OVER) {
-
+            HandleGameOverInput(&screen);
         }
 
         BeginDrawing();
@@ -81,6 +85,9 @@ int main() {
         }
         else if (gameState == PAUSE) {
             DrawPauseScreen(&screen);
+        }
+        else if (gameState == GAME_OVER) {
+            DrawGameOverScreen(&screen);
         }
         EndDrawing();
     }

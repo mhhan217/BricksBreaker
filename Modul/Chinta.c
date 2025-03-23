@@ -12,7 +12,7 @@ Vector2 ballSpeed = { 3, -3 };
 float paddleSpeed = 5.0f;  // Atur kecepatan paddle sesuai kebutuhan
 Vector2 paddlePosition = { 350, 550 }; // Atur posisi awal paddle
 
-GameState gameState;
+GameState* gameState;
 Level level;
 // Ball ball;
 int selectedMenuOption = 0;

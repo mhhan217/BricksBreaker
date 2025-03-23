@@ -4,7 +4,7 @@
 #include "Zidan.h"
 #include <math.h>
 
-bool isPaused = false;
+// bool isPaused = false;
 int currentDifficulty = 0;
 Sound suaratabrakan, suaramenu;
 Level level;

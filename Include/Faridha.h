@@ -9,7 +9,7 @@
 #define MAX_POWERUPS 5
 
 // Deklarasi variabel global
-extern int gameState;
+// extern GameState gameState;
 extern Texture2D powerUpTextures[3];
 
 typedef struct {
