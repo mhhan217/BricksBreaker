@@ -16,6 +16,16 @@ typedef struct {
     int brickPattern[BRICK_ROWS][BRICK_COLS];
 }Level;
 
+typedef struct {
+    Vector2 Position;
+    Vector2 Speed;
+    float Radius;
+    Vector2 Effect[LONG_EFFECT];
+    Color Color;
+    bool Active;
+    bool Released;
+} Ball;
+
 void initBall(Ball* ball, Vector2 ballSpeed, Paddle* paddle);
 void updateBall(Ball* ball, Vector2 ballSpeed, Paddle* paddle);
 void drawBall(Ball* ball);

@@ -1,10 +1,12 @@
-//
-// Created by Arman on 2/23/2025.
-//
-
 #ifndef KONFIGURASI_H
 #define KONFIGURASI_H
 #include "raylib.h"
+#include "Hanif.h"
+#include "Zahwa.h"
+#include "Faridha.h"
+#include "Billy.h"
+#include "Zidan.h"
+#include "Chinta.h"
 #define SCREEN_WIDTH 800
 #define SCREEN_HEIGHT 600
 #define TARGET_FPS 60
@@ -28,21 +30,22 @@ typedef struct {
 } ScreenControl;
 
 typedef struct {
-    Vector2 Position;
-    Vector2 Speed;
-    float Radius;
-    Vector2 Effect[LONG_EFFECT];
-    Color Color;
-    bool Active;
-    bool Released;
-} Ball;
+    GameState state;
+    Ball ball;
+    Paddle paddle;
+    Brick bricks[BRICK_ROWS][BRICK_COLS];
+    PowerUp powerUp;
+    Difficulty difficulty;
+    Level level;
+    Lives lives;
+    float volume;
+    bool isMuted;
+    ScreenControl screen;  // Tambahkan ScreenControl di dalam Game
+} Game;
 
-typedef struct {
-    Vector2 Posisi;
-    Vector2 Ukuran;
-    float Kecepatan;
-    Color Warna;
-} Paddle;
+
+
+
 
 
 #endif //KONFIGURASI_H
