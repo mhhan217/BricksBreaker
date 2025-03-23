@@ -46,18 +46,12 @@ extern Music gameMusic;
 // Deklarasi fungsi
 void displayMenu(ScreenControl *screen);
 void displayLevel(ScreenControl *screen);
-void DrawInfo(int page);
-void HandleInfo(int *page);
 void displayInfo(ScreenControl *screen);
-void DrawSettings(ScreenControl *screen);
-void HandleSettings(ScreenControl *screen);
 void displaySettings(ScreenControl *screen);
 void IncreaseVolume();
 void DecreaseVolume();
 void IncreaseSound();
 void DecreaseSound();
-void playGame(ScreenControl *screen);
-void DrawPause(ScreenControl *screen);
-void HandlePause(ScreenControl *screen);
+void displayPause(ScreenControl *screen)
 
 #endif // CHINTA_H
