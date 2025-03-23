@@ -48,10 +48,10 @@ Color WarnaAcak() {
     return warna[rand() % 2];
 }
 
-void LoadLevel(int level, Brick bricks[ROWS][COLS]) {
+void LoadLevel(int NumberLevel, Brick bricks[ROWS][COLS]) {
     for (int i = 0; i < ROWS; i++) {
         for (int j = 0; j < COLS; j++) {
-            int tipebalok = levels[currentLevel].brickPattern[i][j];
+            int tipebalok = levels[NumberLevel].brickPattern[i][j];
             if (tipebalok == 1) {
                 bricks[i][j].isActive = true;
                 bricks[i][j].color = BLUE;

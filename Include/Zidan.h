@@ -23,11 +23,11 @@ typedef struct {
 
 Brick bricks[ROWS][COLS];
 
-int currentLevel;
+//int currentLevel;
 Level levels[TOTAL_LEVELS];
 
 void InitializeBricks(Brick bricks[ROWS][COLS]);
-void LoadLevel(int level, Brick bricks[ROWS][COLS]);
+void LoadLevel(int NumberLevel, Brick bricks[ROWS][COLS])
 void UpdateBricks(Brick bricks[ROWS][COLS]);
 void DrawBricks(Brick bricks[ROWS][COLS]);
 
