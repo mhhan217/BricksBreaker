@@ -16,20 +16,20 @@
 #define BLACK_BG (Color){ 0, 0, 0, 255 }
 #define WHITE_TEXT (Color){ 255, 255, 255, 255 }
 
-typedef struct {
-    int index;
-    int gameState;
-} ScreenControl;
+// typedef struct {
+//     int index;
+//     int gameState;
+// } ScreenControl;
 
 // Deklarasi variabel global (gunakan `extern`)
-extern Vector2 ballPosition;
-extern Vector2 ballSpeed;
-extern Vector2 paddlePosition;  
-extern float paddleSpeed;       
-extern int menuIndex;
+// extern Vector2 ballPosition;
+// extern Vector2 ballSpeed;
+// extern Vector2 paddlePosition;  
+// extern float paddleSpeed;       
+// extern int menuIndex;
 extern int currentDifficulty;
-extern int currentState;
-extern int selectedDifficulty;
+// extern int currentState;
+// extern int selectedDifficulty;
 // extern int selectedPaddleColorIndex;
 // extern int selectedBallColorIndex;
 extern float musicVolume;

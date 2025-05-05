@@ -3,17 +3,17 @@
 #include "Chinta.h"
 #include "Konfigurasi.h"
 
-Vector2 ballPosition = { 400, 550 };
-Vector2 ballSpeed = { 3, -3 };
+// Vector2 ballPosition = { 400, 550 };
+// Vector2 ballSpeed = { 3, -3 };
 
-float paddleSpeed = 5.0f;  // Atur kecepatan paddle sesuai kebutuhan
-Vector2 paddlePosition = { 350, 550 }; // Atur posisi awal paddle
+// float paddleSpeed = 5.0f;  // Atur kecepatan paddle sesuai kebutuhan
+// Vector2 paddlePosition = { 350, 550 }; // Atur posisi awal paddle
 
-int selectedMenuOption = 0;
-int menuIndex = 0;
+// int selectedMenuOption = 0;
+// int menuIndex = 0;
 int currentDifficulty = 0;
-int selectedDifficulty = 0;
-int currentState = MENU;
+// int selectedDifficulty = 0;
+// int currentState = MENU;
 int selectedLevel = 1;
 // int selectedPaddleColorIndex = 0;
 // int selectedBallColorIndex = 0;
@@ -177,29 +177,11 @@ void displayInfo(ScreenControl *screen)
         DrawText("p", 460, 100, 30, MY_DARK_PINK);
 
         // Isi halaman
-        if (page == 1) 
-        {
-            DrawText("1. Enlarge Paddle - Memperbesar paddle", 200, 175, 20, WHITE_TEXT);
-            DrawText("2. Shrink Paddle - Mengecilkan paddle", 200, 225, 20, WHITE_TEXT);
-            DrawText("3. Speed Up Ball - Mempercepat bola", 200, 275, 20, WHITE_TEXT);
-        } 
-        else if (page == 2) 
-        {
-            DrawText("4. Slow Down Ball - Memperlambat bola", 200, 175, 20, WHITE_TEXT);
-            DrawText("5. Extra Life - Menambah nyawa pemain", 200, 225, 20, WHITE_TEXT);
-        }
+        DrawText("1. Pemain memiliki 3 nyawa di awal permainan.", 160, 175, 20, WHITE_TEXT);
+        DrawText("2. Jika bola jatuh lebih dari 4 kali, permainan berakhir (Game Over).", 160, 225, 20, WHITE_TEXT);
+        DrawText("3. Pemain akan menang jika semua balok berhasil dihancurkan.", 160, 275, 20, WHITE_TEXT);
 
         DrawText("Press B to go back", 300, 350, 20, MY_YELLOW);
-
-        // Navigasi antar halaman
-        if (IsKeyPressed(KEY_A) || IsKeyPressed(KEY_LEFT)) 
-        {
-            if (page == 2) page = 1;
-        }
-        if (IsKeyPressed(KEY_D) || IsKeyPressed(KEY_RIGHT)) 
-        {
-            if (page == 1) page = 2;
-        }
 
         // Back to menu
         if (IsKeyPressed(KEY_B) || IsKeyPressed(KEY_ESCAPE)) break;
