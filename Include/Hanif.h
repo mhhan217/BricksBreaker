@@ -1,17 +1,24 @@
 #ifndef HANIF_H
 #define HANIF_H
+#include <stdbool.h>
 #include "raylib.h"
 #include "Konfigurasi.h"
 #include "Zahwa.h"
 #define LONG_EFFECT 15
 #define BRICK_ROWS 30
-#define BRICK_COLS 55
+#define BRICK_COLS 30
+
+
+typedef struct EffectNode {
+    Vector2 posisi;
+    struct EffectNode* next;
+} EffectNode;
 
 typedef struct Ball{
     Vector2 Position;
     Vector2 Speed;
     float Radius;
-    Vector2 Effect[LONG_EFFECT];
+    EffectNode* EffectHead;  // Linked list untuk jejak efek
     Color Color;
     bool Active;
     bool Released;
@@ -27,6 +34,7 @@ typedef struct {
     int brickPattern[BRICK_ROWS][BRICK_COLS];
 }Level;
 
+//Ball
 void initBall(Ball* ball,Vector2 ballSpeed,Paddle* paddle);
 void updateBall(Ball* ball,Paddle* paddle,Vector2 ballSpeed);
 void drawBall(Ball ball);
@@ -43,10 +51,14 @@ void updateGame(GameState *gameState);
 void drawGame(GameState *gametState);
 
 //handle pause
-void DrawPauseScreen(ScreenControl *screen);
-void HandlePauseInput(ScreenControl *screen);
+void DrawPauseScreen(GameState* gamestate);
+void HandlePauseInput(GameState* gamestate);
+
+static inline void AddEffect(EffectNode** head, Vector2 posisi, int maxLength);
+static inline void FreeEffectList(EffectNode** head);
 
 
+EffectNode effectnode;
 
 
 
@@ -79,4 +91,4 @@ void DrawPaddle(Paddle paddle);
 
 */
 
-#endif //HANIF_H
+#endif//HANIF_H

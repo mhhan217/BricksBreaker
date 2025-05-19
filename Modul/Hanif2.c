@@ -1,5 +1,5 @@
-#include "Konfigurasi.h"
-#include "Hanif.h"
+#include "../Include/Konfigurasi.h"
+#include "../Include/Hanif.h"
 //GAME
 
 void updateGame(GameState *gameState,Difficulty* selectDifficult,int *selectNumber){

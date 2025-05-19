@@ -1,7 +1,9 @@
 #include "raylib.h"
-#include "Hanif.h"
-#include "Zahwa.h"
+#include "../Include/Hanif.h"
+#include "../Include/Zahwa.h"
 #include <math.h>
+#include <stdio.h>
+#include <stdlib.h>
 //struct ball
 
 //mengatur atribut atribut bola
@@ -11,6 +13,7 @@ void initBall(Ball* ball, Vector2 ballSpeed, Paddle* paddle) {
     ball->Color = RAYWHITE;
     ball->Active = true;
     ball->Released = false; // Pastikan bola belum dilepas
+    ball->EffectHead = NULL;
     ball->Position.x = paddle->Posisi.x + paddle->Ukuran.x / 2;
     ball->Position.y = paddle->Posisi.y - ball->Radius;
 }
@@ -21,10 +24,7 @@ void updateBall(Ball* ball, Paddle* paddle,Vector2 SpeedBola) {
     if (!ball->Active) return; // Jika bola tidak aktif, tidak ditampilkan atau diupdate
 
     // Geser semua Position Effect (jejak)
-    for (int i = LONG_EFFECT - 1; i > 0; i--) {
-        ball->Effect[i] = ball->Effect[i - 1];
-    }
-    ball->Effect[0] = ball->Position;
+    AddEffect(&ball->EffectHead, ball->Position, LONG_EFFECT);
 
     // Jika bola belum dilepas, Positionnya mengikuti paddle
     if (!ball->Released) {
@@ -79,6 +79,7 @@ void updateBall(Ball* ball, Paddle* paddle,Vector2 SpeedBola) {
         // Jika bola jatuh ke bawah, reset Position ke paddle
         if (ball->Position.y + ball->Radius >= GetScreenHeight()) {
             ball->Released = false;
+            FreeEffectList(&ball->EffectHead);
         }
     }
 }
@@ -86,14 +87,19 @@ void updateBall(Ball* ball, Paddle* paddle,Vector2 SpeedBola) {
 
 void drawBall(Ball ball) {
     if (ball.Active) {
-        // Gambar Effect bola
-        for (int i = 0; i < LONG_EFFECT; i++) { //membuat Effect jejak lingkaran bola dari array Effect
-            float jejak_Effect = (float)(LONG_EFFECT - i) / LONG_EFFECT;//jika Effect[i] lebih besar makan akan semakin transparan
-            Color EffectColor = Fade(ball.Color, jejak_Effect);//Fade digunakan untuk membuat Color bola semakin transparan dengan float jejak_Effect
-            DrawCircleV(ball.Effect[i], ball.Radius - i * 0.3,EffectColor);
+        // Gambar efek jejak menggunakan linked list
+        EffectNode* current = ball.EffectHead;
+        int i = 0;
+        while (current != NULL && i < LONG_EFFECT) {
+            float alpha = (float)(LONG_EFFECT - i) / LONG_EFFECT;
+            Color effectColor = Fade(ball.Color, alpha);
+            DrawCircleV(current->posisi, ball.Radius - i * 0.3f, effectColor);
+            current = current->next;
+            i++;
         }
-        // Gambar bola
-        DrawCircleV(ball.Position, ball.Radius, ball.Color);//menggambar bola
+
+        // Gambar bola utama
+        DrawCircleV(ball.Position, ball.Radius, ball.Color);
     }
 }
 
@@ -110,6 +116,41 @@ Vector2 getSpeedBall(Ball* ball) {
     return ball->Speed;
 }
 
+// Menambahkan node ke awal linked list, dan menghapus yang berlebih jika panjang melebihi maxLength
+void AddEffect(EffectNode** head, Vector2 posisi, int maxLength) {
+    EffectNode* newNode = (EffectNode*)malloc(sizeof(EffectNode));
+    newNode->posisi = posisi;
+    newNode->next = *head;
+    *head = newNode;
+
+    // Potong jika panjang melebihi batas
+    int count = 1;
+    EffectNode* current = *head;
+    while (current->next != NULL) {
+        count++;
+        if (count >= maxLength) {
+            EffectNode* toDelete = current->next;
+            current->next = NULL;
+            while (toDelete != NULL) {
+                EffectNode* temp = toDelete;
+                toDelete = toDelete->next;
+                free(temp);
+            }
+            break;
+
+        }
+        current = current->next;
+    }
+}
 
 
-
+// Membersihkan semua node dalam linked list
+void FreeEffectList(EffectNode** head) {
+    EffectNode* current = *head;
+    while (current != NULL) {
+        EffectNode* temp = current;
+        current = current->next;
+        free(temp);
+    }
+    *head = NULL;
+}

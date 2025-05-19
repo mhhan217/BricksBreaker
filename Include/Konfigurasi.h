@@ -1,8 +1,8 @@
 #ifndef KONFIGURASI_H
 #define KONFIGURASI_H
 
-#define SCREEN_WIDTH 800
-#define SCREEN_HEIGHT 600
+#define SCREEN_WIDTH 600
+#define SCREEN_HEIGHT 800
 #define TARGET_FPS 60
 
 typedef enum {
@@ -16,10 +16,5 @@ PAUSE,
 GAME_OVER,
 EXIT
 } GameState;
-
-typedef struct {
-    GameState gameState; // Status utama game
-    int index;   // Indeks pilihan yang sedang dipilih
-} ScreenControl;
 
 #endif //KONFIGURASI_H

@@ -1,7 +1,8 @@
 #include <stdio.h>
 #include "raylib.h"
-#include "Chinta.h"
-#include "Hanif.h"
+#include "../Include/Chinta.h"
+#include "../Include/Hanif.h"
+#include "../Include/Konfigurasi.h"
 
 #define BUTTON_WIDTH 200
 #define BUTTON_HEIGHT 40
@@ -35,7 +36,7 @@ Sound ballBounce;
 Music gameMusic;
 
 void displayMenuWithGraphics() {
-    InitWindow(800, 600, "Bricks Breaker Menu");
+    InitWindow(600, 800, "Bricks Breaker Menu");
     SetTargetFPS(60);
     // InitAudioDevice();
     inisialisasibacksound1();
@@ -44,25 +45,25 @@ void displayMenuWithGraphics() {
         BeginDrawing();
         ClearBackground(BLACK_BG);
 
-        DrawText("B", 250, 50, 30, MY_DARK_PINK);
-        DrawText("r", 270, 50, 30, MY_BLUE);
-        DrawText("i", 290, 50, 30, MY_GREEN);
-        DrawText("c", 310, 50, 30, MY_YELLOW);
-        DrawText("k", 330, 50, 30, MY_DARK_PINK);
-        DrawText("s", 350, 50, 30, MY_BLUE);
-        DrawText(" ", 370, 50, 30, MY_GREEN);
-        DrawText("B", 390, 50, 30, MY_YELLOW);
-        DrawText("r", 410, 50, 30, MY_DARK_PINK);
-        DrawText("e", 430, 50, 30, MY_BLUE);
-        DrawText("a", 450, 50, 30, MY_GREEN);
-        DrawText("k", 470, 50, 30, MY_YELLOW);
-        DrawText("e", 490, 50, 30, MY_DARK_PINK);
-        DrawText("r", 510, 50, 30, MY_BLUE);
-        DrawText(" ", 530, 50, 30, MY_GREEN);
-        DrawText("G", 550, 50, 30, MY_YELLOW);
-        DrawText("a", 570, 50, 30, MY_DARK_PINK);
-        DrawText("m", 590, 50, 30, MY_BLUE);
-        DrawText("e", 610, 50, 30, MY_GREEN);
+        DrawText("B", 120, 50, 30, MY_DARK_PINK);
+        DrawText("r", 140, 50, 30, MY_BLUE);
+        DrawText("i", 160, 50, 30, MY_GREEN);
+        DrawText("c", 180, 50, 30, MY_YELLOW);
+        DrawText("k", 200, 50, 30, MY_DARK_PINK);
+        DrawText("s", 220, 50, 30, MY_BLUE);
+        DrawText(" ", 240, 50, 30, MY_GREEN);
+        DrawText("B", 260, 50, 30, MY_YELLOW);
+        DrawText("r", 280, 50, 30, MY_DARK_PINK);
+        DrawText("e", 300, 50, 30, MY_BLUE);
+        DrawText("a", 320, 50, 30, MY_GREEN);
+        DrawText("k", 340, 50, 30, MY_YELLOW);
+        DrawText("e", 360, 50, 30, MY_DARK_PINK);
+        DrawText("r", 380, 50, 30, MY_BLUE);
+        DrawText(" ", 400, 50, 30, MY_GREEN);
+        DrawText("G", 420, 50, 30, MY_YELLOW);
+        DrawText("a", 440, 50, 30, MY_DARK_PINK);
+        DrawText("m", 460, 50, 30, MY_BLUE);
+        DrawText("e", 480, 50, 30, MY_GREEN);
 
         const char *menuOptions[] = { "Play", "Info", "Settings", "Exit" };
         Color highlightColors[] = { MY_DARK_PINK, MY_BLUE, MY_GREEN, MY_YELLOW };
@@ -79,7 +80,8 @@ void displayMenuWithGraphics() {
 
         for (int i = 0; i < menuCount; i++) {
             Color textColor = (i == selectedMenuOption) ? highlightColors[i] : WHITE;
-            DrawText(menuOptions[i], 350, 150 + (i * 60), 30, textColor);
+            int textWidth = MeasureText(menuOptions[i], 30);
+            DrawText(menuOptions[i], SCREEN_WIDTH / 2 - textWidth / 2, 150 + (i * 60), 30, textColor);
         }
 
         if (IsKeyPressed(KEY_ENTER) || IsKeyPressed(KEY_SPACE)) {

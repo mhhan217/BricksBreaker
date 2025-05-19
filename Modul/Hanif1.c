@@ -1,5 +1,5 @@
-#include "Hanif.h"
-#include "Konfigurasi.h"
+#include "../Include/Hanif.h"
+#include "../Include/Konfigurasi.h"
 #include <stdio.h>
 //SELECTED_LEVEL
 int menuIndex = 0;

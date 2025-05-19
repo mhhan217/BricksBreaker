@@ -1,9 +1,9 @@
 #include <string.h>
 #include <stdlib.h>
 #include <stdbool.h>
-#include "Faridha.h"
-#include "Konfigurasi.h"
-#include "Hanif.h"
+#include "../Include/Faridha.h"
+#include "../Include/Konfigurasi.h"
+#include "../Include/Hanif.h"
 
 #define TOTAL_BUTTONS 4
 

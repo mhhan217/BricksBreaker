@@ -1,42 +1,37 @@
-#include "Billy.c"
-#include "Chinta.c"
-#include "Faridha.c"
-#include "Hanif.c"
-#include "Zahwa.c"
-#include "Hanif1.c"
-#include "Hanif3.c"
+#include "../Modul/Billy.c"
+#include "../Modul/Chinta.c"
+#include "../Modul/Hanif.c"
+#include "../Modul/Zahwa.c"
+#include "../Modul/Hanif1.c"
+#include "../Modul/Hanif3.c"
 #include "raylib.h"
-#include "Konfigurasi.h"
+#include "../Include/Konfigurasi.h"
 
 int main() {
     displayMenuWithGraphics();
     InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Bricks Breaker");
     SetTargetFPS(TARGET_FPS);
-
-    // Inisialisasi game state
     GameState gameState = LEVEL_SELECTION;
-
-    // Inisialisasi objek game
     Paddle paddle;
     Ball ball;
-    Level level = {1, EASY}; // Default Level 1, Easy
-    ScreenControl screen = {0, PLAY}; // Index menu pause, default ke PLAY
+    Level level = {1, EASY};
     Lives lives;
 
     while (!WindowShouldClose()) {
         if (gameState == MENU) {
-
+            displayMenuWithGraphics();
         }
         else if (gameState == INFO) {
-
+            displayInfo();
         }
         else if (gameState == SETTINGS) {
-
+            displaySettings();
         }
         if (gameState == LEVEL_SELECTION) {
             handleLevelSelectionInput(&gameState, &level, &ball);
         }
         else if (gameState == LOADING) {
+            FreeAllBricks();
             setSpeedBall(&level, &ball);
             currentLevel = numberLevel(&level);
             inisialisasiBalok();
@@ -61,20 +56,27 @@ int main() {
                 gameState = LEVEL_SELECTION;
             }
         }
+
         else if (gameState == PAUSE) {
-            HandlePauseInput(&screen); // Navigasi menu pause
-            if (IsKeyPressed(KEY_ENTER)) {
-                gameState = screen.gameState;
-            }
+            HandlePauseInput(&gameState); 
         }
+
         else if (gameState == GAME_OVER) {
-            HandleGameOverInput(&screen);
+
         }
 
         BeginDrawing();
         ClearBackground(BLACK);
-
-        if (gameState == LEVEL_SELECTION) {
+        if (gameState == MENU){
+            displayMenuWithGraphics();
+        }
+        else if(gameState == INFO){
+            displayInfo();
+        }
+        else if(gameState == SETTINGS){
+            displaySettings();
+        }
+        else if (gameState == LEVEL_SELECTION) {
             drawLevel(&level);
         }
         else if (gameState == PLAY) {
@@ -84,13 +86,16 @@ int main() {
             DrawPaddle(paddle);
         }
         else if (gameState == PAUSE) {
-            DrawPauseScreen(&screen);
+            DrawPauseScreen(&gameState);
         }
         else if (gameState == GAME_OVER) {
-            DrawGameOverScreen(&screen);
+
         }
+
         EndDrawing();
     }
+
+    FreeAllBricks();
     tutupbacksound();
     CloseWindow();
     return 0;

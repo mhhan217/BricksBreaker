@@ -1,5 +1,5 @@
 #include "raylib.h"
-#include "Zahwa.h"
+#include "../Include/Zahwa.h"
 
 #define MAKS_NYAWA 3
 

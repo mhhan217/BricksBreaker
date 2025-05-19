@@ -5,6 +5,11 @@
         "zahwa.h": "c",
         "stdio.h": "c",
         "konfigurasi.h": "c",
-        "raylib.h": "c"
+        "raylib.h": "c",
+        "billy.h": "c",
+        "math.h": "c",
+        "zidan.h": "c",
+        "stdlib.h": "c",
+        "cstdlib": "c"
     }
 }

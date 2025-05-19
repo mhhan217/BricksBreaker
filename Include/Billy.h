@@ -24,4 +24,12 @@ void inisialisasibacksound1();
 void panggilbacksound1();
 void tutupbacksound1();
 
+typedef struct Bricks *address;
+typedef struct Bricks {
+    Rectangle kotak;
+    bool on;
+    address next;
+} Bricks;
+void AddBrick(address *head, Rectangle rect);
+
 #endif // BILLY_H

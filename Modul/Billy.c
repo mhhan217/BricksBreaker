@@ -1,14 +1,14 @@
 #include <stdio.h>
-#include "Billy.h"
-#include "Hanif.h"
-#include "Zidan.h"
+#include <stdlib.h>
+#include "../Include/Billy.h"
+#include "../Include/Hanif.h"
+#include "../Include/Zidan.h"
 #include <math.h>
 
-// bool isPaused = false;
 int currentDifficulty = 0;
 Sound suaratabrakan, suaramenu;
 Level level;
-
+address headBricks = NULL;
 
 void inisialisasibacksound() {
     InitAudioDevice();
@@ -38,98 +38,75 @@ void tutupbacksound1(){
     CloseAudioDevice();
 }
 
+void AddBrick(address *head, Rectangle rect) {
+    address newNode = (address)malloc(sizeof(Bricks));
+    newNode->kotak = rect;
+    newNode->on = true;
+    newNode->next = *head;
+    *head = newNode;
+}
+
 void inisialisasiBalok() {
-    int i=0;
-    while (i < BRICK_ROWS) {
-        int j=0;
-        while (j < BRICK_COLS){
-            bricks[i][j].kotak.x = j * (BRICK_WIDTH + BRICK_PADDING) + 38;
-            bricks[i][j].kotak.y = i * (BRICK_HEIGHT + BRICK_PADDING) + 38;
-            bricks[i][j].kotak.width = BRICK_WIDTH;
-            bricks[i][j].kotak.height = BRICK_HEIGHT;
-            int tipebalok = levels[currentLevel].brickPattern[i][j];
-            if (tipebalok == 1)
-            {
-                bricks[i][j].on = true;
-            } else {
-                bricks[i][j].on = false;
-            }
-            j++;
+    for (int i = 0; i < BRICK_ROWS; i++) {
+        for (int j = 0; j < BRICK_COLS; j++) {
+            Rectangle r;
+            r.x = j * (BRICK_WIDTH + BRICK_PADDING) + 50;
+            r.y = i * (BRICK_HEIGHT + BRICK_PADDING) + 50;
+            r.width = BRICK_WIDTH;
+            r.height = BRICK_HEIGHT;
+
+            AddBrick(&headBricks, r);
         }
-        i++; 
-    }    
+    }   
 }
 
 void gambarBalok() {
-    int i=0;
-    while (i < BRICK_ROWS) {
-        int j=0;
-        while (j < BRICK_COLS){
-            if (bricks[i][j].on) {
-                int tipebalok = levels[currentLevel].brickPattern[i][j];
-                if (tipebalok == 1)
-                {
-                    DrawRectangleRec(bricks[i][j].kotak, BLUE);
-                }
-            }
-            j++;
+    address current = headBricks;
+    while (current != NULL) {
+        if (current->on == true){
+            DrawRectangleRec(current->kotak, BLUE);            
         }
-        i++; 
+        current = current->next;
     }
 }
 
 void bolaterkenabalok(Ball* Ball) {
-    int i = 0;
-    while (i < BRICK_ROWS) {
-        int j = 0;
-        while (j < BRICK_COLS) {
-            Brick *brick = &bricks[i][j];
-            if (!brick->on) {  
-                j++;  
-                continue;
-            }
-            if (Ball->Position.x + Ball->Radius >= brick->kotak.x && 
-                Ball->Position.x <= brick->kotak.x + BRICK_WIDTH &&
-                Ball->Position.y + Ball->Radius >= brick->kotak.y && 
-                Ball->Position.y <= brick->kotak.y + BRICK_HEIGHT) {
-                    if (levels[currentLevel].brickPattern[i][j] == 1)
-                    {
-                        brick->on = false;
-                        panggilbacksound();
-                        Ball->Speed.y = -Ball->Speed.y;
-                        return;
-                    } else if (levels[currentLevel].brickPattern[i][j] == 2)
-                    {
-                        panggilbacksound();
-                        Ball->Speed.y = -Ball->Speed.y;
-                        return;
-                    }
-                    
-            }
-            j++;
+    address current = headBricks;
+    while (current != NULL) {
+        if (!current->on) {
+            current = current->next;
+            continue;
         }
-        i++;
+
+        if (Ball->Position.x + Ball->Radius >= current->kotak.x &&
+            Ball->Position.x <= current->kotak.x + BRICK_WIDTH &&
+            Ball->Position.y + Ball->Radius >= current->kotak.y &&
+            Ball->Position.y <= current->kotak.y + BRICK_HEIGHT) {
+            current->on = false;    
+            panggilbacksound();
+            Ball->Speed.y = -Ball->Speed.y;
+            return;
+        }
+
+        current = current->next;
     }
 }
 
 bool AreAllBricksDestroyed() {
-    for (int i = 0; i < BRICK_ROWS; i++) {
-        for (int j = 0; j < BRICK_COLS; j++) {
-            if (bricks[i][j].on) return false;
-        }
+    address current = headBricks;
+    while (current != NULL) {
+        if (current->on) return false;
+        current = current->next;
     }
     return true;
 }
 
-void SetDifficulty(int difficulty) {
-    if (difficulty >= 0 && difficulty < DIFFICULTY_LEVELS) {
-        currentDifficulty = difficulty; 
-        inisialisasiBalok(); 
+void FreeAllBricks() {
+    address current = headBricks;
+    while (current != NULL) {
+        address temp = current;
+        current = current->next;
+        free(temp);
     }
-}
-
-
-void NextLevel() {
-    currentLevel = (currentLevel + 1) % TOTAL_LEVELS;  
-    inisialisasiBalok();
+    headBricks = NULL;
 }
