@@ -52,8 +52,8 @@ typedef struct {
 
 // Deklarasi fungsi
 void InisialisasiLayarGameOver(LayarGameOver *layar);
-void DrawGameOverScreen(ScreenControl sc);
-void HandleGameOverInput(GameState *gameState, ScreenControl *sc);
+void DrawGameOverScreen(GameState *gameState);
+void HandleGameOverInput(GameState *gameState);
 void HapusLayarGameOver(LayarGameOver *layar);
 void PauseGame();
 void ResumeGame();

@@ -10,16 +10,27 @@
 #define BRICK_PADDING 5
 #define TOTAL_LEVELS 30
 
-typedef struct {
-    Vector2 position;
+// typedef struct {
+//     Vector2 position;
+//     Rectangle kotak;
+//     float width;
+//     float heigth;
+//     Color color;        
+//     bool isActive;      
+//     bool isIndestructible;
+//     bool on;
+// } Brick;
+
+typedef struct Brick {
     Rectangle kotak;
-    float width;
-    float heigth;
-    Color color;        
-    bool isActive;      
-    bool isIndestructible;
     bool on;
+    Color color;
+    bool isActive;
+    bool isIndestructible;
+    int row, col;
+    struct Brick* next;  // Tambahkan pointer ke brick selanjutnya
 } Brick;
+
 
 Brick bricks[BRICK_ROWS][BRICK_COLS];
 

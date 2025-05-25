@@ -1,5 +1,6 @@
 #include "../Include/Hanif.h"
 #include "../Include/Konfigurasi.h"
+#include "../Include/Billy.h"
 #include <stdio.h>
 //SELECTED_LEVEL
 int menuIndex = 0;
@@ -9,9 +10,11 @@ void handleLevelSelectionInput(GameState* gameState, Level* level,Ball* ball) {
     //membatasi pilihan pada menu index
     if (IsKeyPressed(KEY_UP)) {
         menuIndex = (menuIndex == 0) ? 3 : menuIndex - 1;
+        panggilbacksound1();
     }
     if (IsKeyPressed(KEY_DOWN)) {
         menuIndex = (menuIndex == 3) ? 0 : menuIndex + 1;
+        panggilbacksound1();
     }
 
     if (menuIndex == 0) {
@@ -24,7 +27,7 @@ void handleLevelSelectionInput(GameState* gameState, Level* level,Ball* ball) {
         if (IsKeyPressed(KEY_ENTER)) {
             setSpeedBall(level, ball);//memanggil fungsi setspeedball jika menu index = 2 dan pengguna menekan enter
 
-            *gameState = RESTART;//berpindah ke state loading
+            *gameState = RESTART;
         }
     }
     else if (menuIndex == 3) {
@@ -58,8 +61,7 @@ void drawLevel(Level *level) {
 
     // Array untuk teks menu
     char difficultyText[10];
-    sprintf(difficultyText, "%s", (level->DifficultLevel == EASY) ? "EASY" :
-                              (level->DifficultLevel == MEDIUM) ? "MEDIUM" : "HARD");
+    sprintf(difficultyText, "%s", (level->DifficultLevel == EASY) ? "EASY" : (level->DifficultLevel == MEDIUM) ? "MEDIUM" : "HARD");
 
     char levelText[10];
     sprintf(levelText, "LEVEL %d", level->NumberLevel);

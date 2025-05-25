@@ -31,13 +31,3 @@ void HandlePauseInput(GameState* gameState) {
         }
     }
 }
-
-void ResetGame(GameState* gameState, Paddle* paddle, Ball* ball, Level* level, Lives* lives, ScreenControl* sc) {
-    level->DifficultLevel = EASY;
-    level->NumberLevel = 1;
-    InitLives(lives, (Vector2){0, 0});
-    InitPaddle(paddle, (Vector2){SCREEN_WIDTH / 2 - 50, SCREEN_HEIGHT - 70}, (Vector2){100, 20}, 20);
-    initBall(ball, ball->Speed, paddle);
-    sc->index = 0;
-    *gameState = MENU;
-}

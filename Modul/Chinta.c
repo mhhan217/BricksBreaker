@@ -38,9 +38,6 @@ Music gameMusic;
 void displayMenuWithGraphics() {
     InitWindow(600, 800, "Bricks Breaker Menu");
     SetTargetFPS(60);
-    // InitAudioDevice();
-    inisialisasibacksound1();
-
     while (!WindowShouldClose()) {
         BeginDrawing();
         ClearBackground(BLACK_BG);
@@ -93,8 +90,6 @@ void displayMenuWithGraphics() {
 
         EndDrawing();
     }
-    tutupbacksound1();
-    // CloseAudioDevice();
     CloseWindow();
 }
 
