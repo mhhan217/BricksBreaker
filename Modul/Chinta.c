@@ -1,4 +1,6 @@
 #include <stdio.h>
+#include <stdlib.h>    
+#include <string.h> 
 #include "raylib.h"
 #include "../Include/Konfigurasi.h"
 #include "../Include/Chinta.h"
@@ -30,25 +32,25 @@ void displayMenu(ScreenControl *screen) {
         BeginDrawing();
         ClearBackground(BLACK_BG);
 
-        DrawText("B", 200, 50, 30, MY_DARK_PINK);
-        DrawText("r", 220, 50, 30, MY_BLUE);
-        DrawText("i", 240, 50, 30, MY_GREEN);
-        DrawText("c", 260, 50, 30, MY_YELLOW);
-        DrawText("k", 280, 50, 30, MY_DARK_PINK);
-        DrawText("s", 300, 50, 30, MY_BLUE);
-        DrawText(" ", 320, 50, 30, MY_GREEN);
-        DrawText("B", 340, 50, 30, MY_YELLOW);
-        DrawText("r", 360, 50, 30, MY_DARK_PINK);
-        DrawText("e", 380, 50, 30, MY_BLUE);
-        DrawText("a", 400, 50, 30, MY_GREEN);
-        DrawText("k", 420, 50, 30, MY_YELLOW);
-        DrawText("e", 440, 50, 30, MY_DARK_PINK);
-        DrawText("r", 460, 50, 30, MY_BLUE);
-        DrawText(" ", 480, 50, 30, MY_GREEN);
-        DrawText("G", 500, 50, 30, MY_YELLOW);
-        DrawText("a", 520, 50, 30, MY_DARK_PINK);
-        DrawText("m", 540, 50, 30, MY_BLUE);
-        DrawText("e", 560, 50, 30, MY_GREEN);
+        DrawText("B", 120, 50, 30, MY_DARK_PINK);
+        DrawText("r", 140, 50, 30, MY_BLUE);
+        DrawText("i", 160, 50, 30, MY_GREEN);
+        DrawText("c", 180, 50, 30, MY_YELLOW);
+        DrawText("k", 200, 50, 30, MY_DARK_PINK);
+        DrawText("s", 220, 50, 30, MY_BLUE);
+        DrawText(" ", 240, 50, 30, MY_GREEN);
+        DrawText("B", 260, 50, 30, MY_YELLOW);
+        DrawText("r", 280, 50, 30, MY_DARK_PINK);
+        DrawText("e", 300, 50, 30, MY_BLUE);
+        DrawText("a", 320, 50, 30, MY_GREEN);
+        DrawText("k", 340, 50, 30, MY_YELLOW);
+        DrawText("e", 360, 50, 30, MY_DARK_PINK);
+        DrawText("r", 380, 50, 30, MY_BLUE);
+        DrawText(" ", 400, 50, 30, MY_GREEN);
+        DrawText("G", 420, 50, 30, MY_YELLOW);
+        DrawText("a", 440, 50, 30, MY_DARK_PINK);
+        DrawText("m", 460, 50, 30, MY_BLUE);
+        DrawText("e", 480, 50, 30, MY_GREEN);
 
         const char *menuOptions[] = { "Play", "Info", "Settings", "Exit" };
         Color highlightColors[] = { MY_DARK_PINK, MY_BLUE, MY_GREEN, MY_YELLOW };
@@ -79,6 +81,11 @@ void displayMenu(ScreenControl *screen) {
 }
 
 void displayLevel(ScreenControl *screen) {
+    MenuTextNode *difficultyList = NULL;
+    appendMenuText(&difficultyList, "EASY");
+    appendMenuText(&difficultyList, "MEDIUM");
+    appendMenuText(&difficultyList, "HARD");
+
     while (!WindowShouldClose()) {
         BeginDrawing();
         ClearBackground(BLACK_BG);
@@ -97,10 +104,11 @@ void displayLevel(ScreenControl *screen) {
         DrawText("L", 330, 50, 30, MY_GREEN);
 
         // Opsi kesulitan
-        const char *difficulties[] = {"EASY", "MEDIUM", "HARD"};
+        MenuTextNode *diffNode = getMenuTextNodeAt(difficultyList, level.DifficultLevel);
+        const char *difficultyText = (diffNode != NULL) ? diffNode->text : "UNKNOWN";
         Color difficultyColor = (screen->index == 0) ? MY_DARK_PINK : WHITE;
-        int diffWidth = MeasureText(difficulties[level.DifficultLevel], 30);
-        DrawText(difficulties[level.DifficultLevel], SCREEN_WIDTH / 2 - diffWidth / 2, 150, 30, difficultyColor);
+        int diffWidth = MeasureText(difficultyText, 30);
+        DrawText(difficultyText, SCREEN_WIDTH / 2 - diffWidth / 2, 150, 30, difficultyColor);
 
         // Opsi pemilihan level
         char levelText[20];
@@ -228,8 +236,19 @@ void DecreaseSound()
 }
 
 void displayPause(ScreenControl *screen) {
-    const char *menuItems[] = {"Resume", "Settings", "Restart", "Menu"};
-    const Color menuColors[] = {MY_DARK_PINK, MY_BLUE, MY_GREEN, MY_YELLOW}; // Warna buat menu
+
+    MenuTextNode *pauseMenu = NULL;
+    appendMenuText(&pauseMenu, "Resume");
+    appendMenuText(&pauseMenu, "Settings");
+    appendMenuText(&pauseMenu, "Restart");
+    appendMenuText(&pauseMenu, "Menu");
+
+    ColorNode *pauseColors = NULL;
+    appendColor(&pauseColors, MY_DARK_PINK);
+    appendColor(&pauseColors, MY_BLUE);
+    appendColor(&pauseColors, MY_GREEN);
+    appendColor(&pauseColors, MY_YELLOW);
+
     const int menuCount = 4;
 
     while (!WindowShouldClose()) {
@@ -262,13 +281,54 @@ void displayPause(ScreenControl *screen) {
         DrawText("D", 350, 50, 40, MY_GREEN);
 
         // Menu pause
+        MenuTextNode *textNode = pauseMenu;
+        ColorNode *colorNode = pauseColors;
         for (int i = 0; i < menuCount; i++) {
-            int x = SCREEN_WIDTH / 2 - MeasureText(menuItems[i], 30) / 2;
+            int x = SCREEN_WIDTH / 2 - MeasureText(textNode->text, 30) / 2;
             int y = 150 + (i * 60);
-            Color color = (i == screen->index) ? menuColors[i] : WHITE;
-            DrawText(menuItems[i], x, y, 30, color);
+            Color color = (i == screen->index) ? colorNode->color : WHITE;
+            DrawText(textNode->text, x, y, 30, color);
+            textNode = textNode->next;
+            colorNode = colorNode->next;
         }
 
         EndDrawing();
+    }
+}
+
+void appendMenuText(MenuTextNode **head, const char *text) {
+    MenuTextNode *newNode = malloc(sizeof(MenuTextNode));
+    strcpy(newNode->text, text);
+    newNode->next = NULL;
+
+    if (*head == NULL) {
+        *head = newNode;
+    } else {
+        MenuTextNode *temp = *head;
+        while (temp->next) temp = temp->next;
+        temp->next = newNode;
+    }
+}
+
+MenuTextNode* getMenuTextNodeAt(MenuTextNode *head, int index) {
+    int i = 0;
+    while (head && i < index) {
+        head = head->next;
+        i++;
+    }
+    return head;
+}
+
+void appendColor(ColorNode **head, Color color) {
+    ColorNode *newNode = malloc(sizeof(ColorNode));
+    newNode->color = color;
+    newNode->next = NULL;
+
+    if (*head == NULL) {
+        *head = newNode;
+    } else {
+        ColorNode *temp = *head;
+        while (temp->next) temp = temp->next;
+        temp->next = newNode;
     }
 }

@@ -3,6 +3,17 @@
 
 #include <stdio.h>
 #include "raylib.h"
+
+typedef struct MenuTextNode {
+    char text[50];
+    struct MenuTextNode *next;
+} MenuTextNode;
+
+typedef struct ColorNode {
+    Color color;
+    struct ColorNode *next;
+} ColorNode;
+
 extern float musicVolume;
 extern float soundVolume;
 extern Sound ballBounce;
@@ -18,5 +29,10 @@ void DecreaseVolume();
 void IncreaseSound();
 void DecreaseSound();
 void displayPause(ScreenControl *screen);
+
+void appendMenuText(MenuTextNode **head, const char *text);
+MenuTextNode* getMenuTextNodeAt(MenuTextNode *head, int index);
+
+void appendColor(ColorNode **head, Color color);
 
 #endif // CHINTA_H
