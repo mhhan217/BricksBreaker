@@ -18,7 +18,7 @@ typedef struct Ball{
     Vector2 Position;
     Vector2 Speed;
     float Radius;
-    EffectNode* EffectHead;  // Linked list untuk jejak efek
+    Vector2 Effect[LONG_EFFECT];
     Color Color;
     bool Active;
     bool Released;
@@ -37,7 +37,7 @@ typedef struct {
 //Ball
 void initBall(Ball* ball,Vector2 ballSpeed,Paddle* paddle);
 void updateBall(Ball* ball,Paddle* paddle,Vector2 ballSpeed);
-void drawBall(Ball ball);
+void drawBall(Ball *ball);
 void setSpeedBall(Level* level,Ball* ball);
 Vector2 getSpeedBall(Ball* ball);
 //Handlelevel

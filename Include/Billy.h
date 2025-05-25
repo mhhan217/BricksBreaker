@@ -10,8 +10,6 @@
 #define BRICK_PADDING 5
 #define TOTAL_LEVELS 30
 
-// int currentLevel;
-
 void inisialisasiBalok();
 void gambarBalok();
 void bolaterkenabalok(Ball *ball);
@@ -28,8 +26,9 @@ typedef struct Bricks *address;
 typedef struct Bricks {
     Rectangle kotak;
     bool on;
+    int type;
     address next;
 } Bricks;
-void AddBrick(address *head, Rectangle rect);
+void AddBrick(address *head, Rectangle rect, int type);
 
 #endif // BILLY_H

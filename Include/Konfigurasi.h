@@ -10,11 +10,17 @@ MENU,
 SETTINGS,
 INFO,
 LEVEL_SELECTION,
-LOADING,
+RESTART,
 PLAY,
 PAUSE,
 GAME_OVER,
 EXIT
 } GameState;
+
+typedef struct
+{
+    int index;
+}ScreenControl;
+
 
 #endif //KONFIGURASI_H

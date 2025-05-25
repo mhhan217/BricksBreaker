@@ -24,7 +24,7 @@ void handleLevelSelectionInput(GameState* gameState, Level* level,Ball* ball) {
         if (IsKeyPressed(KEY_ENTER)) {
             setSpeedBall(level, ball);//memanggil fungsi setspeedball jika menu index = 2 dan pengguna menekan enter
 
-            *gameState = LOADING;//berpindah ke state loading
+            *gameState = RESTART;//berpindah ke state loading
         }
     }
     else if (menuIndex == 3) {
