@@ -2,6 +2,10 @@
 #define ZAHWA_H
 
 #include "raylib.h"
+#include "../Include/Konfigurasi.h"
+#include "../Include/Chinta.h"
+#include <stdlib.h>
+#include <string.h>
 
 typedef struct {
     Vector2 Posisi;
@@ -16,23 +20,22 @@ typedef struct {
     Vector2 posisi;
 } Lives;
 
-// typedef struct{
-//     Vector2 Posisi;
-//     Vector2 Kecepatan;
-//     float Radius;
-//     Color Warna;
-//     bool Aktif;
-//     bool Released;
-// } Ball;
+typedef struct MenuNode {
+    char *text;
+    Color color;
+    struct MenuNode *next;
+} MenuNode;
 
 void InitPaddle(Paddle* Paddle, Vector2 posisiAwal, Vector2 ukuran, float kecepatan);
 void UpdatePaddle(Paddle* Paddle);
 void DrawPaddle(Paddle Paddle);
 
-void InitLives(Lives* lives, Vector2 Posisi, int jumlah_nyawa);
+void InitLives(Lives* lives, Vector2 Posisi);
 void DrawLives(Lives* lives);
 void UpdateLives(Lives* lives, Ball* ball);
 void UnloadLives(Lives* lives);
+
+void displayMenu(ScreenControl *screen);
 
 #endif //ZAHWA_H
 

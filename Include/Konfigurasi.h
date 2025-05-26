@@ -1,6 +1,7 @@
 #ifndef KONFIGURASI_H
 #define KONFIGURASI_H
 
+#include "raylib.h"
 #define SCREEN_WIDTH 800
 #define SCREEN_HEIGHT 600
 #define TARGET_FPS 60
