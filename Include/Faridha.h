@@ -4,47 +4,39 @@
 #include "raylib.h"
 #include "Konfigurasi.h"
 
-extern int gameState;
+//Warna
+#define DARKPINK (Color){199, 21, 133, 255}
 
 typedef struct {
-    char pesan[20];  
+    GameState gameState; 
+    int index;   
+} ScreenControl;
+
+typedef struct ColorNode {
+    Color warna;
+    struct ColorNode *next;
+} ColorNode;
+
+typedef struct MenuNode {
+    char *namaMenu;
+    struct MenuNode *next;
+} MenuNode;
+
+typedef struct {
+    char *pesan;  
     int indeksMenu;
     Color warnaTeks;
+    MenuNode *menuList;
+    ColorNode *warnaJudul;
+    ColorNode *warnaTombol;
 } LayarGameOver;
 
-typedef enum { 
-    POWER_NONE,          
-    POWER_ENLARGE_PADDLE, 
-    POWER_SHRINK_PADDLE,  
-    POWER_SPEED_UP_BALL,  
-    POWER_SLOW_DOWN_BALL, 
-    POWER_EXTRA_LIFE      
-} PowerUpType;
-
-typedef struct PowerUp {
-    Vector2 position;
-    Vector2 speed;
-    int radius;
-    int type;
-    bool active;
-} PowerUp;
-
-extern Texture2D powerUpTexture;
-
-
 void InisialisasiLayarGameOver(LayarGameOver *layar);
-void DrawGameOverScreen(ScreenControl *screen);
-void HandleGameOverInput(ScreenControl *screen);
+void DrawGameOverScreen(GameState *gameState);
+void HandleGameOverInput(GameState *gameState);
 void HapusLayarGameOver(LayarGameOver *layar);
 void PauseGame();
 void ResumeGame();
-void BackToMenu();
 void ShowGameOver();
-
-//PowerUp
-void InitializePowerUp(PowerUp *powerUp);
-void UpdatePowerUp(PowerUp *powerUp);
-void DrawPowerUp(PowerUp powerUp);
-
 
 #endif
