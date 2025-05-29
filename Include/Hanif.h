@@ -18,7 +18,7 @@ typedef struct Ball{
     Vector2 Position;
     Vector2 Speed;
     float Radius;
-    Vector2 Effect[LONG_EFFECT];
+    EffectNode *effect;
     Color Color;
     bool Active;
     bool Released;

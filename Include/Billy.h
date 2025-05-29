@@ -10,7 +10,7 @@
 #define BRICK_PADDING 5
 #define TOTAL_LEVELS 30
 
-void inisialisasiBalok();
+void inisialisasiBalok(int level);
 void gambarBalok();
 void bolaterkenabalok(Ball *ball);
 bool AreAllBricksDestroyed();

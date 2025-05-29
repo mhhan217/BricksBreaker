@@ -170,33 +170,33 @@ void displayInfo()
 
         if (page == 1) 
         {
-            DrawText("P", 320, 100, 30, MY_BLUE);
-            DrawText("o", 340, 100, 30, MY_GREEN);
-            DrawText("w", 360, 100, 30, MY_YELLOW);
-            DrawText("e", 380, 100, 30, MY_DARK_PINK);
-            DrawText("r", 400, 100, 30, MY_BLUE);
-            DrawText("-", 420, 100, 30, MY_GREEN);
-            DrawText("u", 440, 100, 30, MY_YELLOW);
-            DrawText("p", 460, 100, 30, MY_DARK_PINK);
-            DrawText("1. Enlarge Paddle - Memperbesar paddle", 200, 175, 20, WHITE_TEXT);
-            DrawText("2. Shrink Paddle - Mengecilkan paddle", 200, 225, 20, WHITE_TEXT);
-            DrawText("3. Speed Up Ball - Mempercepat bola", 200, 275, 20, WHITE_TEXT);
+            DrawText("P", 220, 100, 30, MY_BLUE);
+            DrawText("o", 240, 100, 30, MY_GREEN);
+            DrawText("w", 260, 100, 30, MY_YELLOW);
+            DrawText("e", 280, 100, 30, MY_DARK_PINK);
+            DrawText("r", 300, 100, 30, MY_BLUE);
+            DrawText("-", 320, 100, 30, MY_GREEN);
+            DrawText("u", 340, 100, 30, MY_YELLOW);
+            DrawText("p", 360, 100, 30, MY_DARK_PINK);
+            DrawText("1. Enlarge Paddle - Memperbesar paddle", 100, 175, 20, WHITE_TEXT);
+            DrawText("2. Shrink Paddle - Mengecilkan paddle", 100, 225, 20, WHITE_TEXT);
+            DrawText("3. Speed Up Ball - Mempercepat bola", 100, 275, 20, WHITE_TEXT);
         } 
         else if (page == 2) 
         {
-            DrawText("P", 320, 100, 30, MY_BLUE);
-            DrawText("o", 340, 100, 30, MY_GREEN);
-            DrawText("w", 360, 100, 30, MY_YELLOW);
-            DrawText("e", 380, 100, 30, MY_DARK_PINK);
-            DrawText("r", 400, 100, 30, MY_BLUE);
-            DrawText("-", 420, 100, 30, MY_GREEN);
-            DrawText("u", 440, 100, 30, MY_YELLOW);
-            DrawText("p", 460, 100, 30, MY_DARK_PINK);
-            DrawText("4. Slow Down Ball - Memperlambat bola", 200, 175, 20, WHITE_TEXT);
-            DrawText("5. Extra Life - Menambah nyawa pemain", 200, 225, 20, WHITE_TEXT);
+            DrawText("P", 220, 100, 30, MY_BLUE);
+            DrawText("o", 240, 100, 30, MY_GREEN);
+            DrawText("w", 260, 100, 30, MY_YELLOW);
+            DrawText("e", 280, 100, 30, MY_DARK_PINK);
+            DrawText("r", 300, 100, 30, MY_BLUE);
+            DrawText("-", 320, 100, 30, MY_GREEN);
+            DrawText("u", 340, 100, 30, MY_YELLOW);
+            DrawText("p", 360, 100, 30, MY_DARK_PINK);
+            DrawText("4. Slow Down Ball - Memperlambat bola", 100, 175, 20, WHITE_TEXT);
+            DrawText("5. Extra Life - Menambah nyawa pemain", 100, 225, 20, WHITE_TEXT);
         }
 
-        DrawText("Press B to go back", 300, 350, 20, MY_YELLOW);
+        DrawText("Press B to go back", 200, 350, 20, MY_YELLOW);
 
         if (IsKeyPressed(KEY_A) || IsKeyPressed(KEY_LEFT)) 
         {
@@ -219,14 +219,14 @@ void displaySettings() {
         BeginDrawing();
         ClearBackground(BLACK_BG);
 
-        DrawText("S", 330, 50, 30, MY_BLUE);
-        DrawText("e", 350, 50, 30, MY_GREEN);
-        DrawText("t", 370, 50, 30, MY_YELLOW);
-        DrawText("t", 390, 50, 30, MY_DARK_PINK);
-        DrawText("i", 410, 50, 30, MY_BLUE);
-        DrawText("n", 420, 50, 30, MY_GREEN);
-        DrawText("g", 440, 50, 30, MY_YELLOW);
-        DrawText("s", 460, 50, 30, MY_DARK_PINK);
+        DrawText("S", 220, 50, 30, MY_BLUE);
+        DrawText("e", 240, 50, 30, MY_GREEN);
+        DrawText("t", 260, 50, 30, MY_YELLOW);
+        DrawText("t", 280, 50, 30, MY_DARK_PINK);
+        DrawText("i", 300, 50, 30, MY_BLUE);
+        DrawText("n", 340, 50, 30, MY_GREEN);
+        DrawText("g", 360, 50, 30, MY_YELLOW);
+        DrawText("s", 380, 50, 30, MY_DARK_PINK);
 
         DrawText("Paddle Color:", 200, 120, 20, WHITE);
         DrawRectangle(400, 120, 40, 40, paddleColors[selectedPaddleColorIndex]);
@@ -248,7 +248,7 @@ void displaySettings() {
         if (IsKeyPressed(KEY_A)) DecreaseSound();
         if (IsKeyPressed(KEY_D)) IncreaseSound();
 
-        DrawText("Press B to go back", 300, 400, 20, MY_GREEN);
+        DrawText("Press B to go back", 200, 400, 20, MY_GREEN);
         if (IsKeyPressed(KEY_B)) return;
 
         EndDrawing();

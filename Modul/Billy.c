@@ -1,9 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <math.h>
+#include <time.h>
 #include "../Include/Billy.h"
 #include "../Include/Hanif.h"
 #include "../Include/Zidan.h"
-#include <math.h>
 
 int currentDifficulty = 0;
 Sound suaratabrakan, suaramenu;
@@ -52,25 +53,46 @@ void tutupbacksound() {
 //     }    
 // }
 
-void inisialisasiBalok() {
-    for (int i = 0; i < BRICK_ROWS; i++) {
-        for (int j = 1; j < BRICK_COLS; j++) {
-            Rectangle r;
-            r.x = j * (BRICK_WIDTH + BRICK_PADDING) + 50;
-            r.y = i * (BRICK_HEIGHT + BRICK_PADDING) + 50;
-            r.width = BRICK_WIDTH;
-            r.height = BRICK_HEIGHT;
-            
-            AddBrick(&headBricks, r, 1);
-        }
-    }   
+void inisialisasiBalok(int level) {
+    srand(time(NULL) + level);
+
+    int totalBricks;
+    if (level <= 10) {
+        totalBricks = 500;
+    } else if (level <= 20) {
+        totalBricks = 700;
+    } else {
+        totalBricks = 900;
+    }
+
+    int fillednodes = 0;
+    while (fillednodes < totalBricks) {
+        int rows = rand() % BRICK_ROWS;
+        int cols = rand() % BRICK_COLS;
+        int x = cols * (BRICK_WIDTH + BRICK_PADDING) + 50;
+        int y = rows * (BRICK_HEIGHT + BRICK_PADDING) + 50;
+        Rectangle r;
+        r.x = x;
+        r.y = y;
+        r.width = BRICK_WIDTH;
+        r.height = BRICK_HEIGHT;
+
+        int type = 1;
+        AddBrick(&headBricks, r, type);
+        fillednodes++;
+    }
 }
+
 
 void AddBrick(address *head, Rectangle rect, int type) {
     address newNode = (address)malloc(sizeof(Bricks));
     newNode->kotak = rect;
-    newNode->on = true;
     newNode->type = type;
+    if (type == 1) {
+        newNode->on = true;
+    } else {
+        newNode->on = false;
+    }
     newNode->next = *head;
     *head = newNode;
 }
@@ -93,10 +115,7 @@ void gambarBalok() {
     address current = headBricks;
     while (current != NULL) {
         if (current->on == true){
-            if (current -> type == 1)
-            {
-                DrawRectangleRec(current->kotak, BLUE);   
-            }         
+            DrawRectangleRec(current->kotak, BLUE);        
         }
         current = current->next;
     }

@@ -21,7 +21,7 @@ int main() {
 
     setSpeedBall(&level, &ball);
     currentLevel = numberLevel(&level);
-    inisialisasiBalok();
+    inisialisasiBalok(currentLevel);
     InitPaddle(&paddle, (Vector2){SCREEN_WIDTH / 2 - 50, SCREEN_HEIGHT - 70}, (Vector2){100, 20}, 20);
     initBall(&ball, ball.Speed, &paddle);
     InitLives(&lives, (Vector2){0, 0});
@@ -40,7 +40,7 @@ int main() {
             handleLevelSelectionInput(&gameState, &level, &ball);
         }
         else if (gameState == RESTART) {
-            inisialisasiBalok();
+            inisialisasiBalok(currentLevel);
             InitPaddle(&paddle, (Vector2){SCREEN_WIDTH / 2 - 50, SCREEN_HEIGHT - 70}, (Vector2){100, 20}, 20);
             initBall(&ball, ball.Speed, &paddle);
             InitLives(&lives, (Vector2){0, 0});
@@ -50,10 +50,10 @@ int main() {
             if (IsKeyPressed(KEY_P)) {
                 gameState = PAUSE;
             }
+            bolaterkenabalok(&ball);            
             UpdateLives(&lives, &ball);
             updateBall(&ball, &paddle, ball.Speed);
             UpdatePaddle(&paddle);
-            bolaterkenabalok(&ball);
             if (lives.jumlah_nyawa == 0) {
                 gameState = GAME_OVER;
             }

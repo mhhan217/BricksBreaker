@@ -12,6 +12,7 @@ void initBall(Ball* ball,Vector2 ballSpeed,Paddle* paddle){
     ball->Color = RAYWHITE;
     ball->Active = true;
     ball->Released = false;
+    ball->effect = NULL;
     ball->Position.x = paddle->Posisi.x + paddle->Ukuran.x / 2;
     ball->Position.y = paddle->Posisi.y - ball->Radius;
 }
@@ -19,10 +20,7 @@ void initBall(Ball* ball,Vector2 ballSpeed,Paddle* paddle){
 void updateBall(Ball* ball,Paddle* paddle,Vector2 ballSpeed) {
     if (!ball->Active) return;
 
-    for (int i = LONG_EFFECT - 1; i > 0; i--) {
-        ball->Effect[i] = ball->Effect[i - 1];
-    }
-    ball->Effect[0] = ball->Position;
+    AddEffect(&ball->effect, ball->Position, LONG_EFFECT);
 
     if (!ball->Released) {
         ball->Position.x = paddle->Posisi.x + paddle->Ukuran.x / 2;
@@ -73,14 +71,22 @@ void updateBall(Ball* ball,Paddle* paddle,Vector2 ballSpeed) {
 
 void drawBall(Ball* ball) {
     if (ball->Active) {
-        for (int i = 0; i < LONG_EFFECT; i++) {
+        EffectNode* current = ball->effect;
+        int i = 0;
+
+        while (current != NULL && i < LONG_EFFECT) {
             float jejak_Effect = (float)(LONG_EFFECT - i) / LONG_EFFECT;
             Color EffectColor = Fade(ball->Color, jejak_Effect);
-            DrawCircleV(ball->Effect[i], ball->Radius - i * 0.3, EffectColor);
+            DrawCircleV(current->posisi, ball->Radius - i * 0.3f, EffectColor);
+
+            current = current->next;
+            i++;
         }
+
         DrawCircleV(ball->Position, ball->Radius, ball->Color);
     }
 }
+
 
 void setSpeedBall(Level* level,Ball* ball) {
     switch (level->DifficultLevel) {
@@ -96,16 +102,12 @@ Vector2 getSpeedBall(Ball* ball) {
 }
 
 
-
-/*
-// Menambahkan node ke awal linked list, dan menghapus yang berlebih jika panjang melebihi maxLength
 void AddEffect(EffectNode** head, Vector2 posisi, int maxLength) {
     EffectNode* newNode = (EffectNode*)malloc(sizeof(EffectNode));
     newNode->posisi = posisi;
     newNode->next = *head;
     *head = newNode;
 
-    // Potong jika panjang melebihi batas
     int count = 1;
     EffectNode* current = *head;
     while (current->next != NULL) {
@@ -126,7 +128,6 @@ void AddEffect(EffectNode** head, Vector2 posisi, int maxLength) {
 }
 
 
-Membersihkan semua node dalam linked list
 void FreeEffectList(EffectNode** head) {
     EffectNode* current = *head;
     while (current != NULL) {
@@ -136,4 +137,3 @@ void FreeEffectList(EffectNode** head) {
     }
     *head = NULL;
 }
-*/
