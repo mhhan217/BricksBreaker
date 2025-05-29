@@ -1,9 +1,11 @@
-#include "../Include/Zahwa.h"
-#include "../Include/Konfigurasi.h"
+#include <stdio.h>
+#include <stdlib.h>
 #include "raylib.h"
-#define MAKS_NYAWA 3
+#include "../Include/Zahwa.h"
+#include "../Include/Chinta.h"
+#include "../Include/Billy.h"
 
-// Paddle
+#define MAKS_NYAWA 3
 
 void InitPaddle(Paddle* Paddle, Vector2 posisiAwal, Vector2 ukuran, float kecepatan) {
     Paddle->Posisi = posisiAwal;
@@ -19,14 +21,12 @@ void UpdatePaddle(Paddle* Paddle) {
     if (IsKeyDown(KEY_RIGHT) && Paddle->Posisi.x + Paddle->Ukuran.x < GetScreenWidth()) {
         Paddle->Posisi.x += Paddle->Kecepatan;
     }
+
 }
 
 void DrawPaddle(Paddle Paddle) {
     DrawRectangleV(Paddle.Posisi, Paddle.Ukuran, Paddle.Warna);
 }
-
-
-//Lives
 
 void InitLives(Lives* lives, Vector2 Posisi) {
     lives->jumlah_nyawa = MAKS_NYAWA;
@@ -48,21 +48,18 @@ void DrawLives(Lives* lives) {
     } 
 }
 
-
 void UpdateLives(Lives* lives, Ball* ball) {
     // Cek bola jatuh ke bawah layar 
-    if (lives->jumlah_nyawa > 0 && ball->Posisi.y + ball->Radius >= GetScreenHeight()) {
+    if (lives->jumlah_nyawa > 0 && ball->Position.y + ball->Radius >= GetScreenHeight()) {
         lives->jumlah_nyawa--;  
-
         // Nyawa masih ada
         if (lives->jumlah_nyawa <= 0) {
-            lives->jumlah_nyawa = 0;  
-                
+            lives->jumlah_nyawa = 0;          
         }
     }
-}
+}    
 
-// Membersihkan memori texture lives icon
+// Cleanup memory texture lives icon setelah permainan selesai
 void UnloadLives(Lives* lives) {
     if (IsTextureValid(lives->heartIcon)) {
         UnloadTexture(lives->heartIcon);
@@ -70,144 +67,106 @@ void UnloadLives(Lives* lives) {
     }
 }
 
-void displayMenu(ScreenControl *screen) {
-    InitWindow(800, 600, "Bricks Breaker Menu"); 
+// convert Array to SLL
+void displayMenuWithGraphics() {
+    InitWindow(600, 800, "Bricks Breaker Menu");
     SetTargetFPS(60);
-    InitAudioDevice();
     
-    // Linked list menuOptions
-    MenuNode *menuOptions = NULL;
-    MenuNode *temp;
+    // Membuat linked list per node menu
+    MenuNode* menuHead = NULL;
     
-    // Node 1: "Play"
-    menuOptions = (MenuNode*)malloc(sizeof(MenuNode));
-    menuOptions->text = (char*)malloc(strlen("Play") + 1);
-    strcpy(menuOptions->text, "Play");
-    menuOptions->next = NULL;
+    // Node Play
+    MenuNode* node1 = (MenuNode*)malloc(sizeof(MenuNode));
+    node1->menumenuOption = "Play";
+    node1->highlightColor = MY_DARK_PINK;
+    node1->next = NULL;
+    menuHead = node1;
     
-    // Node 2: "Info"
-    temp = (MenuNode*)malloc(sizeof(MenuNode));
-    temp->text = (char*)malloc(strlen("Info") + 1);
-    strcpy(temp->text, "Info");
-    temp->next = NULL;
-    menuOptions->next = temp;
+    // Node Info
+    MenuNode* node2 = (MenuNode*)malloc(sizeof(MenuNode));
+    node2->menuOption = "Info";
+    node2->highlightColor = MY_BLUE;
+    node2->next = NULL;
+    node1->next = node2;
     
-    // Node 3: "Settings"
-    temp = (MenuNode*)malloc(sizeof(MenuNode));
-    temp->text = (char*)malloc(strlen("Settings") + 1);
-    strcpy(temp->text, "Settings");
-    temp->next = NULL;
-    menuOptions->next->next = temp;
+    // Node Settings
+    MenuNode* node3 = (MenuNode*)malloc(sizeof(MenuNode));
+    node3->menuOption = "Settings";
+    node3->highlightColor = MY_GREEN;
+    node3->next = NULL;
+    node2->next = node3;
     
-    // Node 4: "Exit"
-    temp = (MenuNode*)malloc(sizeof(MenuNode));
-    temp->text = (char*)malloc(strlen("Exit") + 1);
-    strcpy(temp->text, "Exit");
-    temp->next = NULL;
-    menuOptions->next->next->next = temp;
-    
-    // Linked list highlightColors
-    MenuNode *highlightColors = NULL;
-    
-    // Node 1: PINK
-    highlightColors = (MenuNode*)malloc(sizeof(MenuNode));
-    highlightColors->text = NULL;
-    highlightColors->color = MY_DARK_PINK;
-    highlightColors->next = NULL;
-    
-    // Node 2: BLUE
-    temp = (MenuNode*)malloc(sizeof(MenuNode));
-    temp->text = NULL;
-    temp->color = MY_BLUE;
-    temp->next = NULL;
-    highlightColors->next = temp;
-    
-    // Node 3: GREEN
-    temp = (MenuNode*)malloc(sizeof(MenuNode));
-    temp->text = NULL;
-    temp->color = MY_GREEN;
-    temp->next = NULL;
-    highlightColors->next->next = temp;
-    
-    // Node 4: YELLOW
-    temp = (MenuNode*)malloc(sizeof(MenuNode));
-    temp->text = NULL;
-    temp->color = MY_YELLOW;
-    temp->next = NULL;
-    highlightColors->next->next->next = temp;
+    // Node Exit
+    MenuNode* node4 = (MenuNode*)malloc(sizeof(MenuNode));
+    node4->menuOption = "Exit";
+    node4->highlightColor = MY_YELLOW;
+    node4->next = NULL;
+    node3->next = node4;
     
     int menuCount = 4;
-
+    
     while (!WindowShouldClose()) {
         BeginDrawing();
         ClearBackground(BLACK_BG);
-
-        DrawText("B", 250, 50, 30, MY_DARK_PINK);
-        DrawText("r", 270, 50, 30, MY_BLUE);
-        DrawText("i", 290, 50, 30, MY_GREEN);
-        DrawText("c", 310, 50, 30, MY_YELLOW);
-        DrawText("k", 330, 50, 30, MY_DARK_PINK);
-        DrawText("s", 350, 50, 30, MY_BLUE);
-        DrawText(" ", 370, 50, 30, MY_GREEN);
-        DrawText("B", 390, 50, 30, MY_YELLOW);
-        DrawText("r", 410, 50, 30, MY_DARK_PINK);
-        DrawText("e", 430, 50, 30, MY_BLUE);
-        DrawText("a", 450, 50, 30, MY_GREEN);
-        DrawText("k", 470, 50, 30, MY_YELLOW);
-        DrawText("e", 490, 50, 30, MY_DARK_PINK);
-        DrawText("r", 510, 50, 30, MY_BLUE);
-        DrawText(" ", 530, 50, 30, MY_GREEN);
-        DrawText("G", 550, 50, 30, MY_YELLOW);
-        DrawText("a", 570, 50, 30, MY_DARK_PINK);
-        DrawText("m", 590, 50, 30, MY_BLUE);
-        DrawText("e", 610, 50, 30, MY_GREEN);
-
-        if (IsKeyPressed(KEY_DOWN) || IsKeyPressed(KEY_S))
-            screen->index = (screen->index + 1) % menuCount;
-        if (IsKeyPressed(KEY_UP) || IsKeyPressed(KEY_W))
-            screen->index = (screen->index - 1 + menuCount) % menuCount;
-
-        // Menggambar menu menggunakan linked list
-        MenuNode *currentMenu = menuOptions;
-        MenuNode *currentHighlight = highlightColors;
-        int i = 0;
         
-        while (currentMenu != NULL && currentHighlight != NULL) {
-            Color textColor = (i == screen->index) ? currentHighlight->color : WHITE;
-            DrawText(currentMenu->text, SCREEN_WIDTH / 2 - textWidth / 2, 150 + (i * 60), 30, textColor);  
+        DrawText("B", 120, 50, 30, MY_DARK_PINK);
+        DrawText("r", 140, 50, 30, MY_BLUE);
+        DrawText("i", 160, 50, 30, MY_GREEN);
+        DrawText("c", 180, 50, 30, MY_YELLOW);
+        DrawText("k", 200, 50, 30, MY_DARK_PINK);
+        DrawText("s", 220, 50, 30, MY_BLUE);
+        DrawText(" ", 240, 50, 30, MY_GREEN);
+        DrawText("B", 260, 50, 30, MY_YELLOW);
+        DrawText("r", 280, 50, 30, MY_DARK_PINK);
+        DrawText("e", 300, 50, 30, MY_BLUE);
+        DrawText("a", 320, 50, 30, MY_GREEN);
+        DrawText("k", 340, 50, 30, MY_YELLOW);
+        DrawText("e", 360, 50, 30, MY_DARK_PINK);
+        DrawText("r", 380, 50, 30, MY_BLUE);
+        DrawText(" ", 400, 50, 30, MY_GREEN);
+        DrawText("G", 420, 50, 30, MY_YELLOW);
+        DrawText("a", 440, 50, 30, MY_DARK_PINK);
+        DrawText("m", 460, 50, 30, MY_BLUE);
+        DrawText("e", 480, 50, 30, MY_GREEN);
+
+        int selectedMenuOption = 0;
+        
+        if (IsKeyPressed(KEY_DOWN) || IsKeyPressed(KEY_S)){
+            panggilbacksound1();
+            selectedMenuOption = (selectedMenuOption + 1) % menuCount;
+        }
+        if (IsKeyPressed(KEY_UP) || IsKeyPressed(KEY_W)){
+            panggilbacksound1();
+            selectedMenuOption = (selectedMenuOption - 1 + menuCount) % menuCount;
+        }
+        
+        MenuNode* current = menuHead;
+        int index = 0;
+        while (current != NULL) {
+            Color textColor = (index == selectedMenuOption) ? current->highlightColor : WHITE;
+            int textWidth = MeasureText(current->menuOption, 30);
+            DrawText(current->menuOption, SCREEN_WIDTH / 2 - textWidth / 2, 150 + (index * 60), 30, textColor);
             
-            currentMenu = currentMenu->next;
-            currentHighlight = currentHighlight->next;
-            i++;
+            current = current->next;
+            index++;
         }
-
+        
         if (IsKeyPressed(KEY_ENTER) || IsKeyPressed(KEY_SPACE)) {
-            if (screen->index == 0) displayLevel(screen);
-            else if (screen->index == 1) displayInfo(screen);
-            else if (screen->index == 2) displaySettings(screen);
-            else if (screen->index == 3) break;
+            if (selectedMenuOption == 0) break;
+            else if (selectedMenuOption == 1) displayInfo();
+            else if (selectedMenuOption == 2) displaySettings();
+            else if (selectedMenuOption == 3) break;
         }
-
+        
         EndDrawing();
     }
     
-    // Membersihkan memori menuOptions
-    MenuNode *current = menuOptions;
-    while (current != NULL) {
-        MenuNode *temp = current;
-        current = current->next;
-        if (temp->text != NULL) free(temp->text);
+    // Cleanup memory
+    while (menuHead != NULL) {
+        MenuNode* temp = menuHead;
+        menuHead = menuHead->next;
         free(temp);
     }
     
-    // Membersihkan memori highlightColors
-    current = highlightColors;
-    while (current != NULL) {
-        MenuNode *temp = current;
-        current = current->next;
-        free(temp);
-    }
-    
-    CloseAudioDevice();
     CloseWindow();
 }
