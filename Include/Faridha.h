@@ -5,66 +5,32 @@
 
 #include "raylib.h"
 #include "Konfigurasi.h"
+#define DARKPINK (Color){199, 21, 133, 255};
 
-#define MAX_POWERUPS 5
+typedef struct ColorNodeFaridha {
+    Color warna;
+    struct ColorNodeFaridha *next;
+} ColorNodeFaridha;
 
-// Deklarasi variabel global
-// extern GameState gameState;
-extern Texture2D powerUpTextures[3];
+typedef struct MenuNodeFaridha{
+    char *namaMenu;
+    struct MenuNodeFaridha *next;
+} MenuNodeFaridha;
 
-typedef struct {
-    char pesan[20];  
+typedef struct LayarGameOver{
+    char *pesan;  
     int indeksMenu;
     Color warnaTeks;
+    MenuNodeFaridha *menuList;
+    ColorNodeFaridha *warnaJudul;
+    ColorNodeFaridha *warnaTombol;
 } LayarGameOver;
 
-// Struktur dan enum
-typedef enum {
-    POWER_EXTRA_LIFE, 
-    POWER_EXTRA_BALL,
-    POWER_ENLARGE_PADDLE
-} PowerUpType;
-
-typedef struct PowerUp {
-    Vector2 posisi;
-    Vector2 kecepatan;
-    int radius;
-    int tipe;
-    bool aktif;
-    float durasi;
-    float waktu;
-} PowerUp;
-
-// typedef struct Ball {
-//     float x;
-//     float y;
-//     float radius;
-//     float speedX;
-//     float speedY;
-//     bool isStrong;      // Menandai apakah bola sedang kuat
-//     float strongTime;   // Durasi efek kuat
-// } Ball;
-
-typedef struct {
-    Rectangle rect;
-    bool isDestroyed;
-} Balok;
-
-// Deklarasi fungsi
 void InisialisasiLayarGameOver(LayarGameOver *layar);
-void DrawGameOverScreen(GameState *gameState);
-void HandleGameOverInput(GameState *gameState);
+void DrawGameOverScreen(GameState *gameState, LayarGameOver *layar);
+void HandleGameOverInput(GameState *gameState, LayarGameOver *layar);
 void HapusLayarGameOver(LayarGameOver *layar);
 void PauseGame();
 void ResumeGame();
-void BackToMenu();
 void ShowGameOver();
-
-// PowerUp
-void LoadPowerUpTextures();
-void InitializePowerUp(PowerUp *powerUp);
-void UpdatePowerUp(PowerUp *powerUp, float deltaTime);
-void DrawPowerUp(PowerUp powerUp);
-void CloseGame();
-void DestroyBricksAround(Balok brick); 
 #endif

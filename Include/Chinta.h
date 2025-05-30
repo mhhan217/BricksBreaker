@@ -32,12 +32,15 @@ extern float soundVolume;
 extern Sound ballBounce;
 extern Music gameMusic;
 
-// Deklarasi konstanta menu
-// typedef enum {
-//     MENU,
-//     LEVEL_SELECTION,
-//     LOADING
-// } GameState;
+typedef struct MenuTextNode {
+    char text[50];
+    struct MenuTextNode *next;
+} MenuTextNode;
+
+typedef struct ColorNode {
+    Color color;
+    struct ColorNode *next;
+} ColorNode;
 
 // Deklarasi array warna sebagai `extern`
 extern Color paddleColor;
@@ -48,7 +51,7 @@ extern Color ballColors[6];
 // Deklarasi fungsi
 void displayMenuWithGraphics();
 void DrawTextShadow(const char *text, int posX, int posY, int fontSize, Color textColor, Color shadowColor);
-void displayLevelSelection();
+void displayLevel();
 void handleLevelSelectionInput();
 void displayInfo();
 void displaySettings();
@@ -59,5 +62,9 @@ void DecreaseVolume();
 void IncreaseSound();
 void DecreaseSound();
 void playGame();
+
+void appendMenuText(MenuTextNode **head, const char *text);
+MenuTextNode* getMenuTextNodeAt(MenuTextNode *head, int index);
+void appendColor(ColorNode **head, Color color);
 
 #endif // CHINTA_H

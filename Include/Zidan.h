@@ -21,25 +21,45 @@
 //     bool on;
 // } Brick;
 
-typedef struct Brick {
+typedef struct BrickZidan {
     Rectangle kotak;
     bool on;
     Color color;
     bool isActive;
     bool isIndestructible;
     int row, col;
-    struct Brick* next;  // Tambahkan pointer ke brick selanjutnya
-} Brick;
+    struct BrickZidan* next; // Tambahkan pointer ke brick selanjutnya
+} BrickZidan;
+
+typedef struct PatternNodeZidan {
+    int row, col;
+    int value; // 1 = aktif, 2 = indestructible
+    struct PatternNodeZidan* next;
+} PatternNodeZidan;
+
+typedef struct LevelZidan {
+    int NumberLevel;
+    PatternNodeZidan* patternList;
+    struct LevelZidan* next;
+} LevelZidan;
+
+PatternNodeZidan* CreatePattern();
+void AddLevel(int number, PatternNodeZidan* patternList);
+LevelZidan* GetLevelByNumber(int number);
+BrickZidan* LoadLevelFromPatternList(PatternNodeZidan* patternList);
+void InitializeBricks(BrickZidan* brickList);
+void UpdateBricks(BrickZidan* brickList);
+void DrawBricks(BrickZidan* brickList);
+void SetupGameLevels();
+Color WarnaAcak();
 
 
-Brick bricks[BRICK_ROWS][BRICK_COLS];
-
-int currentLevel;
-
-void InitializeBricks(Brick bricks[BRICK_ROWS][BRICK_ROWS]);
-void LoadLevel(int level, Brick bricks[BRICK_ROWS][BRICK_COLS]);
-void UpdateBricks(Brick bricks[BRICK_ROWS][BRICK_COLS]);
-void DrawBricks(Brick bricks[BRICK_ROWS][BRICK_COLS]);
+// Brick bricks[BRICK_ROWS][BRICK_COLS];
+// int currentLevel;
+// void InitializeBricks(Brick bricks[BRICK_ROWS][BRICK_ROWS]);
+// Brick* LoadLevel(int level);
+// void UpdateBricks(Brick bricks[BRICK_ROWS][BRICK_COLS]);
+// void DrawBricks(Brick bricks[BRICK_ROWS][BRICK_COLS]);
 
 // static Level levels[TOTAL_LEVELS] ={
 //     {

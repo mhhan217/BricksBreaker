@@ -5,6 +5,7 @@
 #include "../Modul/Hanif1.c"
 #include "../Modul/Hanif3.c"
 #include "../Modul/Faridha.c"
+#include "../Modul/Zidan.c"
 #include "raylib.h"
 #include "../Include/Konfigurasi.h"
 
@@ -18,9 +19,11 @@ int main() {
     Ball ball;
     Level level = {1, EASY};
     Lives lives;
+    LayarGameOver *layar = malloc(sizeof(LayarGameOver));
 
+    InisialisasiLayarGameOver(layar);
     setSpeedBall(&level, &ball);
-    currentLevel = numberLevel(&level);
+    int currentLevel = numberLevel(&level);
     inisialisasiBalok(currentLevel);
     InitPaddle(&paddle, (Vector2){SCREEN_WIDTH / 2 - 50, SCREEN_HEIGHT - 70}, (Vector2){100, 20}, 20);
     initBall(&ball, ball.Speed, &paddle);
@@ -67,7 +70,7 @@ int main() {
         }
 
         else if (gameState == GAME_OVER) {
-            HandleGameOverInput(&gameState);
+            HandleGameOverInput(&gameState, layar);
         }
 
         BeginDrawing();
@@ -82,7 +85,7 @@ int main() {
             displaySettings();
         }
         else if (gameState == LEVEL_SELECTION) {
-            drawLevel(&level);
+            displayLevel();
         }
         else if (gameState == PLAY) {
             DrawLives(&lives);
@@ -94,12 +97,13 @@ int main() {
             DrawPauseScreen(&gameState);
         }
         else if (gameState == GAME_OVER) {
-            DrawGameOverScreen(&gameState);
+            DrawGameOverScreen(&gameState, layar);
         }
 
         EndDrawing();
     }
 
+    HapusLayarGameOver(layar);
     FreeAllBricks();
     tutupbacksound();
     CloseWindow();

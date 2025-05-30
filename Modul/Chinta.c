@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include "raylib.h"
+#include <string.h>
 #include "../Include/Chinta.h"
 #include "../Include/Hanif.h"
 #include "../Include/Konfigurasi.h"
@@ -14,10 +15,10 @@ float paddleSpeed = 5.0f;  // Atur kecepatan paddle sesuai kebutuhan
 Vector2 paddlePosition = { 350, 550 }; // Atur posisi awal paddle
 
 GameState* gameState;
-Level level;
-// Ball ball;
+extern Level level;
+Ball ball;
 int selectedMenuOption = 0;
-// int menuIndex = 0;
+extern int menuIndex;
 // int currentDifficulty = 0;
 int selectedDifficulty = 0;
 int currentState = MENU;
@@ -35,63 +36,63 @@ Color ballColor = WHITE;
 Sound ballBounce;
 Music gameMusic;
 
-void displayMenuWithGraphics() {
-    InitWindow(600, 800, "Bricks Breaker Menu");
-    SetTargetFPS(60);
-    while (!WindowShouldClose()) {
-        BeginDrawing();
-        ClearBackground(BLACK_BG);
+// void displayMenuWithGraphics() {
+//     InitWindow(600, 800, "Bricks Breaker Menu");
+//     SetTargetFPS(60);
+//     while (!WindowShouldClose()) {
+//         BeginDrawing();
+//         ClearBackground(BLACK_BG);
 
-        DrawText("B", 120, 50, 30, MY_DARK_PINK);
-        DrawText("r", 140, 50, 30, MY_BLUE);
-        DrawText("i", 160, 50, 30, MY_GREEN);
-        DrawText("c", 180, 50, 30, MY_YELLOW);
-        DrawText("k", 200, 50, 30, MY_DARK_PINK);
-        DrawText("s", 220, 50, 30, MY_BLUE);
-        DrawText(" ", 240, 50, 30, MY_GREEN);
-        DrawText("B", 260, 50, 30, MY_YELLOW);
-        DrawText("r", 280, 50, 30, MY_DARK_PINK);
-        DrawText("e", 300, 50, 30, MY_BLUE);
-        DrawText("a", 320, 50, 30, MY_GREEN);
-        DrawText("k", 340, 50, 30, MY_YELLOW);
-        DrawText("e", 360, 50, 30, MY_DARK_PINK);
-        DrawText("r", 380, 50, 30, MY_BLUE);
-        DrawText(" ", 400, 50, 30, MY_GREEN);
-        DrawText("G", 420, 50, 30, MY_YELLOW);
-        DrawText("a", 440, 50, 30, MY_DARK_PINK);
-        DrawText("m", 460, 50, 30, MY_BLUE);
-        DrawText("e", 480, 50, 30, MY_GREEN);
+//         DrawText("B", 120, 50, 30, MY_DARK_PINK);
+//         DrawText("r", 140, 50, 30, MY_BLUE);
+//         DrawText("i", 160, 50, 30, MY_GREEN);
+//         DrawText("c", 180, 50, 30, MY_YELLOW);
+//         DrawText("k", 200, 50, 30, MY_DARK_PINK);
+//         DrawText("s", 220, 50, 30, MY_BLUE);
+//         DrawText(" ", 240, 50, 30, MY_GREEN);
+//         DrawText("B", 260, 50, 30, MY_YELLOW);
+//         DrawText("r", 280, 50, 30, MY_DARK_PINK);
+//         DrawText("e", 300, 50, 30, MY_BLUE);
+//         DrawText("a", 320, 50, 30, MY_GREEN);
+//         DrawText("k", 340, 50, 30, MY_YELLOW);
+//         DrawText("e", 360, 50, 30, MY_DARK_PINK);
+//         DrawText("r", 380, 50, 30, MY_BLUE);
+//         DrawText(" ", 400, 50, 30, MY_GREEN);
+//         DrawText("G", 420, 50, 30, MY_YELLOW);
+//         DrawText("a", 440, 50, 30, MY_DARK_PINK);
+//         DrawText("m", 460, 50, 30, MY_BLUE);
+//         DrawText("e", 480, 50, 30, MY_GREEN);
 
-        const char *menuOptions[] = { "Play", "Info", "Settings", "Exit" };
-        Color highlightColors[] = { MY_DARK_PINK, MY_BLUE, MY_GREEN, MY_YELLOW };
-        int menuCount = 4;
+//         const char *menuOptions[] = { "Play", "Info", "Settings", "Exit" };
+//         Color highlightColors[] = { MY_DARK_PINK, MY_BLUE, MY_GREEN, MY_YELLOW };
+//         int menuCount = 4;
 
-        if (IsKeyPressed(KEY_DOWN) || IsKeyPressed(KEY_S)){
-            panggilbacksound1();
-            selectedMenuOption = (selectedMenuOption + 1) % menuCount;
-        }
-        if (IsKeyPressed(KEY_UP) || IsKeyPressed(KEY_W)){
-            panggilbacksound1();
-            selectedMenuOption = (selectedMenuOption - 1 + menuCount) % menuCount;
-        }
+//         if (IsKeyPressed(KEY_DOWN) || IsKeyPressed(KEY_S)){
+//             panggilbacksound1();
+//             selectedMenuOption = (selectedMenuOption + 1) % menuCount;
+//         }
+//         if (IsKeyPressed(KEY_UP) || IsKeyPressed(KEY_W)){
+//             panggilbacksound1();
+//             selectedMenuOption = (selectedMenuOption - 1 + menuCount) % menuCount;
+//         }
 
-        for (int i = 0; i < menuCount; i++) {
-            Color textColor = (i == selectedMenuOption) ? highlightColors[i] : WHITE;
-            int textWidth = MeasureText(menuOptions[i], 30);
-            DrawText(menuOptions[i], SCREEN_WIDTH / 2 - textWidth / 2, 150 + (i * 60), 30, textColor);
-        }
+//         for (int i = 0; i < menuCount; i++) {
+//             Color textColor = (i == selectedMenuOption) ? highlightColors[i] : WHITE;
+//             int textWidth = MeasureText(menuOptions[i], 30);
+//             DrawText(menuOptions[i], SCREEN_WIDTH / 2 - textWidth / 2, 150 + (i * 60), 30, textColor);
+//         }
 
-        if (IsKeyPressed(KEY_ENTER) || IsKeyPressed(KEY_SPACE)) {
-            if (selectedMenuOption == 0) break;
-            else if (selectedMenuOption == 1) displayInfo();
-            else if (selectedMenuOption == 2) displaySettings();
-            else if (selectedMenuOption == 3) break;
-        }
+//         if (IsKeyPressed(KEY_ENTER) || IsKeyPressed(KEY_SPACE)) {
+//             if (selectedMenuOption == 0) break;
+//             else if (selectedMenuOption == 1) displayInfo();
+//             else if (selectedMenuOption == 2) displaySettings();
+//             else if (selectedMenuOption == 3) break;
+//         }
 
-        EndDrawing();
-    }
-    CloseWindow();
-}
+//         EndDrawing();
+//     }
+//     CloseWindow();
+// }
 
 // Fungsi untuk menggambar teks dengan bayangan
 void DrawTextShadow(const char *text, int posX, int posY, int fontSize, Color textColor, Color shadowColor) {
@@ -100,47 +101,53 @@ void DrawTextShadow(const char *text, int posX, int posY, int fontSize, Color te
 }
 
 // // Fungsi untuk menampilkan menu pemilihan level
-// void displayLevelSelection() {
-//     while (!WindowShouldClose()) {
-//         BeginDrawing();
-//         ClearBackground(BLACK_BG);
+void displayLevel() {
+    MenuTextNode *difficultyList = NULL;
+    appendMenuText(&difficultyList, "EASY");
+    appendMenuText(&difficultyList, "MEDIUM");
+    appendMenuText(&difficultyList, "HARD");
 
-//         DrawText("P", 280, 50, 30, MY_DARK_PINK);
-//         DrawText("I", 300, 50, 30, MY_BLUE);
-//         DrawText("L", 320, 50, 30, MY_GREEN);
-//         DrawText("I", 340, 50, 30, MY_YELLOW);
-//         DrawText("H", 360, 50, 30, MY_DARK_PINK);
-//         DrawText(" ", 480, 50, 30, MY_BLUE);
-//         DrawText("L", 400, 50, 30, MY_GREEN);
-//         DrawText("E", 420, 50, 30, MY_YELLOW);
-//         DrawText("V", 440, 50, 30, MY_DARK_PINK);
-//         DrawText("E", 460, 50, 30, MY_BLUE);
-//         DrawText("L", 480, 50, 30, MY_GREEN);
+        ClearBackground(BLACK_BG);
 
-//         // Tampilkan pilihan kesulitan
-//         const char *difficulties[] = {"EASY", "MEDIUM", "HARD"};
-//         Color difficultyColor = (menuIndex == 0) ? MY_DARK_PINK : WHITE;
-//         DrawText(difficulties[currentDifficulty], 350, 150, 30, difficultyColor);
+        // Judul dengan warna berbeda
+        DrawText("P", 200, 50, 30, MY_DARK_PINK);
+        DrawText("I", 220, 50, 30, MY_BLUE);
+        DrawText("L", 240, 50, 30, MY_GREEN);
+        DrawText("I", 260, 50, 30, MY_YELLOW);
+        DrawText("H", 280, 50, 30, MY_DARK_PINK);
+        DrawText(" ", 300, 50, 30, MY_BLUE);
+        DrawText("L", 320, 50, 30, MY_GREEN);
+        DrawText("E", 340, 50, 30, MY_YELLOW);
+        DrawText("V", 360, 50, 30, MY_DARK_PINK);
+        DrawText("E", 380, 50, 30, MY_BLUE);
+        DrawText("L", 400, 50, 30, MY_GREEN);
 
-//         // Tampilkan level yang dipilih
-//         char levelText[20];
-//         sprintf(levelText, "LEVEL %d", selectedLevel);
-//         Color levelColor = (menuIndex == 1) ? MY_BLUE : WHITE;
-//         DrawText(levelText, 340, 250, 30, levelColor);
+        // Opsi kesulitan
+        MenuTextNode *diffNode = getMenuTextNodeAt(difficultyList, level.DifficultLevel);
+        const char *difficultyText = (diffNode != NULL) ? diffNode->text : "UNKNOWN";
+        Color difficultyColor = (menuIndex == 0) ? MY_DARK_PINK : WHITE;
+        int diffWidth = MeasureText(difficultyText, 30);
+        DrawText(difficultyText, SCREEN_WIDTH / 2 - diffWidth / 2, 150, 30, difficultyColor);
 
-//         // Tampilkan "START GAME"
-//         Color startColor = (menuIndex == 2) ? MY_GREEN : WHITE;
-//         DrawText("START GAME", 300, 350, 30, startColor);
+        // Opsi pemilihan level
+        char levelText[20];
+        sprintf(levelText, "LEVEL %d", level.NumberLevel);
+        Color levelColor = (menuIndex == 1) ? MY_BLUE : WHITE;
+        int levelWidth = MeasureText(levelText, 30);
+        DrawText(levelText, SCREEN_WIDTH / 2 - levelWidth / 2, 250, 30, levelColor);
 
-//         // Tampilkan "BACK"
-//         Color backColor = (menuIndex == 3) ? MY_YELLOW : WHITE;
-//         DrawText("BACK", 350, 450, 30, backColor);
+        // Opsi start game
+        Color startColor = (menuIndex == 2) ? MY_GREEN : WHITE;
+        int startWidth = MeasureText("START GAME", 30);
+        DrawText("START GAME", SCREEN_WIDTH / 2 - startWidth / 2, 350, 30, startColor);
 
-//         handleLevelSelectionInput();
+        // Opsi kembali
+        Color backColor = (menuIndex == 3) ? MY_YELLOW : WHITE;
+        int backWidth = MeasureText("BACK", 30);
+        DrawText("BACK", SCREEN_WIDTH / 2 - backWidth / 2, 450, 30, backColor);
 
-//         EndDrawing();
-//     }
-// }
+        handleLevelSelectionInput(gameState, &level, &ball);
+}
 
 // Fungsi untuk menangani input dalam menu pemilihan level
 // void handleLevelSelectionInput() {
@@ -307,5 +314,42 @@ void playGame() {
         if (IsKeyPressed(KEY_B)) return;
 
         EndDrawing();
+    }
+}
+
+void appendMenuText(MenuTextNode **head, const char *text) {
+    MenuTextNode *newNode = malloc(sizeof(MenuTextNode));
+    strcpy(newNode->text, text);
+    newNode->next = NULL;
+
+    if (*head == NULL) {
+        *head = newNode;
+    } else {
+        MenuTextNode *temp = *head;
+        while (temp->next) temp = temp->next;
+        temp->next = newNode;
+    }
+}
+
+MenuTextNode* getMenuTextNodeAt(MenuTextNode *head, int index) {
+    int i = 0;
+    while (head && i < index) {
+        head = head->next;
+        i++;
+    }
+    return head;
+}
+
+void appendColor(ColorNode **head, Color color) {
+    ColorNode *newNode = malloc(sizeof(ColorNode));
+    newNode->color = color;
+    newNode->next = NULL;
+
+    if (*head == NULL) {
+        *head = newNode;
+    } else {
+        ColorNode *temp = *head;
+        while (temp->next) temp = temp->next;
+        temp->next = newNode;
     }
 }

@@ -15,6 +15,14 @@ typedef struct {
     Vector2 posisi;
 } Lives;
 
+typedef struct MenuNodeZahwa{
+    const char* menuOption;
+    Color highlightColor;
+    struct MenuNodeZahwa* next;
+} MenuNodeZahwa;
+
+void displayMenuWithGraphics();
+
 typedef struct Ball Ball;
 void InitPaddle(Paddle* Paddle, Vector2 posisiAwal, Vector2 ukuran, float kecepatan);
 void UpdatePaddle(Paddle* Paddle);
