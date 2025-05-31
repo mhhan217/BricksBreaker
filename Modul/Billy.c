@@ -58,9 +58,9 @@ void inisialisasiBalok(int level) {
 
     int totalBricks;
     if (level <= 10) {
-        totalBricks = 500;
+        totalBricks = 300;
     } else if (level <= 20) {
-        totalBricks = 700;
+        totalBricks = 600;
     } else {
         totalBricks = 900;
     }
@@ -77,8 +77,7 @@ void inisialisasiBalok(int level) {
         r.width = BRICK_WIDTH;
         r.height = BRICK_HEIGHT;
 
-        int type = 1;
-        AddBrick(&headBricks, r, type);
+        AddBrick(&headBricks, r, 1);
         fillednodes++;
     }
 }
@@ -90,8 +89,6 @@ void AddBrick(address *head, Rectangle rect, int type) {
     newNode->type = type;
     if (type == 1) {
         newNode->on = true;
-    } else {
-        newNode->on = false;
     }
     newNode->next = *head;
     *head = newNode;
